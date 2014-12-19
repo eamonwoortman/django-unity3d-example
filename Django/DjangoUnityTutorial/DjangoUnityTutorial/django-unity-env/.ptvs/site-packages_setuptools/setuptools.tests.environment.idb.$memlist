@@ -1,0 +1,17 @@
+os
+zipfile
+sys
+tempfile
+unittest
+shutil
+stat
+unicodedata
+_Popen
+_PIPE
+_extract
+_extract_from_zip
+_extract_member
+_remove_dir
+ZippedEnvironment
+_which_dirs
+run_setup_py

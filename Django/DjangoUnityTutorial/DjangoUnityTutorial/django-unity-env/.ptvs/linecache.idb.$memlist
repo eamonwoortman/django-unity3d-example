@@ -1,0 +1,9 @@
+sys
+os
+__all__
+getline
+cache
+clearcache
+getlines
+checkcache
+updatecache

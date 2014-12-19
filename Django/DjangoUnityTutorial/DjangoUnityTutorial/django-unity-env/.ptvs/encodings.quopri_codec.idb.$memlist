@@ -1,0 +1,11 @@
+codecs
+quopri
+StringIO
+quopri_encode
+quopri_decode
+Codec
+IncrementalEncoder
+IncrementalDecoder
+StreamWriter
+StreamReader
+getregentry

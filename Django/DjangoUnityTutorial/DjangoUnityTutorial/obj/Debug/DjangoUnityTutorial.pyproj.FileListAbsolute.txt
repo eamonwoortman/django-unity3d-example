@@ -1,0 +1,15 @@
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\bin\Microsoft.PythonTools.WebRole.dll
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\attach_server.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\visualstudio_py_debugger.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\visualstudio_py_repl.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\visualstudio_py_util.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\__init__.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\__main__.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\bin\AzureSetup.cfg
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\bin\Microsoft.PythonTools.AzureSetup.exe
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\bin\Microsoft.PythonTools.AzureSetup.exe.config
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\bin\wfastcgi.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\deployment-updated-orig-prefix.txt
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\ptvs_virtualenv_proxy.py
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\web.config
+E:\Workspace\Unity\SomeUnityDjangoProject\Django\DjangoUnityTutorial\DjangoUnityTutorial\obj\Debug\web.debug.config

@@ -1,0 +1,7 @@
+cache
+clickjacking
+csrf
+debug
+gzip
+http
+vary

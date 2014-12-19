@@ -1,0 +1,6 @@
+GEOSBase
+GEOSException
+GEOSGeometry
+geos_version_info
+capi
+PreparedGeometry

@@ -1,0 +1,10 @@
+codecs
+base64
+base64_encode
+base64_decode
+Codec
+IncrementalEncoder
+IncrementalDecoder
+StreamWriter
+StreamReader
+getregentry

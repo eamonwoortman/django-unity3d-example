@@ -1,0 +1,10 @@
+ACCESS_COPY
+ACCESS_READ
+ACCESS_WRITE
+ALLOCATIONGRANULARITY
+PAGESIZE
+__doc__
+__name__
+__package__
+error
+mmap

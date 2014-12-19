@@ -1,0 +1,9 @@
+codecs
+Codec
+IncrementalEncoder
+IncrementalDecoder
+StreamWriter
+StreamReader
+getregentry
+decoding_table
+encoding_table

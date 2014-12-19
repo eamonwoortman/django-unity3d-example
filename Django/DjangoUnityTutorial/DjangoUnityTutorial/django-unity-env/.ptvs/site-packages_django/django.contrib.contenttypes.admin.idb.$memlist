@@ -1,0 +1,16 @@
+unicode_literals
+partial
+InlineModelAdminChecks
+InlineModelAdmin
+flatten_fieldsets
+GenericForeignKey
+BaseGenericInlineFormSet
+generic_inlineformset_factory
+checks
+FieldDoesNotExist
+ALL_FIELDS
+modelform_defines_fields
+GenericInlineModelAdminChecks
+GenericInlineModelAdmin
+GenericStackedInline
+GenericTabularInline

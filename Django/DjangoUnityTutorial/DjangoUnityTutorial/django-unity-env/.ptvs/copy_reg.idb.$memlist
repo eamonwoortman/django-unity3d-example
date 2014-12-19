@@ -1,0 +1,17 @@
+_ClassType
+__all__
+dispatch_table
+pickle
+constructor
+pickle_complex
+_reconstructor
+_HEAPTYPE
+_reduce_ex
+__newobj__
+_slotnames
+_extension_registry
+_inverted_registry
+_extension_cache
+add_extension
+remove_extension
+clear_extension_cache

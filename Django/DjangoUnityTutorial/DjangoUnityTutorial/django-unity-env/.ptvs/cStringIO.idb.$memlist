@@ -1,0 +1,9 @@
+InputType
+OutputType
+StringI
+StringIO
+StringO
+__doc__
+__name__
+__package__
+cStringIO_CAPI

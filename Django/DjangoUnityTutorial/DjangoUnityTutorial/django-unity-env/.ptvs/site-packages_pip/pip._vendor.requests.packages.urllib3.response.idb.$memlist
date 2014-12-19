@@ -1,0 +1,12 @@
+logging
+zlib
+io
+HTTPHeaderDict
+DecodeError
+basestring
+binary_type
+is_fp_closed
+log
+DeflateDecoder
+_get_decoder
+HTTPResponse

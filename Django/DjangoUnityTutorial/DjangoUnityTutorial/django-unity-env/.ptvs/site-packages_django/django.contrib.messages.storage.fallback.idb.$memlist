@@ -1,0 +1,4 @@
+BaseStorage
+CookieStorage
+SessionStorage
+FallbackStorage

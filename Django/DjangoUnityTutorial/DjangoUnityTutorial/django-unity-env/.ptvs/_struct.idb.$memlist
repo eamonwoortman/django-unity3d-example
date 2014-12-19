@@ -1,0 +1,14 @@
+Struct
+_PY_STRUCT_FLOAT_COERCE
+_PY_STRUCT_RANGE_CHECKING
+__doc__
+__name__
+__package__
+__version__
+_clearcache
+calcsize
+error
+pack
+pack_into
+unpack
+unpack_from

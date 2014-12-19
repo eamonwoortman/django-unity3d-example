@@ -1,0 +1,16 @@
+apps
+Signal
+six
+class_prepared
+ModelSignal
+pre_init
+post_init
+pre_save
+post_save
+pre_delete
+post_delete
+m2m_changed
+pre_migrate
+post_migrate
+pre_syncdb
+post_syncdb

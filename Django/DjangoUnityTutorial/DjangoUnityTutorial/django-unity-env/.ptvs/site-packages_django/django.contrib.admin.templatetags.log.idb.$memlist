@@ -1,0 +1,5 @@
+template
+LogEntry
+register
+AdminLogNode
+get_admin_log

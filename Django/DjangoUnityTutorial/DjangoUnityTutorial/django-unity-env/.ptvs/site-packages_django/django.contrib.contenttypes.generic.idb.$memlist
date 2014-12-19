@@ -1,0 +1,10 @@
+unicode_literals
+warnings
+RemovedInDjango19Warning
+GenericInlineModelAdmin
+GenericStackedInline
+GenericTabularInline
+GenericForeignKey
+GenericRelation
+BaseGenericInlineFormSet
+generic_inlineformset_factory

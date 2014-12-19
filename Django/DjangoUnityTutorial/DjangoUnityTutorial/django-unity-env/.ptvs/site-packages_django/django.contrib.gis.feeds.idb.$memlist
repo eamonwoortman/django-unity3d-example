@@ -1,0 +1,9 @@
+unicode_literals
+BaseFeed
+Atom1Feed
+Rss201rev2Feed
+GeoFeedMixin
+GeoRSSFeed
+GeoAtom1Feed
+W3CGeoFeed
+Feed

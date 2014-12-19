@@ -1,0 +1,4 @@
+unicode_literals
+DATE_FORMAT
+TIME_FORMAT
+SHORT_DATE_FORMAT

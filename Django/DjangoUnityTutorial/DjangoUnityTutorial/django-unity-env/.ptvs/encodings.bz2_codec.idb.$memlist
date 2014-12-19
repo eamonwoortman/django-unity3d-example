@@ -1,0 +1,10 @@
+codecs
+bz2
+bz2_encode
+bz2_decode
+Codec
+IncrementalEncoder
+IncrementalDecoder
+StreamWriter
+StreamReader
+getregentry

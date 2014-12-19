@@ -1,0 +1,10 @@
+wrap_ord
+NUM_OF_CATEGORY
+DONT_KNOW
+ENOUGH_REL_THRESHOLD
+MAX_REL_THRESHOLD
+MINIMUM_DATA_THRESHOLD
+jp2CharContext
+JapaneseContextAnalysis
+SJISContextAnalysis
+EUCJPContextAnalysis

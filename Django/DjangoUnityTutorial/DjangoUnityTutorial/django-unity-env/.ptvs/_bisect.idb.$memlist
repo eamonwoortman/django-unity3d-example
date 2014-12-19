@@ -1,0 +1,9 @@
+__doc__
+__name__
+__package__
+bisect
+bisect_left
+bisect_right
+insort
+insort_left
+insort_right

@@ -1,0 +1,4 @@
+unicode_literals
+migrations
+six
+MigrationOptimizer

@@ -1,0 +1,10 @@
+CallableProxyType
+ProxyType
+ReferenceType
+__doc__
+__name__
+__package__
+getweakrefcount
+getweakrefs
+proxy
+ref

@@ -1,0 +1,14 @@
+BaseHTTPError
+RequestException
+HTTPError
+ConnectionError
+ProxyError
+SSLError
+Timeout
+URLRequired
+TooManyRedirects
+MissingSchema
+InvalidSchema
+InvalidURL
+ChunkedEncodingError
+ContentDecodingError

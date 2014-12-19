@@ -1,0 +1,10 @@
+_codecs_iso2022
+codecs
+mbc
+codec
+Codec
+IncrementalEncoder
+IncrementalDecoder
+StreamReader
+StreamWriter
+getregentry

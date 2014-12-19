@@ -1,0 +1,12 @@
+fnmatch
+logging
+os
+re
+DistlibException
+fsdecode
+convert_path
+__all__
+logger
+_COLLAPSE_PATTERN
+_COMMENTED_LINE
+Manifest
