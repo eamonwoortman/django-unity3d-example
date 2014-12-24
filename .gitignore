@@ -1,3 +1,5 @@
 Django/DjangoUnityTutorial/DjangoUnityTutorial.sln
 Unity/Library/
 Unity/Temp/
+Django/DjangoUnityTutorial/django-unity/
+*.pyc
