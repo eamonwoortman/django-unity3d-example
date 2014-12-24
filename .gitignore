@@ -3,3 +3,4 @@ Unity/Library/
 Unity/Temp/
 Django/DjangoUnityTutorial/django-unity/
 *.pyc
+Django/DjangoUnityTutorial/obj/
