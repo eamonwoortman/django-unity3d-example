@@ -22,6 +22,7 @@ public partial class BackendManager : MonoBehaviour {
 
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
+        fields.Add("name", "dada");
 
         PerformRequest("addscore", fields);
         //PerformRequest("addscore", System.Text.Encoding.UTF8.GetBytes(jsonObject));
