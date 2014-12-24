@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>DjangoUnityTutorial</Name>
     <RootNamespace>DjangoUnityTutorial</RootNamespace>
-    <InterpreterId>{d6c8fbdc-4865-4dc5-8256-c12fb9bcc88f}</InterpreterId>
+    <InterpreterId>{908054c4-96c1-43d3-81d4-1a4632313a15}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
     <PythonRunWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" 8000 $(CommandLineArguments)</PythonRunWebServerCommandArguments>
     <PythonDebugWebServerCommandArguments>runserver --noreload --settings "$(DjangoSettingsModule)" 8000 $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
@@ -67,16 +67,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="django-unity-env\">
-      <Id>{d6c8fbdc-4865-4dc5-8256-c12fb9bcc88f}</Id>
-      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
+    <Interpreter Include="django-unity\">
+      <Id>{908054c4-96c1-43d3-81d4-1a4632313a15}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
       <Version>2.7</Version>
-      <Description>django-unity-env (Python 64-bit 2.7)</Description>
+      <Description>django-unity (Python 2.7)</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <LibraryPath>Lib\</LibraryPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>Amd64</Architecture>
+      <Architecture>X86</Architecture>
     </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
