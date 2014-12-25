@@ -28,5 +28,8 @@ To have a minimal backend this example project should include the following feat
 * Download and install Visual Studio 2013
 * Download and install Python 2.7
 * Download and install Python Tools for Visual Studio
-* Open the solution and either choose or set up a virtual environment(right-click Environments->Add virtual environment)
+* Open the solution and either choose or set up a virtual environment(right-click Environments->Add virtual environment), name it 'django-unity'
 * Start debugging by pressing F5 or clicking the Play button
+
+
+TODO: ADD DISCLAIMER/LICENCE
