@@ -9,6 +9,7 @@ This repository is currently set up using Microsoft Visual Studio and Python Too
 
 ### Goals ###
 To have a minimal backend this example project should include the following features:
+
 * Players can signup using an email and password
 * Players can login
 * Players will be able to save their score and get a list of all scores
