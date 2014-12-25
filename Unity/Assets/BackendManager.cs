@@ -9,25 +9,16 @@ using System.Security.Cryptography;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-class ScoreObject {
-    public string name;
-    public int score;
-}
-
 public partial class BackendManager : MonoBehaviour {
 
     void Start() {
-        ScoreObject so = new ScoreObject() { name = "Bas", score = 1337 };
-        string jsonObject = JsonConvert.SerializeObject(so);
-
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         fields.Add("name", "dada");
 
-        PerformRequest("addscore", fields);
-        //PerformRequest("addscore", System.Text.Encoding.UTF8.GetBytes(jsonObject));
+        PerformRequest("addscore", fields, OnTestResponse);
     }
-    void OnTestResponse(ResponseType responseType, object responseData) {
+    void OnTestResponse(ResponseType responseType, string responseData) {
         Debug.Log("responseType=" + responseType + ", " + responseData);
     }
 
@@ -47,8 +38,8 @@ public partial class BackendManager : MonoBehaviour {
     /// The response delegate
     /// </summary>
     /// <param name="responseType"></param>
-    /// <param name="responseData">can return a string or JObject</param>
-    public delegate void RequestResponseDelegate(ResponseType responseType, object responseData);
+    /// <param name="responseData">returns the json string of the response</param>
+    public delegate void RequestResponseDelegate(ResponseType responseType, string jsonResponse);
 
 
     //---- URLS ----//
@@ -75,21 +66,17 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="onSucces">Will be callend on success</param>
     /// <param name="onError">Will be called when an error occurred during the request</param>
     void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null) {
-        if (onResponse != null) {
-            onResponse(ResponseType.BackendDisabled, null);
-            return;
-        }
-
-        WWWForm wwwForm = new WWWForm();
-        WWW request;
-
         string url = hostUrl + command;
+        WWW request;
+        WWWForm wwwForm = new WWWForm();
+        Hashtable ht = new Hashtable();
+        ht.Add("Accept", "application/json");
 
         if (fields != null) {
             foreach (KeyValuePair<string, object> pair in fields) {
                 wwwForm.AddField(pair.Key, pair.Value.ToString());
             }
-            request = new WWW(url, wwwForm);
+            request = new WWW(url, wwwForm.data, ht);
         } else {
             request = new WWW(url);
         }
@@ -97,22 +84,14 @@ public partial class BackendManager : MonoBehaviour {
         StartCoroutine(HandleRequest(request, onResponse));
     }
     void PerformRequest(string command, byte[] data, RequestResponseDelegate onResponse = null) {
-        if (onResponse != null) {
-            onResponse(ResponseType.BackendDisabled, null);
-            return;
-        }
-
-        WWWForm wwwForm = new WWWForm();
-        WWW request;
-
         string url = hostUrl + command;
+        WWW request;
 
         if (data != null) {
             request = new WWW(url, data);
         } else {
             request = new WWW(url);
         }
-
         StartCoroutine(HandleRequest(request, onResponse));
     }
     IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse) {
@@ -123,28 +102,32 @@ public partial class BackendManager : MonoBehaviour {
             }
             yield return new WaitForEndOfFrame();
         }
-
+        
         if (!String.IsNullOrEmpty(request.error)) {
-            Debug.LogWarning(request.error);
-            Debug.LogWarning(request.text);
-
+            string status = request.responseHeaders["STATUS"];
+            //if it's a 400 Bad Request, it's a valid error, otherwise it's a request error
+            if (status.Contains("400 BAD REQUEST"))
+            {
+                if (onResponse != null) {
+                    onResponse(ResponseType.ErrorFromServer, request.text);
+                }
+                yield break;
+            }
             if (onResponse != null) {
                 onResponse(ResponseType.RequestError, null);
             }
             yield break;
         }
 
-        string responseData = request.text;
-
+         
         //Check if a local error occurred
         if (!string.IsNullOrEmpty(request.error)) {
             if (onResponse != null) {
                 onResponse(ResponseType.ErrorFromClient, "Error from client: " + request.error);
             }
         } else {
-            foreach(KeyValuePair<string, string> pair in request.responseHeaders) {
-                Debug.Log("Header[" + pair.Key + "] " + pair.Value);
-            }
+            string responseData = request.text;
+            Debug.Log("Response=" + responseData);
             /*
             try {
                 JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(responseData);
@@ -165,7 +148,8 @@ public partial class BackendManager : MonoBehaviour {
                 Debug.LogError("Might not be able to parse response: " + responseData);
                 Debug.LogError("Unknonwn exception caught: " + ex.ToString());
                 onResponse(ResponseType.ErrorFromClient, ex.ToString());
-            }*/
+            }
+            */
         }
     }
 }
