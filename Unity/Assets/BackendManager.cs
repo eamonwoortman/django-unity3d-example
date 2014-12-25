@@ -14,11 +14,11 @@ public partial class BackendManager : MonoBehaviour {
     void Start() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
-        fields.Add("name", "dada");
-
+        //fields.Add("name", "dada");
         PerformRequest("addscore", fields, OnTestResponse);
     }
-    void OnTestResponse(ResponseType responseType, string responseData) {
+
+    void OnTestResponse(ResponseType responseType, object responseData) {
         Debug.Log("responseType=" + responseType + ", " + responseData);
     }
 
@@ -39,7 +39,7 @@ public partial class BackendManager : MonoBehaviour {
     /// </summary>
     /// <param name="responseType"></param>
     /// <param name="responseData">returns the json string of the response</param>
-    public delegate void RequestResponseDelegate(ResponseType responseType, string jsonResponse);
+    public delegate void RequestResponseDelegate(ResponseType responseType, object jsonResponse);
 
 
     //---- URLS ----//
@@ -102,54 +102,48 @@ public partial class BackendManager : MonoBehaviour {
             }
             yield return new WaitForEndOfFrame();
         }
-        
+
+        //a proper client error(eg. can't reach the server)
         if (!String.IsNullOrEmpty(request.error)) {
-            string status = request.responseHeaders["STATUS"];
-            //if it's a 400 Bad Request, it's a valid error, otherwise it's a request error
-            if (status.Contains("400 BAD REQUEST"))
-            {
-                if (onResponse != null) {
-                    onResponse(ResponseType.ErrorFromServer, request.text);
-                }
-                yield break;
-            }
             if (onResponse != null) {
                 onResponse(ResponseType.RequestError, null);
             }
             yield break;
         }
 
-         
-        //Check if a local error occurred
-        if (!string.IsNullOrEmpty(request.error)) {
+        //if it's a 400 Bad Request, it's a valid error, otherwise it's a request error
+        string status = request.responseHeaders["REAL_STATUS"];
+        if (!status.Equals("200 OK")) {
             if (onResponse != null) {
-                onResponse(ResponseType.ErrorFromClient, "Error from client: " + request.error);
+                Dictionary<string, string[]> responseDict = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(request.text);
+                onResponse(ResponseType.ErrorFromServer, responseDict);
             }
-        } else {
-            string responseData = request.text;
-            Debug.Log("Response=" + responseData);
-            /*
-            try {
-                JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(responseData);
-                if (onResponse != null) {
-                    //Check if status is succes
-                    if (response.status.Equals("success")) {
-                        onResponse(ResponseType.Success, response.data);
-                    } else {
-                        onResponse(ResponseType.ErrorFromServer, response.data);
-                    }
-                }
-                //Debug.Log("Response: " + response.ToString());
-            } catch (JsonReaderException jre) {
-                Debug.LogError("Could not parse response: " + responseData);
-                Debug.LogError("JsonReaderException caught: " + jre.ToString());
-                onResponse(ResponseType.ErrorFromClient, jre.ToString());
-            } catch (Exception ex) {
-                Debug.LogError("Might not be able to parse response: " + responseData);
-                Debug.LogError("Unknonwn exception caught: " + ex.ToString());
-                onResponse(ResponseType.ErrorFromClient, ex.ToString());
-            }
-            */
+            yield break;
         }
+         
+        //deal with successful responses
+        string responseData = request.text;
+        /*
+        try {
+            JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(responseData);
+            if (onResponse != null) {
+                //Check if status is succes
+                if (response.status.Equals("success")) {
+                    onResponse(ResponseType.Success, response.data);
+                } else {
+                    onResponse(ResponseType.ErrorFromServer, response.data);
+                }
+            }
+            //Debug.Log("Response: " + response.ToString());
+        } catch (JsonReaderException jre) {
+            Debug.LogError("Could not parse response: " + responseData);
+            Debug.LogError("JsonReaderException caught: " + jre.ToString());
+            onResponse(ResponseType.ErrorFromClient, jre.ToString());
+        } catch (Exception ex) {
+            Debug.LogError("Might not be able to parse response: " + responseData);
+            Debug.LogError("Unknonwn exception caught: " + ex.ToString());
+            onResponse(ResponseType.ErrorFromClient, ex.ToString());
+        }
+        */
     }
 }
