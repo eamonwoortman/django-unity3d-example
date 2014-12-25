@@ -5,3 +5,7 @@ Django/DjangoUnityTutorial/django-unity/
 *.pyc
 Django/DjangoUnityTutorial/obj/
 Django/DjangoUnityTutorial/bin/
+Django/DjangoUnityTutorial/ptvs_virtualenv_proxy.py
+Unity/obj/Debug/Assembly-CSharp-vs.csproj.FileListAbsolute.txt
+db.sqlite3
+web.debug.config
