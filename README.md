@@ -5,7 +5,14 @@
 Django-Unity-Tutorial is an example project of how to use Django as a backend for a Unity3D game. 
 
 ### Notes ###
-This repo is currently set up using Microsoft Visual Studio and Python Tools for VS, however, you should be able to run this django project on Linux and Mac considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
+This repository is currently set up using Microsoft Visual Studio and Python Tools for VS, however, you should be able to run this django project on Linux and Mac considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
+
+### Goals ###
+To have a minimal backend this example project should include the following features:
+* Players can signup using an email and password
+* Players can login
+* Players will be able to save their score and get a list of all scores
+* Players can save their game(blob of data) and retreive a list of saved games
 
 ### This project will use the following tools and packages ###
 
