@@ -5,7 +5,18 @@ from rest_framework import status
 
 from serializers import ScoreSerializer
 
-class AddScore(APIView):
+class UnityAPIView(APIView):
+    """
+    This custom API replaces any other status code than 2XX with 200 
+    and adds a REAL_STATUS_CODE header containing the original status code
+    """
+    def finalize_response(self, request, *args, **kwargs):
+        response = super(UnityAPIView, self).finalize_response(request, *args, **kwargs)
+        response["REAL_STATUS"] = '%s %s' % (response.status_code, response.status_text)
+        response.status_code = 200
+        return response
+
+class AddScore(UnityAPIView):
     #authentication_classes = (authentication.TokenAuthentication,)
     #permission_classes = (permissions.IsAdminUser,)
 
