@@ -106,8 +106,8 @@ public partial class BackendManager : MonoBehaviour {
         int statusCode = int.Parse(status.Split(' ')[0]);
         JObject responseObj = JObject.Parse(request.text);
 
-        //if any other error occurred(probably 4xx range)
-        if (statusCode != 200) {
+        //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
+        if (statusCode < 200 || statusCode > 206) {
             if (onResponse != null) {
                 onResponse(ResponseType.ErrorFromServer, responseObj);
             }
