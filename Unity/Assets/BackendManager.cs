@@ -18,14 +18,19 @@ public partial class BackendManager : MonoBehaviour {
         PerformRequest("addscore", fields, OnTestResponse);
     }
 
-    void OnTestResponse(ResponseType responseType, object responseData) {
+    void OnTestResponse(ResponseType responseType, JObject responseData) {
+        JToken detail = responseData.GetValue("detail");
         Debug.Log("responseType=" + responseType + ", " + responseData);
+        if (responseType == ResponseType.ErrorFromServer) {
+            foreach (KeyValuePair<string, JToken> pair in responseData) {
+                Debug.Log("Token[" + pair.Key + "] " + pair.Value);
+            }
+        }
     }
 
     //---- Public Enums ----//
     public enum ResponseType {
         Success,
-        TimedOut,
         ErrorFromClient,
         ErrorFromServer,
         ParseError,
@@ -38,8 +43,8 @@ public partial class BackendManager : MonoBehaviour {
     /// The response delegate
     /// </summary>
     /// <param name="responseType"></param>
-    /// <param name="responseData">returns the json string of the response</param>
-    public delegate void RequestResponseDelegate(ResponseType responseType, object jsonResponse);
+    /// <param name="jsonResponse">returns the json object of the response</param>
+    public delegate void RequestResponseDelegate(ResponseType responseType, JObject jsonResponse);
 
 
     //---- URLS ----//
@@ -103,7 +108,7 @@ public partial class BackendManager : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
-        //a proper client error(eg. can't reach the server)
+        //catch proper client errors(eg. can't reach the server)
         if (!String.IsNullOrEmpty(request.error)) {
             if (onResponse != null) {
                 onResponse(ResponseType.RequestError, null);
@@ -111,18 +116,23 @@ public partial class BackendManager : MonoBehaviour {
             yield break;
         }
 
-        //if it's a 400 Bad Request, it's a valid error, otherwise it's a request error
         string status = request.responseHeaders["REAL_STATUS"];
-        if (!status.Equals("200 OK")) {
+        int statusCode = int.Parse(status.Split(' ')[0]);
+        JObject responseObj = JObject.Parse(request.text);
+
+        //if any other error occurred(probably 4xx range)
+        if (statusCode != 200) {
             if (onResponse != null) {
-                Dictionary<string, string[]> responseDict = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(request.text);
-                onResponse(ResponseType.ErrorFromServer, responseDict);
+                onResponse(ResponseType.ErrorFromServer, responseObj);
             }
             yield break;
         }
          
         //deal with successful responses
         string responseData = request.text;
+        if (onResponse != null) {
+            onResponse(ResponseType.Success, responseObj);
+        }
         /*
         try {
             JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(responseData);

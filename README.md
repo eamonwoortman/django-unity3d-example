@@ -32,4 +32,4 @@ To have a minimal backend this example project should include the following feat
 * Start debugging by pressing F5 or clicking the Play button
 
 
-TODO: ADD DISCLAIMER/LICENCE
+TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework)
