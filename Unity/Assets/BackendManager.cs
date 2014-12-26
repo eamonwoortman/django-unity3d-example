@@ -9,35 +9,18 @@ using System.Security.Cryptography;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
+
+//---- Public Enums ----//
+public enum ResponseType {
+    Success,
+    ErrorFromClient,
+    ErrorFromServer,
+    ParseError,
+    BackendDisabled,
+    RequestError
+}
+
 public partial class BackendManager : MonoBehaviour {
-
-    void Start() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("score", 1337);
-        //fields.Add("name", "dada");
-        PerformRequest("addscore", fields, OnTestResponse);
-    }
-
-    void OnTestResponse(ResponseType responseType, JObject responseData) {
-        JToken detail = responseData.GetValue("detail");
-        Debug.Log("responseType=" + responseType + ", " + responseData);
-        if (responseType == ResponseType.ErrorFromServer) {
-            foreach (KeyValuePair<string, JToken> pair in responseData) {
-                Debug.Log("Token[" + pair.Key + "] " + pair.Value);
-            }
-        }
-    }
-
-    //---- Public Enums ----//
-    public enum ResponseType {
-        Success,
-        ErrorFromClient,
-        ErrorFromServer,
-        ParseError,
-        BackendDisabled,
-        RequestError
-    }
-
     //---- Public Delegates ----//
     /// <summary>
     /// The response delegate
@@ -70,11 +53,12 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="fields">A list of fields that are send as parameters to the backend</param>
     /// <param name="onSucces">Will be callend on success</param>
     /// <param name="onError">Will be called when an error occurred during the request</param>
-    void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null) {
+    public void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null) {
         string url = hostUrl + command;
         WWW request;
         WWWForm wwwForm = new WWWForm();
         Hashtable ht = new Hashtable();
+        //make sure we get a json response
         ht.Add("Accept", "application/json");
 
         if (fields != null) {
@@ -88,7 +72,8 @@ public partial class BackendManager : MonoBehaviour {
 
         StartCoroutine(HandleRequest(request, onResponse));
     }
-    void PerformRequest(string command, byte[] data, RequestResponseDelegate onResponse = null) {
+
+    public void PerformRequest(string command, byte[] data, RequestResponseDelegate onResponse = null) {
         string url = hostUrl + command;
         WWW request;
 
@@ -99,6 +84,7 @@ public partial class BackendManager : MonoBehaviour {
         }
         StartCoroutine(HandleRequest(request, onResponse));
     }
+
     IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse) {
         //Wait till request is done
         while (true) {
@@ -129,7 +115,6 @@ public partial class BackendManager : MonoBehaviour {
         }
          
         //deal with successful responses
-        string responseData = request.text;
         if (onResponse != null) {
             onResponse(ResponseType.Success, responseObj);
         }
