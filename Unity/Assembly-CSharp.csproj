@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\BackendManager.cs" />
      <Compile Include="Assets\BackendTester.cs" />
+     <Compile Include="Assets\ExtensionMethods.cs" />
      <Compile Include="Assets\JsonDotNet\Source\Aot\EnumerationExtension.cs" />
      <Compile Include="Assets\JsonDotNet\Source\Bson\BsonBinaryType.cs" />
      <Compile Include="Assets\JsonDotNet\Source\Bson\BsonBinaryWriter.cs" />
