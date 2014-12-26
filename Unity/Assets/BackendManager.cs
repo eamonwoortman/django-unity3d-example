@@ -118,27 +118,5 @@ public partial class BackendManager : MonoBehaviour {
         if (onResponse != null) {
             onResponse(ResponseType.Success, responseObj);
         }
-        /*
-        try {
-            JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(responseData);
-            if (onResponse != null) {
-                //Check if status is succes
-                if (response.status.Equals("success")) {
-                    onResponse(ResponseType.Success, response.data);
-                } else {
-                    onResponse(ResponseType.ErrorFromServer, response.data);
-                }
-            }
-            //Debug.Log("Response: " + response.ToString());
-        } catch (JsonReaderException jre) {
-            Debug.LogError("Could not parse response: " + responseData);
-            Debug.LogError("JsonReaderException caught: " + jre.ToString());
-            onResponse(ResponseType.ErrorFromClient, jre.ToString());
-        } catch (Exception ex) {
-            Debug.LogError("Might not be able to parse response: " + responseData);
-            Debug.LogError("Unknonwn exception caught: " + ex.ToString());
-            onResponse(ResponseType.ErrorFromClient, ex.ToString());
-        }
-        */
     }
 }
