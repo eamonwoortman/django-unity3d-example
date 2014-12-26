@@ -10,6 +10,7 @@ public class BackendTester : MonoBehaviour {
         if (backendManager == null) {
             backendManager = gameObject.AddComponent<BackendManager>();
         }
+        StartTests();
     }
     void StartTests() {
         Test1();
