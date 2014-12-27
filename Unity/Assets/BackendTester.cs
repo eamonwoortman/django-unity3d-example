@@ -19,9 +19,11 @@ public class BackendTester : MonoBehaviour {
         }
         StartTests();
     }
+
     void StartTests() {
         Test1();
         Test2();
+        Test3();
     }
 
     void Assert(bool statement, int testnumber, string message) {
@@ -85,6 +87,24 @@ public class BackendTester : MonoBehaviour {
         Assert(nameToken.Value<string>() == "dada", 2, "name value does not equal 'dada'");
         
         Debug.Log("Test 2 passed");
+    }
+
+
+    /// <summary>
+    /// Test 3
+    /// this should pass if the response was an error telling us the score is invalid
+    /// </summary>
+    void Test3() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("score", "yoloswaggings");
+        fields.Add("name", "dada");
+        backendManager.PerformRequest("addscore", fields, OnTest3Response);
+    }
+    void OnTest3Response(ResponseType responseType, JObject responseData, string callee) {
+        Debug.Log("[" + responseType + "] " + responseData);
+        Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
+
+        Debug.Log("Test 3 passed");
     }
 
 }
