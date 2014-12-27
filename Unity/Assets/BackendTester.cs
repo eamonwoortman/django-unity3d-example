@@ -40,6 +40,34 @@ public class BackendTester : MonoBehaviour {
         Assert(fieldToken != null, testNumber, key + " field can't be found");
         Assert(fieldToken.Value<object>() == value, testNumber, "field value does not equal " + value);
     }
+
+    void OnBackendResponse(ResponseType responseType, JObject responseData, string callee) {
+        string[] splittedStr = callee.Split('_');
+        if (splittedStr.Length != 2) {
+            Debug.LogWarning("Could not split callee string into multiple strings");
+            return;
+        }
+        int testNumber;
+        if (!int.TryParse(splittedStr[1], out testNumber)) {
+            Debug.LogWarning("Could not parse splittedStr[1] to an int");
+            return;
+        }
+        MethodInfo methodInfo = GetType().GetMethod("Validate_" + testNumber, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (methodInfo == null) {
+            Debug.LogWarning("No validation method for test " + testNumber + " could be found");
+            return;
+        }
+
+        try {
+            methodInfo.Invoke(this, new object[] { responseType, responseData });
+            Debug.Log("Test " + testNumber + " has passed!");
+        } catch (Exception afe) {
+            Debug.LogWarning(afe.InnerException);
+            Debug.LogWarning("Test " + testNumber + " FAILED");
+        }
+    }
+
+
     /// <summary>
     /// Test 1
     /// this should pass if the response was a 403 and we're able to get the validation errors
@@ -47,10 +75,10 @@ public class BackendTester : MonoBehaviour {
     void Test_1() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
-        backendManager.PerformRequest("addscore", fields, OnTest1Response);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
 
-    void OnTest1Response(ResponseType responseType, JObject responseData, string callee) {
+    void Validate_1(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
 
         Assert(responseType == ResponseType.ErrorFromServer, 1, "reponseType != ErrorFromServer");
@@ -61,8 +89,6 @@ public class BackendTester : MonoBehaviour {
         JToken[] fieldValidationErrors = nameField.Values().ToArray();
         string firstError = fieldValidationErrors[0].Value<string>();
         Assert(firstError.Equals(emptyFieldMsg), 1, "error string of namefield does not equal the emptyFieldMsg");
-        
-        Debug.Log("Test 1 passed");
     }
 
     /// <summary>
@@ -73,9 +99,9 @@ public class BackendTester : MonoBehaviour {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnTest2Response);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
-    void OnTest2Response(ResponseType responseType, JObject responseData, string callee) {
+    void Validate_2(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
 
         JToken idToken = responseData["id"];
@@ -89,10 +115,7 @@ public class BackendTester : MonoBehaviour {
         JToken nameToken = responseData["name"];
         Assert(nameToken != null, 2, "name field can't be found");
         Assert(nameToken.Value<string>() == "dada", 2, "name value does not equal 'dada'");
-        
-        Debug.Log("Test 2 passed");
     }
-
 
     /// <summary>
     /// Test 3
@@ -102,13 +125,10 @@ public class BackendTester : MonoBehaviour {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", "yoloswaggings");
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnTest3Response);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
-    void OnTest3Response(ResponseType responseType, JObject responseData, string callee) {
-        Debug.Log("[" + responseType + "] " + responseData);
+    void Validate_3(ResponseType responseType, JObject responseData) {
+//        Debug.Log("[" + responseType + "] " + responseData);
         Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
-
-        Debug.Log("Test 3 passed");
     }
-
 }
