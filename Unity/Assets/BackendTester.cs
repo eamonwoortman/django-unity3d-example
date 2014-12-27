@@ -22,7 +22,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     void StartTests() {
-        MethodInfo[] methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+        MethodInfo[] methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
         foreach (MethodInfo methodInfo in methods) {
             if (methodInfo.Name.StartsWith("Test_")) {
                 Invoke(methodInfo.Name, 0);
