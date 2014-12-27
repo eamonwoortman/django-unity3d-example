@@ -30,15 +30,15 @@ public class BackendTester : MonoBehaviour {
         }
     }
 
-    void Assert(bool statement, int testnumber, string message) {
+    void Assert(bool statement, string message) {
         if (!statement) {
-            throw new AssertionFailedException("[TEST " + testnumber + " FAILED] " + message);
+            throw new AssertionFailedException(message);
         }
     }
-    void ValidateField(int testNumber, JObject jsonObject, string key, object value) {
+    void ValidateField(JObject jsonObject, string key, object value) {
         JToken fieldToken = jsonObject[key];
-        Assert(fieldToken != null, testNumber, key + " field can't be found");
-        Assert(fieldToken.Value<object>() == value, testNumber, "field value does not equal " + value);
+        Assert(fieldToken != null, key + " field can't be found");
+        Assert(fieldToken.Value<object>() == value, "field value does not equal " + value);
     }
 
     void OnBackendResponse(ResponseType responseType, JObject responseData, string callee) {
@@ -60,10 +60,9 @@ public class BackendTester : MonoBehaviour {
 
         try {
             methodInfo.Invoke(this, new object[] { responseType, responseData });
-            Debug.Log("Test " + testNumber + " has passed!");
+            Debug.Log("[TEST " + testNumber + "] PASSED");
         } catch (Exception afe) {
-            Debug.LogWarning(afe.InnerException);
-            Debug.LogWarning("Test " + testNumber + " FAILED");
+            Debug.LogWarning("[TEST " + testNumber + "] FAILED, " + afe.InnerException);
         }
     }
 
@@ -81,14 +80,14 @@ public class BackendTester : MonoBehaviour {
     void Validate_1(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
 
-        Assert(responseType == ResponseType.ErrorFromServer, 1, "reponseType != ErrorFromServer");
+        Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
         JToken nameField = responseData["name"];
-        Assert(nameField != null, 1, "could not retrieve the namefield");
-        Assert(nameField.HasValues, 1, "namefield does not have any values");
+        Assert(nameField != null, "could not retrieve the namefield");
+        Assert(nameField.HasValues, "namefield does not have any values");
 
         JToken[] fieldValidationErrors = nameField.Values().ToArray();
         string firstError = fieldValidationErrors[0].Value<string>();
-        Assert(firstError.Equals(emptyFieldMsg), 1, "error string of namefield does not equal the emptyFieldMsg");
+        Assert(firstError.Equals(emptyFieldMsg), "error string of namefield does not equal the emptyFieldMsg");
     }
 
     /// <summary>
@@ -102,19 +101,19 @@ public class BackendTester : MonoBehaviour {
         backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
     void Validate_2(ResponseType responseType, JObject responseData) {
-        Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
+        Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
 
         JToken idToken = responseData["id"];
-        Assert(idToken != null, 2, "id field can't be found");
-        Assert(idToken.Value<int>() > -1, 2, "id value does not equal 1337");
+        Assert(idToken != null, "id field can't be found");
+        Assert(idToken.Value<int>() > -1, "id value does not equal 1337");
 
         JToken scoreToken = responseData["score"];
-        Assert(scoreToken != null, 2, "score field can't be found");
-        Assert(scoreToken.Value<int>() == 1337, 2, "score value does not equal 1337");
+        Assert(scoreToken != null, "score field can't be found");
+        Assert(scoreToken.Value<int>() == 1337, "score value does not equal 1337");
 
         JToken nameToken = responseData["name"];
-        Assert(nameToken != null, 2, "name field can't be found");
-        Assert(nameToken.Value<string>() == "dada", 2, "name value does not equal 'dada'");
+        Assert(nameToken != null, "name field can't be found");
+        Assert(nameToken.Value<string>() == "dada", "name value does not equal 'dada'");
     }
 
     /// <summary>
@@ -129,6 +128,6 @@ public class BackendTester : MonoBehaviour {
     }
     void Validate_3(ResponseType responseType, JObject responseData) {
 //        Debug.Log("[" + responseType + "] " + responseData);
-        Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
+        Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
     }
 }
