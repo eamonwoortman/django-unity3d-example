@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 class AssertionFailedException : Exception {
     public AssertionFailedException(string message) : base(message) { }
@@ -21,9 +22,12 @@ public class BackendTester : MonoBehaviour {
     }
 
     void StartTests() {
-        Test1();
-        Test2();
-        Test3();
+        MethodInfo[] methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+        foreach (MethodInfo methodInfo in methods) {
+            if (methodInfo.Name.StartsWith("Test_")) {
+                Invoke(methodInfo.Name, 0);
+            }
+        }
     }
 
     void Assert(bool statement, int testnumber, string message) {
@@ -40,7 +44,7 @@ public class BackendTester : MonoBehaviour {
     /// Test 1
     /// this should pass if the response was a 403 and we're able to get the validation errors
     /// </summary>
-    void Test1() {
+    void Test_1() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         backendManager.PerformRequest("addscore", fields, OnTest1Response);
@@ -65,7 +69,7 @@ public class BackendTester : MonoBehaviour {
     /// Test 2
     /// this should pass if the response was a 201 and an object has been created
     /// </summary>
-    void Test2() {
+    void Test_2() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         fields.Add("name", "dada");
@@ -94,7 +98,7 @@ public class BackendTester : MonoBehaviour {
     /// Test 3
     /// this should pass if the response was an error telling us the score is invalid
     /// </summary>
-    void Test3() {
+    void Test_3() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", "yoloswaggings");
         fields.Add("name", "dada");
