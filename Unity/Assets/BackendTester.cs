@@ -43,6 +43,23 @@ public class BackendTester : MonoBehaviour {
         Assert(valueEquals == shouldEqual, "'" + key + "' field value " + (shouldEqual ? "does not equal " : "should not be equal to ") + value);
     }
 
+    void ValidateSubfield(JObject jsonObject, string key, string value) {
+        JToken fieldToken = jsonObject[key];
+        Assert(fieldToken != null, key + " field can't be found");
+        Assert(fieldToken.HasValues, "score field does not have any values");
+
+        JToken[] fieldValidationErrors = fieldToken.Values().ToArray();
+        bool found = false;
+        foreach (JToken token in fieldValidationErrors) {
+            string tokenValue = token.Value<string>();
+            if (tokenValue.Equals(value)) {
+                found = true;
+                break;
+            }
+        }
+        Assert(found, "error strings of namefield does not contain the value '" + value + "'");
+    }
+
     void OnBackendResponse(ResponseType responseType, JObject responseData, string callee) {
         string[] splittedStr = callee.Split('_');
         if (splittedStr.Length != 2) {
@@ -82,15 +99,8 @@ public class BackendTester : MonoBehaviour {
 
     void Validate_1(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
-
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
-        JToken nameField = responseData["name"];
-        Assert(nameField != null, "could not retrieve the namefield");
-        Assert(nameField.HasValues, "namefield does not have any values");
-
-        JToken[] fieldValidationErrors = nameField.Values().ToArray();
-        string firstError = fieldValidationErrors[0].Value<string>();
-        Assert(firstError.Equals(emptyFieldMsg), "error string of namefield does not equal the emptyFieldMsg");
+        ValidateSubfield(responseData, "name", emptyFieldMsg);
     }
 
     /// <summary>
@@ -121,6 +131,8 @@ public class BackendTester : MonoBehaviour {
         backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
     void Validate_3(ResponseType responseType, JObject responseData) {
+        const string invalidIntegerMsg = "A valid integer is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
+        ValidateSubfield(responseData, "score", invalidIntegerMsg);
     }
 }
