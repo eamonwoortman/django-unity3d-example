@@ -26,8 +26,9 @@ public partial class BackendManager : MonoBehaviour {
     /// The response delegate
     /// </summary>
     /// <param name="responseType"></param>
-    /// <param name="jsonResponse">returns the json object of the response</param>
-    public delegate void RequestResponseDelegate(ResponseType responseType, JObject jsonResponse);
+    /// <param name="jsonResponse">the json object of the response</param>
+    /// <param name="callee">the name of the method doing the request(used for testing)</param>
+    public delegate void RequestResponseDelegate(ResponseType responseType, JObject jsonResponse, string callee);
 
 
     //---- URLS ----//
@@ -70,22 +71,23 @@ public partial class BackendManager : MonoBehaviour {
             request = new WWW(url);
         }
 
-        StartCoroutine(HandleRequest(request, onResponse));
+        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+        string callee = stackTrace.GetFrame(1).GetMethod().Name;
+        StartCoroutine(HandleRequest(request, onResponse, callee));
     }
 
     public void PerformRequest(string command, byte[] data, RequestResponseDelegate onResponse = null) {
         string url = hostUrl + command;
         WWW request;
-
         if (data != null) {
             request = new WWW(url, data);
         } else {
             request = new WWW(url);
         }
-        StartCoroutine(HandleRequest(request, onResponse));
+        StartCoroutine(HandleRequest(request, onResponse, ""));
     }
 
-    IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse) {
+    IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
         //Wait till request is done
         while (true) {
             if (request.isDone) {
@@ -97,7 +99,7 @@ public partial class BackendManager : MonoBehaviour {
         //catch proper client errors(eg. can't reach the server)
         if (!String.IsNullOrEmpty(request.error)) {
             if (onResponse != null) {
-                onResponse(ResponseType.RequestError, null);
+                onResponse(ResponseType.RequestError, null, callee);
             }
             yield break;
         }
@@ -109,14 +111,14 @@ public partial class BackendManager : MonoBehaviour {
         //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
         if (statusCode < 200 || statusCode > 206) {
             if (onResponse != null) {
-                onResponse(ResponseType.ErrorFromServer, responseObj);
+                onResponse(ResponseType.ErrorFromServer, responseObj, callee);
             }
             yield break;
         }
          
         //deal with successful responses
         if (onResponse != null) {
-            onResponse(ResponseType.Success, responseObj);
+            onResponse(ResponseType.Success, responseObj, callee);
         }
     }
 }

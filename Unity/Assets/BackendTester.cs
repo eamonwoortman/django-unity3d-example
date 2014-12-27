@@ -8,8 +8,10 @@ using Newtonsoft.Json.Linq;
 class AssertionFailedException : Exception {
     public AssertionFailedException(string message) : base(message) { }
 }
+
 public class BackendTester : MonoBehaviour {
     private BackendManager backendManager;
+
     void Start() {
         backendManager = GetComponent<BackendManager>();
         if (backendManager == null) {
@@ -41,7 +43,8 @@ public class BackendTester : MonoBehaviour {
         fields.Add("score", 1337);
         backendManager.PerformRequest("addscore", fields, OnTest1Response);
     }
-    void OnTest1Response(ResponseType responseType, JObject responseData) {
+
+    void OnTest1Response(ResponseType responseType, JObject responseData, string callee) {
         const string emptyFieldMsg = "This field may not be blank.";
 
         Assert(responseType == ResponseType.ErrorFromServer, 1, "reponseType != ErrorFromServer");
@@ -58,7 +61,7 @@ public class BackendTester : MonoBehaviour {
 
     /// <summary>
     /// Test 2
-    /// this should pass if the response was a 200
+    /// this should pass if the response was a 201 and an object has been created
     /// </summary>
     void Test2() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
@@ -66,7 +69,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("name", "dada");
         backendManager.PerformRequest("addscore", fields, OnTest2Response);
     }
-    void OnTest2Response(ResponseType responseType, JObject responseData) {
+    void OnTest2Response(ResponseType responseType, JObject responseData, string callee) {
         Assert(responseType == ResponseType.Success, 2, "responseType != success, it's: " + responseType);
 
         JToken idToken = responseData["id"];
