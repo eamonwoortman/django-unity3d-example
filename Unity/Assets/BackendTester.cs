@@ -154,5 +154,21 @@ public class BackendTester : MonoBehaviour {
         ValidateSubfield(responseData, "email", invalidEmailMsg);
     }
 
+    /// <summary>
+    /// Test 5
+    /// this should pass if the response was an error telling us the username should be unique
+    /// </summary>
+    void Test_5() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("username", "admin");
+        fields.Add("password", "superpassword");
+        fields.Add("email", "test@test.com");
+        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+    }
+    void Validate_5(ResponseType responseType, JObject responseData) {
+        const string uniqueUsernameMsg = "This field must be unique.";
+        Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
+        ValidateSubfield(responseData, "username", uniqueUsernameMsg);
+    }
 
 }
