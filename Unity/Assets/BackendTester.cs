@@ -137,4 +137,22 @@ public class BackendTester : MonoBehaviour {
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "score", invalidIntegerMsg);
     }
+
+    /// <summary>
+    /// Test 4
+    /// this should pass if the response was an error telling us we need an email
+    /// </summary>
+    void Test_4() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("username", "testuser");
+        fields.Add("password", "superpassword");
+        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+    }
+    void Validate_4(ResponseType responseType, JObject responseData) {
+        const string invalidEmailMsg = "This field may not be blank.";
+        Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
+        ValidateSubfield(responseData, "email", invalidEmailMsg);
+    }
+
+
 }
