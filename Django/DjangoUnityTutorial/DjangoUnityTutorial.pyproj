@@ -7,7 +7,7 @@
     <InterpreterId>{908054c4-96c1-43d3-81d4-1a4632313a15}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
     <PythonRunWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
-    <PythonDebugWebServerCommandArguments>runserver --noreload --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
+    <PythonDebugWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
     <WebBrowserPort>8000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
