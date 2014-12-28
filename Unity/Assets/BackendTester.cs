@@ -171,4 +171,21 @@ public class BackendTester : MonoBehaviour {
         ValidateSubfield(responseData, "username", uniqueUsernameMsg);
     }
 
+    /// <summary>
+    /// Test 6
+    /// this should pass if the response was successful and the response object contains an email field which equals to our email
+    /// </summary>
+    void Test_6() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        string randomUsername = "test" + System.Guid.NewGuid().ToString().Substring(0, 8);
+        fields.Add("username", randomUsername);
+        fields.Add("password", "superpassword");
+        fields.Add("email", "test@test.com");
+        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+    }
+    void Validate_6(ResponseType responseType, JObject responseData) {
+        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        ValidateField<string>(responseData, "email", "test@test.com");
+    }
+
 }
