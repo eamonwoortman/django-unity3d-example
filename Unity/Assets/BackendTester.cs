@@ -23,9 +23,11 @@ public class BackendTester : MonoBehaviour {
 
     void StartTests() {
         MethodInfo[] methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        float waitTime = 0.1f;
         foreach (MethodInfo methodInfo in methods) {
             if (methodInfo.Name.StartsWith("Test_")) {
-                methodInfo.Invoke(this, null);
+                Invoke(methodInfo.Name, waitTime);
+                waitTime += 0.3f;
             }
         }
     }
