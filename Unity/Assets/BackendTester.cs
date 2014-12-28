@@ -27,7 +27,7 @@ public class BackendTester : MonoBehaviour {
         foreach (MethodInfo methodInfo in methods) {
             if (methodInfo.Name.StartsWith("Test_")) {
                 Invoke(methodInfo.Name, waitTime);
-                waitTime += 0.3f;
+                waitTime += 0.5f;
             }
         }
     }
