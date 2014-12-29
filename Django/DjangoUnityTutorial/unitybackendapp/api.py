@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from rest_framework import status
 from serializers import ScoreSerializer, CreateUserSerializer
+from rest_framework.generics import DestroyAPIView
+from django.contrib.auth.models import User
 
 class UnityAPIView(APIView):
     """
@@ -36,3 +38,15 @@ class RegisterUser(UnityAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+class DeleteUser(UnityAPIView):
+    def post(self, request, format=None):
+        try:
+            user = User.objects.get(username=request.data['username'], email=request.data['email'])
+            if user.check_password(request.data['password']) is False:
+                raise Exception('Invalid password')
+            user.delete()
+        except:
+            return Response('Could not find that user', status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)
