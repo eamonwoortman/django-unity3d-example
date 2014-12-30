@@ -184,7 +184,7 @@ public class BackendTester : MonoBehaviour {
 
     /// <summary>
     /// Test 6
-    /// this should pass if the response was a 403 and we're able to get the validation errors
+    /// this should pass if the response was a 401, authentication failed
     /// </summary>
     void Test_6() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
@@ -192,22 +192,37 @@ public class BackendTester : MonoBehaviour {
         backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
     void Validate_6(ResponseType responseType, JObject responseData) {
+        const string noAuthCredentialsMsg = "Authentication credentials were not provided.";
+        Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
+        ValidateField<string>(responseData, "detail", noAuthCredentialsMsg);
+    }
+
+    /// <summary>
+    /// Test 7
+    /// this should pass if the response was a 403 and we're able to get the validation errors
+    /// </summary>
+    void Test_7() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("score", 1337);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
+    }
+    void Validate_7(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
         ValidateSubfield(responseData, "name", emptyFieldMsg);
     }
 
     /// <summary>
-    /// Test 7
+    /// Test 8
     /// this should pass if the response was a 201 and an object has been created
     /// </summary>
-    void Test_7() {
+    void Test_8() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
     }
-    void Validate_7(ResponseType responseType, JObject responseData) {
+    void Validate_8(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
         ValidateField<int>(responseData, "id", -1, false);
         ValidateField<int>(responseData, "score", 1337);
@@ -215,16 +230,16 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 8
+    /// Test 9
     /// this should pass if the response was an error telling us the score is invalid
     /// </summary>
-    void Test_8() {
+    void Test_9() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", "yoloswaggings");
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
+        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
     }
-    void Validate_8(ResponseType responseType, JObject responseData) {
+    void Validate_9(ResponseType responseType, JObject responseData) {
         const string invalidIntegerMsg = "A valid integer is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "score", invalidIntegerMsg);
