@@ -29,6 +29,7 @@ To have a minimal backend this example project should include the following feat
 * Download and install Python 2.7
 * Download and install Python Tools for Visual Studio
 * Open the solution and either choose or set up a virtual environment(right-click Environments->Add virtual environment), name it 'django-unity'
+* Synchronize the database by right-clicking the project->Python->Django Sync DB...
 * Start debugging by pressing F5 or clicking the Play button
 
 
