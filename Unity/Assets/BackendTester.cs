@@ -89,7 +89,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 4
+    /// Test 1
     /// this should pass if the response was an error telling us we need an email
     /// </summary>
     void Test_1() {
@@ -105,7 +105,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 5
+    /// Test 2
     /// this should pass if the response was an error telling us the username should be unique
     /// </summary>
     void Test_2() {
@@ -122,7 +122,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 6
+    /// Test 3
     /// this should pass if the response was successful and the response object contains an email field which equals to our email
     /// </summary>
     private string randomUsername, password, email;
@@ -150,7 +150,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 7
+    /// Test 4
     /// this should pass if the response was successful and the response object contains a token field which is not empty
     /// </summary>
      void Test_4() {
@@ -165,7 +165,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 8
+    /// Test 5
     /// this should pass if the response contains an error about having invalid credentials
     /// </summary>
     void Test_5() {
@@ -181,7 +181,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 1
+    /// Test 6
     /// this should pass if the response was a 403 and we're able to get the validation errors
     /// </summary>
     void Test_6() {
@@ -196,7 +196,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 2
+    /// Test 7
     /// this should pass if the response was a 201 and an object has been created
     /// </summary>
     void Test_7() {
@@ -213,7 +213,7 @@ public class BackendTester : MonoBehaviour {
     }
 
     /// <summary>
-    /// Test 3
+    /// Test 8
     /// this should pass if the response was an error telling us the score is invalid
     /// </summary>
     void Test_8() {
