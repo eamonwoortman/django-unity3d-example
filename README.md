@@ -32,5 +32,6 @@ To have a minimal backend this example project should include the following feat
 * Synchronize the database by right-clicking the project->Python->Django Sync DB...
 * Start debugging by pressing F5 or clicking the Play button
 
+NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
 TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework)
