@@ -23,9 +23,12 @@ class UnityAPIView(APIView):
         response.status_code = 200
         return response
 
-class AddScore(UnityAPIView):
+class ScoreAPI(UnityAPIView):
     authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, format=None):
+        return Response('YOLO', status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         """

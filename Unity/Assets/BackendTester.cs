@@ -189,7 +189,7 @@ public class BackendTester : MonoBehaviour {
     void Test_6() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse);
+        backendManager.PerformRequest("score", fields, OnBackendResponse);
     }
     void Validate_6(ResponseType responseType, JObject responseData) {
         const string noAuthCredentialsMsg = "Authentication credentials were not provided.";
@@ -204,7 +204,7 @@ public class BackendTester : MonoBehaviour {
     void Test_7() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
+        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_7(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
@@ -220,7 +220,7 @@ public class BackendTester : MonoBehaviour {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
+        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_8(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
@@ -237,7 +237,7 @@ public class BackendTester : MonoBehaviour {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", "yoloswaggings");
         fields.Add("name", "dada");
-        backendManager.PerformRequest("addscore", fields, OnBackendResponse, authToken);
+        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_9(ResponseType responseType, JObject responseData) {
         const string invalidIntegerMsg = "A valid integer is required.";
