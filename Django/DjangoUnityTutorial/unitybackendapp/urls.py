@@ -10,3 +10,8 @@ urlpatterns = patterns('unitybackendapp.views',
     url(r'^api/deleteuser', DeleteUser.as_view())
     
 )
+
+#for our json interface
+urlpatterns += patterns('',
+    url(r'^api/get-auth-token', 'rest_framework.authtoken.views.obtain_auth_token'),
+)

@@ -133,6 +133,7 @@ INSTALLED_APPS = (
 
     'unitybackendapp',
     'rest_framework',
+    'rest_framework.authtoken',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
