@@ -98,7 +98,6 @@ public class BackendTester : MonoBehaviour {
         fields.Add("score", 1337);
         backendManager.PerformRequest("addscore", fields, OnBackendResponse);
     }
-
     void Validate_1(ResponseType responseType, JObject responseData) {
         const string emptyFieldMsg = "This field may not be blank.";
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
@@ -214,4 +213,19 @@ public class BackendTester : MonoBehaviour {
         ValidateField<string>(responseData, "token", "", false);
     }
 
+    /// <summary>
+    /// Test 8
+    /// this should pass if the response contains an error about having invalid credentials
+    /// </summary>
+    void Test_8() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("username", "admin");
+        fields.Add("password", "someotherpassword");
+        backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
+    }
+    void Validate_8(ResponseType responseType, JObject responseData) {
+        const string invalidCredentialsMsg = "Unable to log in with provided credentials.";
+        Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
+        ValidateSubfield(responseData, "non_field_errors", invalidCredentialsMsg);
+    }
 }
