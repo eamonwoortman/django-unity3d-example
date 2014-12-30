@@ -12,8 +12,10 @@ from django.contrib.auth.models import User
 
 class UnityAPIView(APIView):
     """
-    This custom API replaces any other status code than 2XX with 200 
-    and adds a REAL_STATUS_CODE header containing the original status code
+    The UnityAPIView replaces the response status code with 200 
+    and adds a REAL_STATUS_CODE header containing the original status code. 
+    This is required to work with Unity3D's WWW class since 
+    it doesn't read the response body if the status code is anything other than 200
     """
     def finalize_response(self, request, *args, **kwargs):
         response = super(UnityAPIView, self).finalize_response(request, *args, **kwargs)
