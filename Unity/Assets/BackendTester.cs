@@ -175,17 +175,28 @@ public class BackendTester : MonoBehaviour {
     /// Test 6
     /// this should pass if the response was successful and the response object contains an email field which equals to our email
     /// </summary>
+    private string randomUsername, password, email;
+    private void DeleteCreatedUser() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("username", randomUsername);
+        fields.Add("password", password);
+        fields.Add("email", email);
+        backendManager.PerformRequest("deleteuser", fields, null);
+    }
     void Test_6() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
-        string randomUsername = "test" + System.Guid.NewGuid().ToString().Substring(0, 8);
+        randomUsername = "test" + System.Guid.NewGuid().ToString().Substring(0, 8);
+        password = "superpassword";
+        email = "test@test.com";
         fields.Add("username", randomUsername);
-        fields.Add("password", "superpassword");
-        fields.Add("email", "test@test.com");
+        fields.Add("password", password);
+        fields.Add("email", email);
         backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
     }
     void Validate_6(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         ValidateField<string>(responseData, "email", "test@test.com");
+        DeleteCreatedUser();
     }
 
 }
