@@ -31,7 +31,9 @@ class ScoreAPI(UnityAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
-        return Response('YOLO', status=status.HTTP_200_OK)
+        scores = Score.objects.all()
+        serializer = ScoreSerializer(scores, many=True)
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         """
