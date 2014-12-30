@@ -54,13 +54,18 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="fields">A list of fields that are send as parameters to the backend</param>
     /// <param name="onSucces">Will be callend on success</param>
     /// <param name="onError">Will be called when an error occurred during the request</param>
-    public void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null) {
+    public void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
         WWWForm wwwForm = new WWWForm();
         Hashtable ht = new Hashtable();
         //make sure we get a json response
         ht.Add("Accept", "application/json");
+        //also, add the authentication token, if we have one
+        if (authToken != "") {
+            //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+            ht.Add("Authorization", "Token " + authToken);
+        }
 
         if (fields != null) {
             foreach (KeyValuePair<string, object> pair in fields) {
