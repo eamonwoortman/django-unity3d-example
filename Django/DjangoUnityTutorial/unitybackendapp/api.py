@@ -24,8 +24,8 @@ class UnityAPIView(APIView):
         return response
 
 class AddScore(UnityAPIView):
-    #authentication_classes = (authentication.TokenAuthentication,)
-    #permission_classes = (permissions.IsAdminUser,)
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, format=None):
         """
