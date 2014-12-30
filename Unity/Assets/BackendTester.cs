@@ -207,7 +207,7 @@ public class BackendTester : MonoBehaviour {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("username", "admin");
         fields.Add("password", "admin");
-        backendManager.PerformRequest("get-auth-token", fields, OnBackendResponse);
+        backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
     void Validate_7(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
