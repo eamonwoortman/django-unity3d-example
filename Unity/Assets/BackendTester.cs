@@ -199,4 +199,19 @@ public class BackendTester : MonoBehaviour {
         DeleteCreatedUser();
     }
 
+    /// <summary>
+    /// Test 7
+    /// this should pass if the response was successful and the response object contains a token field which is not empty
+    /// </summary>
+     void Test_7() {
+        Dictionary<string, object> fields = new Dictionary<string, object>();
+        fields.Add("username", "admin");
+        fields.Add("password", "admin");
+        backendManager.PerformRequest("get-auth-token", fields, OnBackendResponse);
+    }
+    void Validate_7(ResponseType responseType, JObject responseData) {
+        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        ValidateField<string>(responseData, "token", "", false);
+    }
+
 }
