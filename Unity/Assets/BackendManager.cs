@@ -103,16 +103,21 @@ public partial class BackendManager : MonoBehaviour {
             }
             yield break;
         }
-        string status = request.responseHeaders["REAL_STATUS"];
-        int statusCode = int.Parse(status.Split(' ')[0]);
+        int statusCode = 200;
+        
+        if (request.responseHeaders.ContainsKey("REAL_STATUS")) {
+            string status = request.responseHeaders["REAL_STATUS"];
+            statusCode = int.Parse(status.Split(' ')[0]);
+        }
+        //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
+        bool responseSuccessful = (statusCode >= 200 && statusCode <= 206);
         JObject responseObj = null;
 
         try {
             responseObj = JObject.Parse(request.text);
         } catch (Exception ex) {
             if (onResponse != null) {
-                //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
-                if (statusCode < 200 || statusCode > 206) {
+                if (!responseSuccessful) {
                     Debug.Log("Could not parse the response, request.text=" + request.text);
                     Debug.Log("Exception=" + ex.ToString());
                     onResponse(ResponseType.ParseError, null, callee);
@@ -126,8 +131,8 @@ public partial class BackendManager : MonoBehaviour {
             }
             yield break;
         }
-        //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
-        if (statusCode < 200 || statusCode > 206) {
+
+        if (!responseSuccessful) {
             if (onResponse != null) {
                 onResponse(ResponseType.ErrorFromServer, responseObj, callee);
             }
