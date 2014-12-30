@@ -120,7 +120,7 @@ public partial class BackendManager : MonoBehaviour {
                     if (request.text == "") {
                         onResponse(ResponseType.Success, null, callee);
                     } else {
-                        onResponse(ResponseType.ErrorFromServer, responseObj, callee);
+                        onResponse(ResponseType.ParseError, null, callee);
                     }
                 }
             }
