@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from rest_framework import authentication, permissions
 from rest_framework import status
 from rest_framework import parsers
@@ -7,8 +9,9 @@ from rest_framework.response import Response
 from rest_framework.generics import DestroyAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from serializers import ScoreSerializer, CreateUserSerializer
-from django.contrib.auth.models import User
+
+from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer
+from unitybackendapp.models import Score
 
 class UnityAPIView(APIView):
     """

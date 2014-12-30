@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url, include
-from api import ScoreAPI, RegisterUser, DeleteUser, GetAuthToken
+from unitybackendapp.api import ScoreAPI, RegisterUser, DeleteUser, GetAuthToken
 
 urlpatterns = patterns('unitybackendapp.views',
 	url(r'^$', 'home_view'),

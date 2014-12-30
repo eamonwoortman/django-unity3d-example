@@ -1,6 +1,6 @@
-from models import Score
-from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework import serializers
+from unitybackendapp.models import Score
 
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
