@@ -153,6 +153,7 @@ public class BackendTester : MonoBehaviour {
     /// Test 4
     /// this should pass if the response was successful and the response object contains a token field which is not empty
     /// </summary>
+    private string authToken;
      void Test_4() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("username", "admin");
@@ -162,6 +163,7 @@ public class BackendTester : MonoBehaviour {
     void Validate_4(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         ValidateField<string>(responseData, "token", "", false);
+        authToken = responseData.Value<string>("token");
     }
 
     /// <summary>
