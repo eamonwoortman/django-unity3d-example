@@ -203,13 +203,13 @@ public class BackendTester : MonoBehaviour {
     /// </summary>
     void Test_7() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("score", 1337);
+        fields.Add("TEST", "TEST");
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_7(ResponseType responseType, JObject responseData) {
-        const string emptyFieldMsg = "This field may not be blank.";
+        const string emptyFieldMsg = "This field is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
-        ValidateSubfield(responseData, "name", emptyFieldMsg);
+        ValidateSubfield(responseData, "score", emptyFieldMsg);
     }
 
     /// <summary>
@@ -219,14 +219,12 @@ public class BackendTester : MonoBehaviour {
     void Test_8() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", 1337);
-        fields.Add("name", "dada");
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_8(ResponseType responseType, JObject responseData) {
         Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
         ValidateField<int>(responseData, "id", -1, false);
         ValidateField<int>(responseData, "score", 1337);
-        ValidateField<string>(responseData, "name", "dada");
     }
 
     /// <summary>
@@ -236,7 +234,6 @@ public class BackendTester : MonoBehaviour {
     void Test_9() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("score", "yoloswaggings");
-        fields.Add("name", "dada");
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
     void Validate_9(ResponseType responseType, JObject responseData) {

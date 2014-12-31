@@ -1,19 +1,19 @@
 from django.contrib.auth.models import User
-
+from django.utils.datastructures import MultiValueDict
 from rest_framework import authentication, permissions
 from rest_framework import status
 from rest_framework import parsers
 from rest_framework import renderers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import DestroyAPIView
+from rest_framework.generics import DestroyAPIView, GenericAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-
+from rest_framework import mixins
 from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer
 from unitybackendapp.models import Score
 
-class UnityAPIView(APIView):
+class UnityAPIView(GenericAPIView):
     """
     The UnityAPIView replaces the response status code with 200 
     and adds a REAL_STATUS_CODE header containing the original status code. 
@@ -26,20 +26,25 @@ class UnityAPIView(APIView):
         response.status_code = 200
         return response
 
-class ScoreAPI(UnityAPIView):
+class ScoreAPI(mixins.ListModelMixin,
+               UnityAPIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
 
-    def get(self, request, format=None):
-        scores = Score.objects.all()
-        serializer = ScoreSerializer(scores, many=True)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
     def post(self, request, format=None):
         """
         Post a new score
         """
-        serializer = ScoreSerializer(data=request.data)
+        data = MultiValueDict(request.DATA)
+        #force the authenticated user as the owner
+        data['user'] = request.user.pk
+        serializer = ScoreSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
