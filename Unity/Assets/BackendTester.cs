@@ -247,14 +247,14 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response contains an array of scores
     /// </summary>
     void Test_10() {
-        //Dictionary<string, object> fields = new Dictionary<string, object>();
-        //fields.Add("score", "yoloswaggings");
         backendManager.PerformRequest("score", null, OnBackendResponse, authToken);
     }
     void Validate_10(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         JArray jArray = (JArray)responseData;
         Assert(jArray != null, "responseData was not a valid JArray");
-        Debug.Log("JArray length=" + jArray.Count);
+        Assert(jArray.Count > 0, "jsonArray does not have any elements");
+        JToken token = jArray.GetItem(0);
+        ValidateField<int>(token, "score", -1, false);
     }
 }
