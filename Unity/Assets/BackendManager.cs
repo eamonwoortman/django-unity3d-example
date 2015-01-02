@@ -52,8 +52,8 @@ public partial class BackendManager : MonoBehaviour {
     /// <summary>Performs a request to the backend.</summary>
     /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
     /// <param name="fields">A list of fields that are send as parameters to the backend</param>
-    /// <param name="onSucces">Will be callend on success</param>
-    /// <param name="onError">Will be called when an error occurred during the request</param>
+    /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
+    /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
     public void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
@@ -81,16 +81,30 @@ public partial class BackendManager : MonoBehaviour {
         StartCoroutine(HandleRequest(request, onResponse, callee));
     }
 
-    public void PerformRequest(string command, byte[] data, RequestResponseDelegate onResponse = null) {
+    /// <summary>Performs a request to the backend.</summary>
+    /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
+    /// <param name="wwwForm">A WWWForm to send with the request</param>
+    /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
+    /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
+    public void PerformRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
-        if (data != null) {
-            request = new WWW(url, data);
-        } else {
-            request = new WWW(url);
+        Hashtable ht = wwwForm.headers;
+        //make sure we get a json response
+        ht.Add("Accept", "application/json");
+        //also, add the authentication token, if we have one
+        if (authToken != "") {
+            //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+            ht.Add("Authorization", "Token " + authToken);
         }
-        StartCoroutine(HandleRequest(request, onResponse, ""));
+            
+        request = new WWW(url, wwwForm.data, ht);
+
+        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+        string callee = stackTrace.GetFrame(1).GetMethod().Name;
+        StartCoroutine(HandleRequest(request, onResponse, callee));
     }
+
 
     IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
         //Wait till request is done
