@@ -28,7 +28,7 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="responseType"></param>
     /// <param name="jsonResponse">the json object of the response, this can be null when no content is returned(eg. HTTP 204)</param>
     /// <param name="callee">the name of the method doing the request(used for testing)</param>
-    public delegate void RequestResponseDelegate(ResponseType responseType, JObject jsonResponse, string callee);
+    public delegate void RequestResponseDelegate(ResponseType responseType, JToken jsonResponse, string callee);
 
 
     //---- URLS ----//
@@ -116,10 +116,14 @@ public partial class BackendManager : MonoBehaviour {
         }
         //if any other error occurred(probably 4xx range), see http://www.django-rest-framework.org/api-guide/status-codes/
         bool responseSuccessful = (statusCode >= 200 && statusCode <= 206);
-        JObject responseObj = null;
+        JToken responseObj = null;
 
         try {
-            responseObj = JObject.Parse(request.text);
+            if (request.text.StartsWith("[")) { 
+                responseObj = JArray.Parse(request.text); 
+            } else { 
+                responseObj = JObject.Parse(request.text); 
+            }
         } catch (Exception ex) {
             if (onResponse != null) {
                 if (!responseSuccessful) {
@@ -130,6 +134,8 @@ public partial class BackendManager : MonoBehaviour {
                     if (request.text == "") {
                         onResponse(ResponseType.Success, null, callee);
                     } else {
+                        Debug.Log("Could not parse the response, request.text=" + request.text);
+                        Debug.Log("Exception=" + ex.ToString());
                         onResponse(ResponseType.ParseError, null, callee);
                     }
                 }

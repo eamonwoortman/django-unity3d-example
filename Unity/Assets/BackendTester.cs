@@ -38,14 +38,14 @@ public class BackendTester : MonoBehaviour {
         }
     }
 
-    void ValidateField<T>(JObject jsonObject, string key, T value, bool shouldEqual = true) {
+    void ValidateField<T>(JToken jsonObject, string key, T value, bool shouldEqual = true) {
         JToken fieldToken = jsonObject[key];
         Assert(fieldToken != null, key + " field can't be found");
         bool valueEquals = fieldToken.Value<T>().Equals(value);
         Assert(valueEquals == shouldEqual, "'" + key + "' field value " + (shouldEqual ? "does not equal " : "should not be equal to ") + value);
     }
 
-    void ValidateSubfield(JObject jsonObject, string key, string value) {
+    void ValidateSubfield(JToken jsonObject, string key, string value) {
         JToken fieldToken = jsonObject[key];
         Assert(fieldToken != null, key + " field can't be found");
         Assert(fieldToken.HasValues, "score field does not have any values");
@@ -62,7 +62,7 @@ public class BackendTester : MonoBehaviour {
         Assert(found, "error strings of namefield does not contain the value '" + value + "'");
     }
 
-    void OnBackendResponse(ResponseType responseType, JObject responseData, string callee) {
+    void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
         string[] splittedStr = callee.Split('_');
         if (splittedStr.Length != 2) {
             Debug.LogWarning("Could not split callee string into multiple strings");
@@ -98,7 +98,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("password", "superpassword");
         backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
     }
-    void Validate_1(ResponseType responseType, JObject responseData) {
+    void Validate_1(ResponseType responseType, JToken responseData) {
         const string invalidEmailMsg = "This field may not be blank.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "email", invalidEmailMsg);
@@ -115,7 +115,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("email", "test@test.com");
         backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
     }
-    void Validate_2(ResponseType responseType, JObject responseData) {
+    void Validate_2(ResponseType responseType, JToken responseData) {
         const string uniqueUsernameMsg = "This field must be unique.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "username", uniqueUsernameMsg);
@@ -143,7 +143,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("email", email);
         backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
     }
-    void Validate_3(ResponseType responseType, JObject responseData) {
+    void Validate_3(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         ValidateField<string>(responseData, "email", "test@test.com");
         DeleteCreatedUser();
@@ -160,7 +160,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("password", "admin");
         backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
-    void Validate_4(ResponseType responseType, JObject responseData) {
+    void Validate_4(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         ValidateField<string>(responseData, "token", "", false);
         authToken = responseData.Value<string>("token");
@@ -176,7 +176,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("password", "someotherpassword");
         backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
-    void Validate_5(ResponseType responseType, JObject responseData) {
+    void Validate_5(ResponseType responseType, JToken responseData) {
         const string invalidCredentialsMsg = "Unable to log in with provided credentials.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "non_field_errors", invalidCredentialsMsg);
@@ -191,7 +191,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("score", 1337);
         backendManager.PerformRequest("score", fields, OnBackendResponse);
     }
-    void Validate_6(ResponseType responseType, JObject responseData) {
+    void Validate_6(ResponseType responseType, JToken responseData) {
         const string noAuthCredentialsMsg = "Authentication credentials were not provided.";
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
         ValidateField<string>(responseData, "detail", noAuthCredentialsMsg);
@@ -206,7 +206,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("TEST", "TEST");
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
-    void Validate_7(ResponseType responseType, JObject responseData) {
+    void Validate_7(ResponseType responseType, JToken responseData) {
         const string emptyFieldMsg = "This field is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "reponseType != ErrorFromServer");
         ValidateSubfield(responseData, "score", emptyFieldMsg);
@@ -221,7 +221,7 @@ public class BackendTester : MonoBehaviour {
         fields.Add("score", 1337);
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
-    void Validate_8(ResponseType responseType, JObject responseData) {
+    void Validate_8(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
         ValidateField<int>(responseData, "id", -1, false);
         ValidateField<int>(responseData, "score", 1337);
@@ -236,10 +236,25 @@ public class BackendTester : MonoBehaviour {
         fields.Add("score", "yoloswaggings");
         backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
     }
-    void Validate_9(ResponseType responseType, JObject responseData) {
+    void Validate_9(ResponseType responseType, JToken responseData) {
         const string invalidIntegerMsg = "A valid integer is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "score", invalidIntegerMsg);
     }
 
+    /// <summary>
+    /// Test 10
+    /// this should pass if the response contains an array of scores
+    /// </summary>
+    void Test_10() {
+        //Dictionary<string, object> fields = new Dictionary<string, object>();
+        //fields.Add("score", "yoloswaggings");
+        backendManager.PerformRequest("score", null, OnBackendResponse, authToken);
+    }
+    void Validate_10(ResponseType responseType, JToken responseData) {
+        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        JArray jArray = (JArray)responseData;
+        Assert(jArray != null, "responseData was not a valid JArray");
+        Debug.Log("JArray length=" + jArray.Count);
+    }
 }
