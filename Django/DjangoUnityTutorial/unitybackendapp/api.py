@@ -37,6 +37,12 @@ class ScoreAPI(mixins.ListModelMixin,
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    def get_object(self, pk, score):
+        try:
+            return Score.objects.get(user=pk, score=score)
+        except Score.DoesNotExist:
+            return None
+
     def post(self, request, format=None):
         """
         Post a new score
@@ -44,7 +50,13 @@ class ScoreAPI(mixins.ListModelMixin,
         data = MultiValueDict(request.DATA)
         #force the authenticated user as the owner
         data['user'] = request.user.pk
-        serializer = ScoreSerializer(data=data)
+        #first try to see if there already exists an object with that user and score
+        score = self.get_object(data['user'], data['score'])
+        if score != None:
+            serializer = ScoreSerializer(score, data=data)
+        else:
+            serializer = ScoreSerializer(data=data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
