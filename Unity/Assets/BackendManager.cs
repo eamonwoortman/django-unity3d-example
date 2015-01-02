@@ -86,7 +86,7 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="wwwForm">A WWWForm to send with the request</param>
     /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
     /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
-    public void PerformRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
+    public void PerformFormRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
         Hashtable ht = wwwForm.headers;
