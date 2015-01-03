@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from unitybackendapp.models import Score
+from unitybackendapp.models import Score, Savegame
 
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class SavegameDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('name', 'saveblob')
+        model = Savegame
+
+
+class SavegameListSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'name', 'updated')
+        model = Savegame

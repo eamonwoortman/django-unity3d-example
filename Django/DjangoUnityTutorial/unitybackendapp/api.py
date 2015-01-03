@@ -10,8 +10,8 @@ from rest_framework.generics import DestroyAPIView, GenericAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework import mixins
-from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer
-from unitybackendapp.models import Score
+from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameDetailSerializer, SavegameListSerializer
+from unitybackendapp.models import Score, Savegame
 
 class UnityAPIView(GenericAPIView):
     """
@@ -96,3 +96,19 @@ class GetAuthToken(UnityAPIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
+class SavegameDetail(UnityAPIView, mixins.RetrieveModelMixin):
+    serializer_class = SavegameDetailSerializer
+    queryset = Savegame.objects.all()
+ 
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class SavegameList(UnityAPIView, mixins.ListModelMixin):
+    serializer_class = SavegameListSerializer
+     
+    def get_queryset(self):
+        qs = Savegame.objects.all().filter(user=self.request.user)
+        return qs
+ 
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
