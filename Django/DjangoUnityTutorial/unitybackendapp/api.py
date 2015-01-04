@@ -99,7 +99,7 @@ class GetAuthToken(UnityAPIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
-class SavegameList(UnityAPIView, ListAPIView):
+class SavegameAPI(UnityAPIView, ListAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer
