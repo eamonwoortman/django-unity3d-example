@@ -257,4 +257,27 @@ public class BackendTester : MonoBehaviour {
         JToken token = jArray.GetItem(0);
         ValidateField<int>(token, "score", -1, false);
     }
+
+    /// <summary>
+    /// Test 11
+    /// this should pass if we can post a new savegame and the reponse was succesful
+    /// </summary>
+    private const string LONG_SAVE_STR = "Lorem ipsum dolor sit amet, id dicant quidam delicatissimi eos, nostrud epicuri fabellas nec cu. Ei mucius aliquam corrumpit mea, perfecto molestiae democritum an vim. Saperet electram contentiones per at, ne homero luptatum eam, vel cu singulis molestiae instructior. Eam novum detracto senserit cu, ad brute nihil salutandi nam.Lorem ipsum dolor sit amet, id dicant quidam delicatissimi eos, nostrud epicuri fabellas nec cu. Ei mucius aliquam corrumpit mea, perfecto molestiae democritum an vim. Saperet electram contentiones per at, ne homero luptatum eam, vel cu singulis molestiae instructior. Eam novum detracto senserit cu, ad brute nihil salutandi nam.Lorem ipsum dolor sit amet, id dicant quidam delicatissimi eos, nostrud epicuri fabellas nec cu. Ei mucius aliquam corrumpit mea, perfecto molestiae democritum an vim. Saperet electram contentiones per at, ne homero luptatum eam, vel cu singulis molestiae instructior. Eam novum detracto senserit cu, ad brute nihil salutandi nam.";
+    private string ToBase64(string inputText) {
+        byte[] bytesToEncode = System.Text.Encoding.UTF8.GetBytes(inputText);
+        return Convert.ToBase64String(bytesToEncode);
+    }
+    void Test_11() {
+        //Dictionary<string, object> fields = new Dictionary<string, object>();
+        //fields.Add("name", "best save1");
+        //fields.Add("saveblob", ToBase64(LONG_SAVE_STR));
+        WWWForm form = new WWWForm();
+        form.AddField("name", "best save1");
+        form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(LONG_SAVE_STR));
+        backendManager.PerformFormRequest("savegame", form, OnBackendResponse, authToken);
+    }
+    void Validate_11(ResponseType responseType, JToken responseData) {
+        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        //Debug.Log("ReponseData=" + responseData);
+    }
 }
