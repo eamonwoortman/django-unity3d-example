@@ -9,6 +9,5 @@ urlpatterns = patterns('unitybackendapp.views',
     url(r'^api/registeruser', RegisterUser.as_view()),
     url(r'^api/deleteuser', DeleteUser.as_view()),
     url(r'^api/getauthtoken', GetAuthToken.as_view()),
-    url(r'^api/savegame/(?P<pk>[0-9]+)/', SavegameDetail.as_view()),
     url(r'^api/savegame', SavegameList.as_view())
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
