@@ -6,7 +6,7 @@ from rest_framework import parsers
 from rest_framework import renderers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import DestroyAPIView, GenericAPIView
+from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework import mixins
@@ -33,6 +33,9 @@ class ScoreAPI(mixins.ListModelMixin,
     
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
+    
+    def pre_save(self, obj):
+        obj.author = self.request.user
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -59,7 +62,7 @@ class ScoreAPI(mixins.ListModelMixin,
             serializer = ScoreSerializer(data=data)
 
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -96,19 +99,18 @@ class GetAuthToken(UnityAPIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
-class SavegameDetail(UnityAPIView, mixins.RetrieveModelMixin):
-    serializer_class = SavegameDetailSerializer
-    queryset = Savegame.objects.all()
- 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-class SavegameList(UnityAPIView, mixins.ListModelMixin):
+class SavegameList(UnityAPIView, ListAPIView):
+    authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer
-     
+
     def get_queryset(self):
-        qs = Savegame.objects.all().filter(user=self.request.user)
+        qs = Savegame.objects.all().filter(owner=self.request.user)
         return qs
- 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = SavegameDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

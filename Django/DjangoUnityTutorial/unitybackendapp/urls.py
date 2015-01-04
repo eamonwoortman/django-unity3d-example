@@ -1,5 +1,8 @@
 from django.conf.urls import patterns, url, include
-from unitybackendapp.api import ScoreAPI, RegisterUser, DeleteUser, GetAuthToken, SavegameDetail, SavegameList
+from django.conf import settings
+from django.conf.urls.static import static
+
+from unitybackendapp.api import ScoreAPI, RegisterUser, DeleteUser, GetAuthToken, SavegameList
 
 urlpatterns = patterns('unitybackendapp.views',
 	url(r'^$', 'home_view'),

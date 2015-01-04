@@ -2,10 +2,19 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from unitybackendapp.models import Score, Savegame
 
-class ScoreSerializer(serializers.ModelSerializer):
+"""
+A serializer which autosets the owner field
+snippet from 'bartvandendriessche', see https://github.com/tomchristie/django-rest-framework/issues/729#issuecomment-35377747
+"""
+class OwnedModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        read_only_fields = ['owner']
+        exclude = ('owner',)
+
+class ScoreSerializer(OwnedModelSerializer):
     class Meta:
         model = Score
-
+        exclude = ('owner',)
 
 class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
@@ -21,16 +30,16 @@ class CreateUserSerializer(serializers.ModelSerializer):
             username=validated_data['username']
         )
         user.set_password(validated_data['password'])
-        user.save()
+        user.save() 
         return user
 
-class SavegameDetailSerializer(serializers.ModelSerializer):
+class SavegameDetailSerializer(OwnedModelSerializer):
     class Meta:
-        fields = ('name', 'saveblob')
         model = Savegame
-
+        fields = ('name', 'file')        
 
 class SavegameListSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'name', 'updated')
+        fields = ('id', 'name', 'updated', 'file')
         model = Savegame
+
