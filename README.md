@@ -1,5 +1,5 @@
-![Unity_3D_logo.png](https://bitbucket.org/repo/pXng5B/images/327723555-Unity_3D_logo.png)
-![python-django.png](https://bitbucket.org/repo/pXng5B/images/1357840543-python-django.png)
+![Unity_3D_logo.png](https://cloud.githubusercontent.com/assets/9072397/5611600/db8770ac-94c8-11e4-976a-9e42ccf23345.png)
+![python-django.png](https://cloud.githubusercontent.com/assets/9072397/5611563/762c7108-94c8-11e4-9d9c-8ae4a703a03e.png)
 # Django-Unity-tutorial #
 
 Django-Unity-Tutorial is an example project of how to use Django as a backend for a Unity3D game. 
