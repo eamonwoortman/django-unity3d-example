@@ -17,6 +17,9 @@ public class BlockSpawner : MonoBehaviour {
         return position;
     }
 	void Update () {
+        if (GameMenu.WindowRect.Contains(Input.mousePosition)) {
+            return;
+        }
         if (Input.GetMouseButtonUp(0)) {
             Vector3 worldPos = GetPosition();
             Instantiate(BlockPrefab, worldPos, transform.rotation);
