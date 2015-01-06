@@ -3,7 +3,10 @@ using System.Collections;
 
 public class BlockSpawner : MonoBehaviour {
     public GameObject BlockPrefab;
+    private GameMenu gameMenu;
+
     void Awake() {
+        gameMenu = FindObjectOfType<GameMenu>();
         if (BlockPrefab == null) {
             Debug.LogWarning("BlockPrefab == null");
             enabled = false;
@@ -16,8 +19,20 @@ public class BlockSpawner : MonoBehaviour {
         position.x = (bc.bounds.min.x) + (width * (Input.mousePosition.x / Screen.width));
         return position;
     }
+    private bool CanClick() {
+        Vector3 mp = Input.mousePosition;
+        mp.y = Mathf.Abs(mp.y - Screen.height);
+
+        if (gameMenu == null) {
+            return true;
+        }
+        if (gameMenu.InRect(mp)) {
+            return false;
+        }
+        return true;
+    }
 	void Update () {
-        if (GameMenu.WindowRect.Contains(Input.mousePosition)) {
+        if (!CanClick()) {
             return;
         }
         if (Input.GetMouseButtonUp(0)) {
