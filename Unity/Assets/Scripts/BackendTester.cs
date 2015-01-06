@@ -11,6 +11,9 @@ class AssertionFailedException : Exception {
 }
 
 public class BackendTester : MonoBehaviour {
+    public string AdminUsername = "admin";
+    public string AdminPassword = "admin";
+
     private BackendManager backendManager;
 
     void Start() {
@@ -110,7 +113,7 @@ public class BackendTester : MonoBehaviour {
     /// </summary>
     void Test_2() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", "admin");
+        fields.Add("username", AdminUsername);
         fields.Add("password", "superpassword");
         fields.Add("email", "test@test.com");
         backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
@@ -156,8 +159,8 @@ public class BackendTester : MonoBehaviour {
     private string authToken;
      void Test_4() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", "admin");
-        fields.Add("password", "admin");
+        fields.Add("username", AdminUsername);
+        fields.Add("password", AdminPassword);
         backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
     void Validate_4(ResponseType responseType, JToken responseData) {
@@ -172,7 +175,7 @@ public class BackendTester : MonoBehaviour {
     /// </summary>
     void Test_5() {
         Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", "admin");
+        fields.Add("username", AdminUsername);
         fields.Add("password", "someotherpassword");
         backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
