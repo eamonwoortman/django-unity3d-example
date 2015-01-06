@@ -33,17 +33,17 @@ public partial class BackendManager : MonoBehaviour {
 
     //---- URLS ----//
     [SerializeField]
-    bool useProduction = false;
+    public bool UseProduction = false;
     [SerializeField]
-    string productionUrl = "http://localhost:8000/api/";
+    public string ProductionUrl = "http://foobar:8000/api/";
     [SerializeField]
-    string developmentUrl = "http://localhost:8000/api/";
+    public string DevelopmentUrl = "http://localhost:8000/api/";
 
 
     //---- Private Properties ----//
     string hostUrl {
         get {
-            return useProduction ? productionUrl : developmentUrl;
+            return UseProduction ? ProductionUrl : DevelopmentUrl;
         }
     }
 

@@ -13,6 +13,7 @@ class AssertionFailedException : Exception {
 public class BackendTester : MonoBehaviour {
     public string AdminUsername = "admin";
     public string AdminPassword = "admin";
+    public string AlternateBackendUrl = "";
 
     private BackendManager backendManager;
 
@@ -20,6 +21,9 @@ public class BackendTester : MonoBehaviour {
         backendManager = GetComponent<BackendManager>();
         if (backendManager == null) {
             backendManager = gameObject.AddComponent<BackendManager>();
+        }
+        if (AlternateBackendUrl != "") {
+            backendManager.DevelopmentUrl = backendManager.ProductionUrl = AlternateBackendUrl;
         }
         StartTests();
     }
