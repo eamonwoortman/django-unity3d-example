@@ -49,12 +49,6 @@ public partial class BackendManager : MonoBehaviour {
 
 
     //---- Private Methods ----//
-    public static Dictionary<K, V> HashtableToDictionary<K, V>(Hashtable table)
-    {
-        return table
-          .Cast<DictionaryEntry>()
-          .ToDictionary(kvp => (K)kvp.Key, kvp => (V)kvp.Value);
-    }
     /// <summary>Performs a request to the backend.</summary>
     /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
     /// <param name="fields">A list of fields that are send as parameters to the backend</param>
@@ -64,7 +58,7 @@ public partial class BackendManager : MonoBehaviour {
         string url = hostUrl + command;
         WWW request;
         WWWForm wwwForm = new WWWForm();
-        Dictionary<string, string> headers = new Dictionary<string,string>();
+        Hashtable headers = new Hashtable();
 
         //make sure we get a json response
         headers.Add("Accept", "application/json");
@@ -96,7 +90,7 @@ public partial class BackendManager : MonoBehaviour {
     public void PerformFormRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
-        Dictionary<string, string> headers = HashtableToDictionary<string, string>(wwwForm.headers);
+        Hashtable headers = wwwForm.headers;
         //make sure we get a json response
         headers.Add("Accept", "application/json");
         //also, add the authentication token, if we have one
