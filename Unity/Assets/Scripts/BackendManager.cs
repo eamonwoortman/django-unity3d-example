@@ -49,6 +49,12 @@ public partial class BackendManager : MonoBehaviour {
 
 
     //---- Private Methods ----//
+    public static Dictionary<K, V> HashtableToDictionary<K, V>(Hashtable table)
+    {
+        return table
+          .Cast<DictionaryEntry>()
+          .ToDictionary(kvp => (K)kvp.Key, kvp => (V)kvp.Value);
+    }
     /// <summary>Performs a request to the backend.</summary>
     /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
     /// <param name="fields">A list of fields that are send as parameters to the backend</param>
@@ -58,20 +64,21 @@ public partial class BackendManager : MonoBehaviour {
         string url = hostUrl + command;
         WWW request;
         WWWForm wwwForm = new WWWForm();
-        Hashtable ht = new Hashtable();
+        Dictionary<string, string> headers = new Dictionary<string,string>();
+
         //make sure we get a json response
-        ht.Add("Accept", "application/json");
+        headers.Add("Accept", "application/json");
         //also, add the authentication token, if we have one
         if (authToken != "") {
             //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
-            ht.Add("Authorization", "Token " + authToken);
+            headers.Add("Authorization", "Token " + authToken);
         }
 
         if (fields != null) {
             foreach (KeyValuePair<string, object> pair in fields) {
                 wwwForm.AddField(pair.Key, pair.Value.ToString());
             }
-            request = new WWW(url, wwwForm.data, ht);
+            request = new WWW(url, wwwForm.data, headers);
         } else {
             request = new WWW(url);
         }
@@ -89,16 +96,16 @@ public partial class BackendManager : MonoBehaviour {
     public void PerformFormRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
-        Hashtable ht = wwwForm.headers;
+        Dictionary<string, string> headers = HashtableToDictionary<string, string>(wwwForm.headers);
         //make sure we get a json response
-        ht.Add("Accept", "application/json");
+        headers.Add("Accept", "application/json");
         //also, add the authentication token, if we have one
         if (authToken != "") {
             //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
-            ht.Add("Authorization", "Token " + authToken);
+            headers.Add("Authorization", "Token " + authToken);
         }
             
-        request = new WWW(url, wwwForm.data, ht);
+        request = new WWW(url, wwwForm.data, headers);
 
         System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
         string callee = stackTrace.GetFrame(1).GetMethod().Name;
