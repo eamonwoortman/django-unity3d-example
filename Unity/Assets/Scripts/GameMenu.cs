@@ -3,8 +3,8 @@ using System.Collections;
 
 public class GameMenu : MonoBehaviour {
     public GUISkin Skin;
-    private Rect windowRect = new Rect(10, 10, 400, 400);
-
+    private Rect windowRect = new Rect(10, 10, 200, 200);
+    
     public bool InRect(Vector3 mousePosition) {
         return windowRect.Contains(mousePosition);
     }
