@@ -30,7 +30,7 @@ public class SavegameMenu : BaseMenu {
         GUI.enabled = (saveName != "");
         if (GUILayout.Button("Save")) {
             if (OnSaveButtonPressed != null) {
-                OnSaveButtonPressed(savegameNames[selectedNameIndex]);
+                OnSaveButtonPressed(saveName);
             }
         }
 

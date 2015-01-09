@@ -23,7 +23,10 @@ public class BallGame : MonoBehaviour {
     private LayerMask groundLayer;
 
     [SerializeField]
-    private SavegameMenu menu;
+    private SavegameMenu saveMenu;
+
+    [SerializeField]
+    private EnterNameMenu nameMenu;
 
     [SerializeField]
     private BackendManager backendManager;
@@ -48,12 +51,17 @@ public class BallGame : MonoBehaviour {
             Destroy(ball.gameObject);
         }
 
+        balls.Clear();
+
         Score = 0;
         Turn = 0;
+
+        saveMenu.enabled = true;
+        nameMenu.enabled = false;
     }
 
     private void Start() {
-        menu.OnSaveButtonPressed += delegate {
+        saveMenu.OnSaveButtonPressed += delegate {
             Save();
         };
 
@@ -71,9 +79,12 @@ public class BallGame : MonoBehaviour {
         turnText.text = Turn + "/" + MAX_TURNS + " turns";
         scoreText.text = "Score: " + (int)Score;
 
-        if (Input.GetMouseButtonUp(0) && !menu.IsMouseOver() && Turn < MAX_TURNS) {
+        if (Input.GetMouseButtonDown(0) && !saveMenu.IsMouseOver() && Turn < MAX_TURNS) {
             FireCurrentBall();
             Turn++;
+
+            if (Turn == MAX_TURNS)
+                OnGameFinished();
         }
 
         RaycastHit hit;
@@ -136,6 +147,19 @@ public class BallGame : MonoBehaviour {
 
     private void OnRequestDone(ResponseType responseType, JToken jsonResponse, string callee)
     {
-        Debug.Log(jsonResponse);
+        ResetGame();
+    }
+
+    private void OnGameFinished() {
+        saveMenu.enabled = false;
+        nameMenu.enabled = true;
+
+        nameMenu.OnCancel += delegate {
+            ResetGame();
+        };
+
+        nameMenu.OnNameEntered += delegate(string name) {
+            ResetGame();
+        };
     }
 }
