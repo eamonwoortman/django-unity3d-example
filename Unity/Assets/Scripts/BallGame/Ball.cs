@@ -4,16 +4,19 @@ using System;
 
 public class Ball : MonoBehaviour {
 
+    public BallData BallData { get; private set; }
     public Action OnHit;
 
-	// Use this for initialization
+    void Awake(){
+        BallData = new BallData();
+    }
+
 	void Start () {
         gameObject.name = "Ball";
 	}
 	
-	// Update is called once per frame
 	void Update () {
-	
+        BallData.Position = transform.position;
 	}
 
     void OnCollisionEnter(Collision collision)
