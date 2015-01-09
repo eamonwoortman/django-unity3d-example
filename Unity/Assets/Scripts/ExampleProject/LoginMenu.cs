@@ -14,16 +14,15 @@ public class LoginMenu : BaseMenu {
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Please enter your username and password");
-        bool filledIn = (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password));
+        bool filledIn = (username != "" && password != "");
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("username", GUILayout.Width(80));
-        username = GUILayout.TextField(username);
+        username = GUILayout.TextField(username, 30);
         GUILayout.EndHorizontal();
         
         GUILayout.BeginHorizontal();
         GUILayout.Label("password", GUILayout.Width(80));
-        password = GUILayout.TextField(password);
+        password = GUILayout.TextField(password, 30);
         GUILayout.EndHorizontal();
 
         GUILayout.Label(Status);
