@@ -18,13 +18,16 @@ public class BallGame : MonoBehaviour {
     [SerializeField]
     private LayerMask groundLayer;
 
+    [SerializeField]
+    private SavegameMenu menu;
+
     public void ResetGame()
     {
     }
 	
 	void Update () {
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && !menu.IsMouseOver())
         {
             FireCurrentBall();
         }
