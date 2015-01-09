@@ -52,6 +52,7 @@ public class BallGame : MonoBehaviour {
         currentBall.rigidbody.isKinematic = false;
         currentBall.rigidbody.AddForce(target * 80);
         currentBall.collider.enabled = true;
+        currentBall.BallData.IsThrown = true;
 
         currentBall = InitializeBall();
 
