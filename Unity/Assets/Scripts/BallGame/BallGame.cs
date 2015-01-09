@@ -3,8 +3,12 @@ using System.Collections;
 using System.Runtime.Serialization;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 public class BallGame : MonoBehaviour {
+
+    public const int MAX_TURNS = 5;
 
     [SerializeField]
     private Ball currentBall;
@@ -21,24 +25,62 @@ public class BallGame : MonoBehaviour {
     [SerializeField]
     private SavegameMenu menu;
 
+    [SerializeField]
+    private BackendManager backendManager;
+
+    [SerializeField]
+    private GUIText turnText;
+
+    [SerializeField]
+    private GUIText scoreText;
+
+    [SerializeField]
+    private Transform targetBall;
+
+    public float Score { get; private set; }
+    public int Turn { get; private set; }
+
+    private List<Ball> balls;
+
     public void ResetGame()
     {
+        foreach (Ball ball in balls) {
+            Destroy(ball.gameObject);
+        }
+
+        Score = 0;
+        Turn = 0;
+    }
+
+    private void Start() {
+        menu.OnSaveButtonPressed += delegate {
+            Save();
+        };
+
+        balls = new List<Ball>();
     }
 	
 	void Update () {
+        Score = 0;
+        foreach (Ball ball in balls) {
+            Vector3 distance = ball.transform.position - targetBall.position;
+            Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
+        }
+        Score *= 10;
 
-        if (Input.GetMouseButtonUp(0) && !menu.IsMouseOver())
-        {
+        turnText.text = Turn + "/" + MAX_TURNS + " turns";
+        scoreText.text = "Score: " + (int)Score;
+
+        if (Input.GetMouseButtonUp(0) && !menu.IsMouseOver() && Turn < MAX_TURNS) {
             FireCurrentBall();
+            Turn++;
         }
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit, 999, groundLayer))
-        {
-            if(hit.collider.tag == "Board")
-            {
+        if(Physics.Raycast(ray, out hit, 999, groundLayer)){
+            if(hit.collider.tag == "Board"){
                 crosshair.position = hit.point + new Vector3(0, 0.01f, 0);
             }
         }
@@ -54,9 +96,9 @@ public class BallGame : MonoBehaviour {
         currentBall.collider.enabled = true;
         currentBall.BallData.IsThrown = true;
 
-        currentBall = InitializeBall();
+        balls.Add(currentBall);
 
-        Save();
+        currentBall = InitializeBall();
     }
 
     private Ball InitializeBall() {
@@ -80,13 +122,20 @@ public class BallGame : MonoBehaviour {
             ball.transform.position = ballData.Position;
             ball.rigidbody.isKinematic = false;
             ball.collider.enabled = true;
+
+            balls.Add(ball);
         }
     }
 
     public void Save() {
-        BallData[] data = FindObjectsOfType<Ball>().Select(ball => ball.BallData).ToArray();
+        BallData[] data = balls.Select(ball => ball.BallData).ToArray();
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
 
+        backendManager.PerformRequest("score", null, OnRequestDone); 
+    }
 
+    private void OnRequestDone(ResponseType responseType, JToken jsonResponse, string callee)
+    {
+        Debug.Log(jsonResponse);
     }
 }
