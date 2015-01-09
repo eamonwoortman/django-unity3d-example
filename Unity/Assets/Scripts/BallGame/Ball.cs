@@ -4,30 +4,25 @@ using System;
 
 public class Ball : MonoBehaviour {
 
-    public BallData BallData { get; private set; }
-    public Action OnHit;
+    public BallData BallData {
+        get {
+            ballData.Position = transform.position;
+            return ballData;
+        }
+
+        set {
+            ballData = value;
+            transform.position = value.Position;
+        }
+    }
+
+    private BallData ballData;
 
     void Awake(){
-        BallData = new BallData();
+        ballData = new BallData();
     }
 
 	void Start () {
         gameObject.name = "Ball";
 	}
-	
-	void Update () {
-        BallData.Position = transform.position;
-	}
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if(collision.collider.tag == "Board")
-        {
-            if (OnHit != null)
-            {
-                OnHit.Invoke();
-                OnHit = null;
-            }
-        }
-    }
 }
