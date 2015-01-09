@@ -57,10 +57,6 @@ public class SavegameMenu : MonoBehaviour {
         Vector3 mp = Input.mousePosition;
         mp.y = Mathf.Abs(mp.y - Screen.height);
 
-        if (InRect(mp)) {
-            return false;
-        }
-
-        return true;
+        return InRect(mp);
     }
 }
