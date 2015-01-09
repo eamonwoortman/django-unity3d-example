@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BlockSpawner : MonoBehaviour {
     public GameObject BlockPrefab;
+    public float PushForce = 50f;
+
     private GameMenu gameMenu;
 
     void Awake() {
@@ -45,7 +47,8 @@ public class BlockSpawner : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, 1000f) && hit.transform.name.Contains("Block")) {
                 Rigidbody rigidbody = hit.transform.GetComponent<Rigidbody>();
                 if (rigidbody != null) {
-                    rigidbody.AddForce(Vector3.forward * 100, ForceMode.Impulse);
+                    rigidbody.AddForce(Vector3.forward * PushForce, ForceMode.Impulse);
+                    GameObject.Destroy(hit.transform.gameObject, 2f);
                 }
             }
         }
