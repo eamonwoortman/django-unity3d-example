@@ -72,6 +72,10 @@ public class BallGame : MonoBehaviour {
         BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json);
 
         foreach (BallData ballData in data) {
+
+            if (!ballData.IsThrown) 
+                continue;
+
             Ball ball = InitializeBall();
             ball.transform.position = ballData.Position;
             ball.rigidbody.isKinematic = false;
