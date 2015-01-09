@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameMenu : MonoBehaviour {
+public class SavegameMenu : MonoBehaviour {
     public GUISkin Skin;
 
     public delegate void LoadSaveButtonPressed(string filename);
