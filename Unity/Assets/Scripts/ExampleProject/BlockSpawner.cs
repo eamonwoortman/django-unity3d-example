@@ -5,10 +5,10 @@ public class BlockSpawner : MonoBehaviour {
     public GameObject BlockPrefab;
     public float PushForce = 50f;
 
-    private GameMenu gameMenu;
+    private SavegameMenu gameMenu;
 
     void Awake() {
-        gameMenu = FindObjectOfType<GameMenu>();
+        gameMenu = FindObjectOfType<SavegameMenu>();
         if (BlockPrefab == null) {
             Debug.LogWarning("BlockPrefab == null");
             enabled = false;
