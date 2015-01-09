@@ -52,4 +52,15 @@ public class SavegameMenu : MonoBehaviour {
         GUI.skin = Skin;
         windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save game");
     }
+
+    public bool IsMouseOver() {
+        Vector3 mp = Input.mousePosition;
+        mp.y = Mathf.Abs(mp.y - Screen.height);
+
+        if (InRect(mp)) {
+            return false;
+        }
+
+        return true;
+    }
 }
