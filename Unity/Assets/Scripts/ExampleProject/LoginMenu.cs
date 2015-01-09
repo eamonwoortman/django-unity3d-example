@@ -1,19 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoginMenu : MonoBehaviour {
-    public GUISkin Skin;
+public class LoginMenu : BaseMenu {
     public delegate void LoginButtonPressed(string username, string password);
     public LoginButtonPressed OnLoginButtonPressed;
     public string Status = "";
-    private Rect windowRect = new Rect(10, 10, 300, 150);
     private string username = "", password = "";
 
-    public bool InRect(Vector3 mousePosition) {
-        return windowRect.Contains(mousePosition);
+    public LoginMenu() {
+        windowRect = new Rect(10, 10, 300, 150);
     }
-
-
+    
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Please enter your username and password");
