@@ -12,6 +12,9 @@ public class BallGame : MonoBehaviour {
     [SerializeField]
     private Transform crosshair;
 
+    [SerializeField]
+    private LayerMask groundLayer;
+
     public void ResetGame()
     {
 
@@ -21,13 +24,13 @@ public class BallGame : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0))
         {
-            FireCurrentDart();
+            FireCurrentBall();
         }
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit))
+        if(Physics.Raycast(ray, out hit, 999, groundLayer))
         {
             if(hit.collider.tag == "Board")
             {
@@ -36,7 +39,7 @@ public class BallGame : MonoBehaviour {
         }
 	}
 
-    private void FireCurrentDart()
+    private void FireCurrentBall()
     {
         Vector3 target = crosshair.position - currentBall.transform.position;
         target.y = 0;
