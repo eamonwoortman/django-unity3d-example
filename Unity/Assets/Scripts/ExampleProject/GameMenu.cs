@@ -3,7 +3,11 @@ using System.Collections;
 
 public class GameMenu : MonoBehaviour {
     public GUISkin Skin;
+    public LoadSaveButtonPressed OnSaveButtonPressed;
+    public LoadSaveButtonPressed OnLoadButtonPressed;
+
     private Rect windowRect = new Rect(10, 10, 200, 200);
+    private delegate void LoadSaveButtonPressed(string filename);
     
     public bool InRect(Vector3 mousePosition) {
         return windowRect.Contains(mousePosition);
