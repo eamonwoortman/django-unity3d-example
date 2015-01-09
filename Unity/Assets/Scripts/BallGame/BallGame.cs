@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Runtime.Serialization;
+using System.Linq;
+using Newtonsoft.Json;
 
 public class BallGame : MonoBehaviour {
 
@@ -17,7 +20,6 @@ public class BallGame : MonoBehaviour {
 
     public void ResetGame()
     {
-
     }
 	
 	void Update () {
@@ -48,10 +50,35 @@ public class BallGame : MonoBehaviour {
         currentBall.rigidbody.AddForce(target * 80);
         currentBall.collider.enabled = true;
 
-        currentBall.OnHit = null;
+        currentBall = InitializeBall();
+
+        Save();
+    }
+
+    private Ball InitializeBall() {
         GameObject newDartObject = Instantiate(currentBall.gameObject, dartStartPosition.position, dartStartPosition.rotation) as GameObject;
-        currentBall = newDartObject.GetComponent<Ball>();
-        currentBall.rigidbody.isKinematic = true;
-        currentBall.collider.enabled = false;
+        Ball ball = newDartObject.GetComponent<Ball>();
+        ball.rigidbody.isKinematic = true;
+        ball.collider.enabled = false;
+
+        return ball;
+    }
+
+    public void Load(string json) {
+        BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json);
+
+        foreach (BallData ballData in data) {
+            Ball ball = InitializeBall();
+            ball.transform.position = ballData.Position;
+            ball.rigidbody.isKinematic = false;
+            ball.collider.enabled = true;
+        }
+    }
+
+    public void Save() {
+        BallData[] data = FindObjectsOfType<Ball>().Select(ball => ball.BallData).ToArray();
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+
     }
 }
