@@ -53,6 +53,7 @@
      <Compile Include="Assets\Scripts\BallGame\BallGame.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\Block.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\BlockSpawner.cs" />
+     <Compile Include="Assets\Scripts\ExampleProject\LoginMenu.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\SavegameMenu.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\SavegameTest.cs" />
      <Compile Include="Assets\Scripts\JsonDotNet\Source\Aot\EnumerationExtension.cs" />

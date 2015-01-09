@@ -50,6 +50,6 @@ public class SavegameMenu : MonoBehaviour {
     }
     private void OnGUI() {
         GUI.skin = Skin;
-        windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save game");
+        windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
     }
 }
