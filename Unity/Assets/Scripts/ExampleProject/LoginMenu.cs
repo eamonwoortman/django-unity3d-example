@@ -17,6 +17,7 @@ public class LoginMenu : BaseMenu {
         bool filledIn = (username != "" && password != "");
 
         GUILayout.BeginHorizontal();
+        GUILayout.Label("username", GUILayout.Width(80));
         username = GUILayout.TextField(username, 30);
         GUILayout.EndHorizontal();
         
