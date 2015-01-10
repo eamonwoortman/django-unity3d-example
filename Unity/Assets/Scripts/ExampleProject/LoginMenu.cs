@@ -11,6 +11,9 @@ public class LoginMenu : BaseMenu {
     private bool loggingIn = false;
     private float nextStatusChange;
     private int dotNumber = 1;
+    private bool rememberMe = false;
+    private bool hasFocussed = false;
+    private const float LABEL_WIDTH = 100;
 
     public LoginMenu() {
         windowRect = new Rect(10, 10, 300, 150);
@@ -52,7 +55,7 @@ public class LoginMenu : BaseMenu {
         fields.Add("password", password);
         backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
     }
-    private bool hasFocussed = false;
+
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Please enter your username and password");
@@ -60,15 +63,20 @@ public class LoginMenu : BaseMenu {
 
         GUILayout.BeginHorizontal();
         GUI.SetNextControlName("usernameField");
-        GUILayout.Label("username", GUILayout.Width(80));
+        GUILayout.Label("Username", GUILayout.Width(LABEL_WIDTH));
         username = GUILayout.TextField(username, 30);
         GUILayout.EndHorizontal();
         
         GUILayout.BeginHorizontal();
-        GUILayout.Label("password", GUILayout.Width(80));
+        GUILayout.Label("Password", GUILayout.Width(LABEL_WIDTH));
         password = GUILayout.TextField(password, 30);
         GUILayout.EndHorizontal();
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Remember me?", GUILayout.Width(LABEL_WIDTH));
+        rememberMe = GUILayout.Toggle(rememberMe, "");
+        GUILayout.EndHorizontal();
+        
         GUILayout.Label(Status);
         GUI.enabled = filledIn;
         Event e = Event.current;
