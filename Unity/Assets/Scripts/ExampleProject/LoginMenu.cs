@@ -18,12 +18,14 @@ public class LoginMenu : BaseMenu {
 
     private void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
         loggingIn = false;
-
         if (responseType == ResponseType.Success) {
             string authToken = responseData.Value<string>("token");
             if (OnLoggedIn != null) {
                 OnLoggedIn(authToken);
             }
+            Status = "Logged in!";
+        } else if (responseType == ResponseType.RequestError) {
+            Status = "Could not reach the server. Please try again later.";
         } else {
             JToken fieldToken = responseData["non_field_errors"];
             if (fieldToken == null || !fieldToken.HasValues) {
@@ -32,15 +34,19 @@ public class LoginMenu : BaseMenu {
                 string errors = "";
                 JToken[] fieldValidationErrors = fieldToken.Values().ToArray();
                 foreach (JToken validationError in fieldValidationErrors) {
-                    errors += fieldToken.Value<string>();
+                    errors += validationError.Value<string>();
                 }
                 Status = "Login failed: " + errors;
             }
-            
         }
     }
 
     private void DoLogin() {
+        if (loggingIn) {
+            Debug.LogWarning("Already logging in, returning.");
+            return;
+        }
+        loggingIn = true;
         Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("username", username);
         fields.Add("password", password);
@@ -65,9 +71,13 @@ public class LoginMenu : BaseMenu {
 
         GUILayout.Label(Status);
         GUI.enabled = filledIn;
+        Event e = Event.current;
+        if (filledIn && e.isKey && e.keyCode == KeyCode.Return) {
+            DoLogin();
+        }
+
         if (GUILayout.Button("Login")) {
-            //DoLogin();
-            loggingIn = true;
+            DoLogin();
         }
         GUI.enabled = true;
         
@@ -80,11 +90,6 @@ public class LoginMenu : BaseMenu {
     }
 
     private void Update() {
-        if (Input.GetKeyUp(KeyCode.Return)) {
-            //DoLogin();
-            loggingIn = true;
-        }
-
         if(!loggingIn) {
             return;
         }
