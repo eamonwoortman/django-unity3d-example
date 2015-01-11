@@ -3,6 +3,8 @@ using System.Collections;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+
 public class LoginMenu : BaseMenu {
     public delegate void LoggedIn(string authToken);
     public LoggedIn OnLoggedIn;
@@ -15,14 +17,36 @@ public class LoginMenu : BaseMenu {
     private bool hasFocussed = false;
     private const float LABEL_WIDTH = 100;
 
-    public LoginMenu() {
+    private void Start() {
         windowRect = new Rect(10, 10, 300, 150);
+        if (PlayerPrefs.HasKey("x1")) {
+            username = FromBase64(PlayerPrefs.GetString("x2"));
+            password = FromBase64(PlayerPrefs.GetString("x1"));
+        }
+    }
+
+    private string FromBase64(string inputString) {
+        byte[] bytes = Convert.FromBase64String(inputString);
+        return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+    private string ToBase64(string inputString) {
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(inputString);
+        return Convert.ToBase64String(bytes);
+    }
+
+    private void SaveCredentials() {
+        PlayerPrefs.SetString("x2", ToBase64(username));
+        PlayerPrefs.SetString("x1", ToBase64(password));
     }
 
     private void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
         loggingIn = false;
         if (responseType == ResponseType.Success) {
             string authToken = responseData.Value<string>("token");
+            if (rememberMe) {
+                SaveCredentials();
+            }
             if (OnLoggedIn != null) {
                 OnLoggedIn(authToken);
             }
@@ -69,7 +93,7 @@ public class LoginMenu : BaseMenu {
         
         GUILayout.BeginHorizontal();
         GUILayout.Label("Password", GUILayout.Width(LABEL_WIDTH));
-        password = GUILayout.TextField(password, 30);
+        password = GUILayout.PasswordField(password, '*', 30);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
