@@ -10,11 +10,19 @@ public class SavegameMenu : BaseMenu {
     private string[] savegameNames = new string[] { NoSavegamesFound };
     private int selectedNameIndex = -1;
     private string saveName = "";
-
+    
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, 200);
     }
-    
+
+    public void SetData(byte[] data) {
+
+    }
+
+    private void SaveGame() {
+
+    }
+
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Save games");
@@ -45,9 +53,9 @@ public class SavegameMenu : BaseMenu {
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
     }
+
     private void OnGUI() {
         GUI.skin = Skin;
         windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
     }
-
 }
