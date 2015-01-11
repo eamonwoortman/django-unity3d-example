@@ -7,7 +7,7 @@ public class EnterNameMenu : BaseMenu {
     public Action OnCancel;
     public Action<string> OnNameEntered;
 
-    private string name = "";
+    private string playername = "";
 
     public EnterNameMenu() {
         windowRect = new Rect(Screen.width  / 2 - 100, Screen.height / 2 - 100, 200, 200);
@@ -16,12 +16,12 @@ public class EnterNameMenu : BaseMenu {
     private void ShowWindow(int id) {
         GUILayout.Label("Enter name");
 
-        name = GUILayout.TextField(name);
+        playername = GUILayout.TextField(playername);
 
-        GUI.enabled = (name != "");
+        GUI.enabled = (playername != "");
         if (GUILayout.Button("Next")) {
             if (OnNameEntered != null) {
-                OnNameEntered(name);
+                OnNameEntered(playername);
             }
         }
 

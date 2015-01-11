@@ -140,8 +140,7 @@ public class BallGame : MonoBehaviour {
 
     public void Save() {
         BallData[] data = balls.Select(ball => ball.BallData).ToArray();
-        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-
+        //string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         backendManager.PerformRequest("score", null, OnRequestDone); 
     }
 

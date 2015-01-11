@@ -6,17 +6,15 @@ public class SavegameTest : MonoBehaviour {
     private SavegameMenu savegameMenu;
     private string authToken;
 
-	// Use this for initialization
 	void Start () {
         loginMenu = GetComponent<LoginMenu>();
-        loginMenu.OnLoggedIn += LoggedIn;
+        loginMenu.HasLoggedIn += LoggedIn;
 
         savegameMenu = GetComponent<SavegameMenu>();
         savegameMenu.enabled = false;
 	}
 
-    private void LoggedIn(string authToken) {
-        this.authToken = authToken;
+    private void LoggedIn() {
         Invoke("DisableLoginMenu", 1);
     }
 

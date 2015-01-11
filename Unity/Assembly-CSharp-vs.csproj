@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\ExampleProject\BaseMenu.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\Block.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\BlockSpawner.cs" />
+     <Compile Include="Assets\Scripts\ExampleProject\ExampleBackend.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\LoginMenu.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\SavegameMenu.cs" />
      <Compile Include="Assets\Scripts\ExampleProject\SavegameTest.cs" />

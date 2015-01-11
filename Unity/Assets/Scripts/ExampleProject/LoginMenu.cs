@@ -6,8 +6,8 @@ using System.Linq;
 using System;
 
 public class LoginMenu : BaseMenu {
-    public delegate void LoggedIn(string authToken);
-    public LoggedIn OnLoggedIn;
+    public delegate void LoggedIn();
+    public LoggedIn HasLoggedIn;
     public string Status = "";
     private string username = "", password = "";
     private bool loggingIn = false;
@@ -19,6 +19,9 @@ public class LoginMenu : BaseMenu {
 
     private void Start() {
         windowRect = new Rect(10, 10, 300, 150);
+        backendManager.OnLoggedIn += OnLoggedIn;
+        backendManager.OnLoginFailed += OnLoginFailed;
+        
         if (PlayerPrefs.HasKey("x1")) {
             username = FromBase64(PlayerPrefs.GetString("x2"));
             password = FromBase64(PlayerPrefs.GetString("x1"));
@@ -47,36 +50,26 @@ public class LoginMenu : BaseMenu {
         }
     }
 
-    private void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
+    private void OnLoginFailed(string error) {
+        Status = "Login error: " + error;
         loggingIn = false;
-        if (responseType == ResponseType.Success) {
-            string authToken = responseData.Value<string>("token");
-            if (rememberMe) {
-                SaveCredentials();
-            } else {
-                RemoveCredentials();
-            }
+    }
 
-            if (OnLoggedIn != null) {
-                OnLoggedIn(authToken);
-            }
-            Status = "Logged in!";
-        } else if (responseType == ResponseType.RequestError) {
-            Status = "Could not reach the server. Please try again later.";
+    private void OnLoggedIn() {
+        Status = "Logged in!";
+        loggingIn = false;
+
+        if (rememberMe) {
+            SaveCredentials();
         } else {
-            JToken fieldToken = responseData["non_field_errors"];
-            if (fieldToken == null || !fieldToken.HasValues) {
-                Status = "Login failed: unknown error";
-            } else {
-                string errors = "";
-                JToken[] fieldValidationErrors = fieldToken.Values().ToArray();
-                foreach (JToken validationError in fieldValidationErrors) {
-                    errors += validationError.Value<string>();
-                }
-                Status = "Login failed: " + errors;
-            }
+            RemoveCredentials();
+        }
+
+        if (HasLoggedIn != null) {
+            HasLoggedIn();
         }
     }
+
 
     private void DoLogin() {
         if (loggingIn) {
@@ -84,10 +77,7 @@ public class LoginMenu : BaseMenu {
             return;
         }
         loggingIn = true;
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", username);
-        fields.Add("password", password);
-        backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
+        backendManager.Login(username, password);
     }
 
     private void ShowWindow(int id) {
@@ -146,12 +136,10 @@ public class LoginMenu : BaseMenu {
                 dotNumber = 1;
             }
         }
-
     }
 
     private void OnGUI() {
         GUI.skin = Skin;
         windowRect = GUILayout.Window(1, windowRect, ShowWindow, "Login menu");
     }
-
 }
