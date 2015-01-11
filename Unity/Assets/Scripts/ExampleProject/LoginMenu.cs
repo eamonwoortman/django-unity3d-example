@@ -22,6 +22,7 @@ public class LoginMenu : BaseMenu {
         if (PlayerPrefs.HasKey("x1")) {
             username = FromBase64(PlayerPrefs.GetString("x2"));
             password = FromBase64(PlayerPrefs.GetString("x1"));
+            rememberMe = true;
         }
     }
 
@@ -40,13 +41,22 @@ public class LoginMenu : BaseMenu {
         PlayerPrefs.SetString("x1", ToBase64(password));
     }
 
+    private void RemoveCredentials() {
+        if (PlayerPrefs.HasKey("x1")) {
+            PlayerPrefs.DeleteAll();
+        }
+    }
+
     private void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
         loggingIn = false;
         if (responseType == ResponseType.Success) {
             string authToken = responseData.Value<string>("token");
             if (rememberMe) {
                 SaveCredentials();
+            } else {
+                RemoveCredentials();
             }
+
             if (OnLoggedIn != null) {
                 OnLoggedIn(authToken);
             }
