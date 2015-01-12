@@ -15,6 +15,11 @@ public partial class BackendManager {
     public SaveGameSuccess OnSaveGameSucces;
     public SaveGameFailed OnSaveGameFailed;
 
+    public delegate void GamesLoaded();
+    public delegate void GamesLoadedFailed(string errorMsg);
+    public GamesLoaded OnGamesLoaded;
+    public GamesLoadedFailed OnGamesLoadedFailed;
+
     private string authenticationToken = "";
     
     public void Login(string username, string password) {
@@ -76,6 +81,23 @@ public partial class BackendManager {
             } else {
                 Debug.Log(responseType);
                 OnSaveGameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
+            }
+        }
+    }
+
+    public void LoadGames() {
+        PerformRequest("savegame", null, OnLoadGames);
+    }
+
+    private void OnLoadGames(ResponseType responseType, JToken responseData, string callee)
+    {
+        if (responseType == ResponseType.Success) {
+            if (OnGamesLoaded != null) {
+                OnGamesLoaded();
+            }
+        } else {
+            if (OnGamesLoadedFailed != null) {
+                OnGamesLoadedFailed("Could not reach the server. Please try again later.");
             }
         }
     }
