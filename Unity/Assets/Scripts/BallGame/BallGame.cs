@@ -11,7 +11,7 @@ public class BallGame : MonoBehaviour {
     public const int MAX_TURNS = 5;
 
     [SerializeField]
-    private Ball currentBall;
+    private Ball defaultBall;
 
     [SerializeField]
     private Transform dartStartPosition;
@@ -21,6 +21,9 @@ public class BallGame : MonoBehaviour {
 
     [SerializeField]
     private LayerMask groundLayer;
+
+    [SerializeField]
+    private LoginMenu loginMenu;
 
     [SerializeField]
     private SavegameMenu saveMenu;
@@ -45,22 +48,12 @@ public class BallGame : MonoBehaviour {
 
     private List<Ball> balls;
 
-    public void ResetGame()
-    {
-        foreach (Ball ball in balls) {
-            Destroy(ball.gameObject);
-        }
+    private void Start() {
 
-        balls.Clear();
-
-        Score = 0;
-        Turn = 0;
-
+        loginMenu.enabled = true;
         saveMenu.enabled = true;
         nameMenu.enabled = false;
-    }
 
-    private void Start() {
         saveMenu.OnSaveButtonPressed += delegate {
             Save();
         };
@@ -79,7 +72,7 @@ public class BallGame : MonoBehaviour {
         turnText.text = Turn + "/" + MAX_TURNS + " turns";
         scoreText.text = "Score: " + (int)Score;
 
-        if (Input.GetMouseButtonDown(0) && !saveMenu.IsMouseOver() && Turn < MAX_TURNS) {
+        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Turn < MAX_TURNS) {
             FireCurrentBall();
             Turn++;
 
@@ -97,33 +90,49 @@ public class BallGame : MonoBehaviour {
         }
 	}
 
-    private void FireCurrentBall()
-    {
-        Vector3 target = crosshair.position - currentBall.transform.position;
-        target.y = 0;
-
-        currentBall.rigidbody.isKinematic = false;
-        currentBall.rigidbody.AddForce(target * 80);
-        currentBall.collider.enabled = true;
-        currentBall.BallData.IsThrown = true;
-
-        balls.Add(currentBall);
-
-        currentBall = InitializeBall();
+    private bool IsMouseOverMenu() {
+        return saveMenu.IsMouseOver() || loginMenu.IsMouseOver() || nameMenu.IsMouseOver();
     }
 
+    private void FireCurrentBall()
+    {
+        Vector3 target = crosshair.position - defaultBall.transform.position;
+        target.y = 0;
+
+        Ball ball = InitializeBall();
+
+        ball.rigidbody.isKinematic = false;
+        ball.collider.enabled = true;
+        ball.BallData.IsThrown = true;
+
+        ball.rigidbody.AddForce(target * 80);
+
+        balls.Add(ball);
+    }
+
+    /// <summary>
+    /// Will initialize a new Ball gameobject, which will be cloned from the default Ball gameobject which is always in the players 'hand'
+    /// </summary>
+    /// <returns>The newly created Ball</returns>
     private Ball InitializeBall() {
-        GameObject newDartObject = Instantiate(currentBall.gameObject, dartStartPosition.position, dartStartPosition.rotation) as GameObject;
-        Ball ball = newDartObject.GetComponent<Ball>();
-        ball.rigidbody.isKinematic = true;
-        ball.collider.enabled = false;
+        GameObject clonedBall = Instantiate(defaultBall.gameObject, dartStartPosition.position, dartStartPosition.rotation) as GameObject;
+        Ball ball = clonedBall.GetComponent<Ball>();
 
         return ball;
     }
 
+    /// <summary>
+    /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
+    /// </summary>
+    /// <param name="json"></param>
     public void Load(string json) {
+
+        ResetGame();
+
+        // Deserialize the JSON string we got from the server into a array of BallData
         BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json);
 
+        // Now lets loop through the balldata and create an Ball gameobject in our scene, and set its position to that of the BallData
         foreach (BallData ballData in data) {
 
             if (!ballData.IsThrown) 
@@ -138,15 +147,19 @@ public class BallGame : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Will save the game by serializing all game data and making a request to the server. The name of the save file will be pulled from the save game menu.
+    /// </summary>
     public void Save() {
-        BallData[] data = balls.Select(ball => ball.BallData).ToArray();
-        //string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-        backendManager.PerformRequest("score", null, OnRequestDone); 
-    }
 
-    private void OnRequestDone(ResponseType responseType, JToken jsonResponse, string callee)
-    {
-        ResetGame();
+        // Create an array containing the BallData from all balls in the scene
+        BallData[] data = balls.Select(ball => ball.BallData).ToArray();
+
+        // Serialize the BallData array to a JSON string.
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented); // We use the Formatting.Indented just for pretty and readable JSON files
+
+        // Make a call to our back end manager, who will do all the saving for us.
+        backendManager.SaveGame(saveMenu.SaveName, json);
     }
 
     private void OnGameFinished() {
@@ -160,5 +173,24 @@ public class BallGame : MonoBehaviour {
         nameMenu.OnNameEntered += delegate(string name) {
             ResetGame();
         };
+    }
+
+    private void RemoveBalls() {
+        foreach (Ball ball in balls) {
+            Destroy(ball.gameObject);
+        }
+
+        balls.Clear();
+    }
+
+
+    public void ResetGame() {
+        RemoveBalls();
+
+        Score = 0;
+        Turn = 0;
+
+        saveMenu.enabled = true;
+        nameMenu.enabled = false;
     }
 }
