@@ -74,7 +74,7 @@ public partial class BackendManager : MonoBehaviour {
             }
             request = new WWW(url, wwwForm.data, headers);
         } else {
-            request = new WWW(url);
+            request = new WWW(url, null , headers);
         }
 
         System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
