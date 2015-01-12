@@ -4,6 +4,9 @@ using System;
 
 public class Ball : MonoBehaviour {
 
+    [SerializeField]
+    private Cubemap cubemap;
+
     public BallData BallData {
         get {
             ballData.Position = transform.position;
@@ -24,5 +27,6 @@ public class Ball : MonoBehaviour {
 
 	void Start () {
         gameObject.name = "Ball";
+        Camera.main.RenderToCubemap(cubemap);
 	}
 }
