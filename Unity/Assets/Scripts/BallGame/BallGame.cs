@@ -57,6 +57,10 @@ public class BallGame : MonoBehaviour {
             Save();
         };
 
+        backendManager.OnLoggedIn += delegate {
+            backendManager.LoadGames();
+        };
+
         Data = new GameData();
         balls = new List<Ball>();
     }
