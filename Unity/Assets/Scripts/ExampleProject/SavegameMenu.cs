@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class SavegameMenu : BaseMenu {
     public delegate void LoadSaveButtonPressed(string filename);
@@ -24,12 +26,19 @@ public class SavegameMenu : BaseMenu {
     private void Start() {
         backendManager.OnSaveGameSucces += OnSaveGameSuccess;
         backendManager.OnSaveGameFailed += OnSaveGameFailed;
+
+        backendManager.OnGamesLoaded += OnGamesLoaded;
     }
 
     private void OnSaveGameSuccess() {
+        
     }
 
     private void OnSaveGameFailed(string error) {
+    }
+
+    private void OnGamesLoaded(List<Savegame> games) {
+        savegameNames = games.Select(game => game.Name).ToArray();
     }
 
     public void SetData(byte[] data) {
@@ -70,5 +79,9 @@ public class SavegameMenu : BaseMenu {
     private void OnGUI() {
         GUI.skin = Skin;
         windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
+    }
+
+    public void RefreshSaveGames() {
+
     }
 }
