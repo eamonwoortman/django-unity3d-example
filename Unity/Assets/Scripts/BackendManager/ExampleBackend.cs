@@ -91,7 +91,6 @@ public partial class BackendManager {
 
     private void OnLoadGames(ResponseType responseType, JToken responseData, string callee)
     {
-        Debug.Log(responseData.ToString());
         if (responseType == ResponseType.Success) {
             if (OnGamesLoaded != null) {
                 OnGamesLoaded(JsonConvert.DeserializeObject<List<Savegame>>(responseData.ToString()));

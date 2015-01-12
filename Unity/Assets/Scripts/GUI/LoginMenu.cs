@@ -8,7 +8,7 @@ using System;
 public class LoginMenu : BaseMenu {
     public delegate void LoggedIn();
     public LoggedIn HasLoggedIn;
-    public string Status = "";
+    private string status = "";
     private string username = "", password = "";
     private bool loggingIn = false;
     private float nextStatusChange;
@@ -23,25 +23,15 @@ public class LoginMenu : BaseMenu {
         backendManager.OnLoginFailed += OnLoginFailed;
         
         if (PlayerPrefs.HasKey("x1")) {
-            username = FromBase64(PlayerPrefs.GetString("x2"));
-            password = FromBase64(PlayerPrefs.GetString("x1"));
+            username = PlayerPrefs.GetString("x2").FromBase64();
+            password = PlayerPrefs.GetString("x1").FromBase64();
             rememberMe = true;
         }
     }
 
-    private string FromBase64(string inputString) {
-        byte[] bytes = Convert.FromBase64String(inputString);
-        return System.Text.Encoding.UTF8.GetString(bytes);
-    }
-
-    private string ToBase64(string inputString) {
-        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(inputString);
-        return Convert.ToBase64String(bytes);
-    }
-
     private void SaveCredentials() {
-        PlayerPrefs.SetString("x2", ToBase64(username));
-        PlayerPrefs.SetString("x1", ToBase64(password));
+        PlayerPrefs.SetString("x2", username.ToBase64());
+        PlayerPrefs.SetString("x1", password.ToBase64());
     }
 
     private void RemoveCredentials() {
@@ -51,12 +41,12 @@ public class LoginMenu : BaseMenu {
     }
 
     private void OnLoginFailed(string error) {
-        Status = "Login error: " + error;
+        status = "Login error: " + error;
         loggingIn = false;
     }
 
     private void OnLoggedIn() {
-        Status = "Logged in!";
+        status = "Logged in!";
         loggingIn = false;
 
         if (rememberMe) {
@@ -101,7 +91,7 @@ public class LoginMenu : BaseMenu {
         rememberMe = GUILayout.Toggle(rememberMe, "");
         GUILayout.EndHorizontal();
         
-        GUILayout.Label(Status);
+        GUILayout.Label(status);
         GUI.enabled = filledIn;
         Event e = Event.current;
         if (filledIn && e.isKey && e.keyCode == KeyCode.Return) {
@@ -112,7 +102,7 @@ public class LoginMenu : BaseMenu {
             DoLogin();
         }
         GUI.enabled = true;
-        
+         
         GUILayout.EndVertical();
 
         if (!hasFocussed) {
@@ -128,9 +118,9 @@ public class LoginMenu : BaseMenu {
 
         if (Time.time > nextStatusChange) {
             nextStatusChange = Time.time + 0.5f;
-            Status = "Logging in";
+            status = "Logging in";
             for (int i = 0; i < dotNumber; i++) {
-                Status += ".";
+                status += ".";
             }
             if (++dotNumber > 3) {
                 dotNumber = 1;

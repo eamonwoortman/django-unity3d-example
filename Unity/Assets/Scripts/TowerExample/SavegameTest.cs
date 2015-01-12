@@ -12,9 +12,12 @@ public class SavegameTest : MonoBehaviour {
 
         savegameMenu = GetComponent<SavegameMenu>();
         savegameMenu.enabled = false;
+
+        
 	}
 
     private void LoggedIn() {
+        savegameMenu.LoadSavegames();
         Invoke("DisableLoginMenu", 1);
     }
 

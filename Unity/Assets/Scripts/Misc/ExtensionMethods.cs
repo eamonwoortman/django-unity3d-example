@@ -10,4 +10,16 @@ public static class ExtensionMethods {
         return null;
     }
 
+
+    public static string FromBase64(this string inputString) {
+        byte[] bytes = Convert.FromBase64String(inputString);
+        return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+    public static string ToBase64(this string inputString) {
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(inputString);
+        return Convert.ToBase64String(bytes);
+    }
+
+
 }

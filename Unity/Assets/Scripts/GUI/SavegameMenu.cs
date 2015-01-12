@@ -23,15 +23,17 @@ public class SavegameMenu : BaseMenu {
         windowRect = new Rect(Screen.width - 210, Screen.height - 210, 200, 200);
     }
 
+    public void LoadSavegames() {
+        backendManager.LoadGames();
+    }
+
     private void Start() {
         backendManager.OnSaveGameSucces += OnSaveGameSuccess;
         backendManager.OnSaveGameFailed += OnSaveGameFailed;
-
         backendManager.OnGamesLoaded += OnGamesLoaded;
     }
 
     private void OnSaveGameSuccess() {
-        
     }
 
     private void OnSaveGameFailed(string error) {
@@ -39,10 +41,6 @@ public class SavegameMenu : BaseMenu {
 
     private void OnGamesLoaded(List<Savegame> games) {
         savegameNames = games.Select(game => game.Name).ToArray();
-    }
-
-    public void SetData(byte[] data) {
-
     }
 
     private void ShowWindow(int id) {
