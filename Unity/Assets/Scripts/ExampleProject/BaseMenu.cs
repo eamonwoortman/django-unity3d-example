@@ -13,7 +13,7 @@ public class BaseMenu : MonoBehaviour {
     public bool IsMouseOver() {
         Vector3 mp = Input.mousePosition;
         mp.y = Mathf.Abs(mp.y - Screen.height);
-        return InRect(mp);
+        return InRect(mp) && enabled;
     }
 
     private void Awake() {
