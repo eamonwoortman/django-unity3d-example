@@ -76,10 +76,9 @@ public partial class BackendManager {
             }
         } else {
             string[] errors;
-            if (!ContainsSubfield(responseData, "name", out errors)) {
+            if (!ContainsSubfield(responseData, "name", out errors) && OnSaveGameFailed != null) {
                 OnSaveGameFailed("Request failed: " + responseData + " - Name was not provided");
-            } else {
-                Debug.Log(responseType);
+            } else if(OnSaveGameFailed != null){
                 OnSaveGameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
             }
         }
