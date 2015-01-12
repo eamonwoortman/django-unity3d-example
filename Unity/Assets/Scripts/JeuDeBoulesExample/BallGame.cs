@@ -57,12 +57,22 @@ public class BallGame : MonoBehaviour {
             Save();
         };
 
+        saveMenu.OnLoadButtonPressed += delegate(string filename) {
+            StartCoroutine(LoadGame(filename));
+        };
+
         backendManager.OnLoggedIn += delegate {
             backendManager.LoadGames();
         };
 
         Data = new GameData();
         balls = new List<Ball>();
+    }
+
+    private IEnumerator LoadGame(string file) {
+        WWW www = new WWW(file);
+        yield return www;
+        Load(www.text);
     }
 	
 	void Update () {
@@ -131,12 +141,16 @@ public class BallGame : MonoBehaviour {
     /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
     /// </summary>
     /// <param name="json"></param>
-    public void Load(string json) {
+    public void Load(string jsonString) {
 
         ResetGame();
 
+        JObject json = JObject.Parse(jsonString);
+
+        Data = JsonConvert.DeserializeObject<GameData>(json.GetValue("game").ToString());
+
         // Deserialize the JSON string we got from the server into a array of BallData
-        BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json);
+        BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json.GetValue("balls").ToString());
 
         // Now lets loop through the balldata and create an Ball gameobject in our scene, and set its position to that of the BallData
         foreach (BallData ballData in data) {

@@ -15,9 +15,10 @@ public class SavegameMenu : BaseMenu {
     }
 
     private const string NoSavegamesFound = "No savegames found";
-    private string[] savegameNames = new string[] { NoSavegamesFound };
+    private List<Savegame> saveGames;
     private int selectedNameIndex = -1;
     private string saveName = "";
+    private string[] saveGameNames = { NoSavegamesFound };
     
     public SavegameMenu() {
         windowRect = new Rect(Screen.width - 210, Screen.height - 210, 200, 200);
@@ -40,15 +41,16 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void OnGamesLoaded(List<Savegame> games) {
-        savegameNames = games.Select(game => game.Name).ToArray();
+        saveGames = games;
+        saveGameNames = saveGames.Select(game => game.Name).ToArray().SubArray(0, Mathf.Min(3, games.Count));
     }
 
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Save games");
-        bool savegamesFound = (savegameNames[0] != NoSavegamesFound);
+        bool savegamesFound = (saveGameNames[0] != NoSavegamesFound);
         GUI.enabled = savegamesFound;
-        selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, savegameNames, 1);
+        selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1);
         GUI.enabled = true;
         GUILayout.Space(100);
 
@@ -62,10 +64,10 @@ public class SavegameMenu : BaseMenu {
             }
         }
 
-        GUI.enabled = savegamesFound;
+        GUI.enabled = savegamesFound && selectedNameIndex != -1;
         if (GUILayout.Button("Load")) {
             if (OnLoadButtonPressed != null) {
-                OnLoadButtonPressed(savegameNames[selectedNameIndex]);
+                OnLoadButtonPressed(saveGames.Find(game => game.Name == saveGameNames[selectedNameIndex]).File);
             }
         }
         GUI.enabled = true;
