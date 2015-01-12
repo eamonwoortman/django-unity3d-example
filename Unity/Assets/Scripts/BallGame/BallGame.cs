@@ -43,8 +43,7 @@ public class BallGame : MonoBehaviour {
     [SerializeField]
     private Transform targetBall;
 
-    public float Score { get; private set; }
-    public int Turn { get; private set; }
+    public GameData Data;
 
     private List<Ball> balls;
 
@@ -58,32 +57,33 @@ public class BallGame : MonoBehaviour {
             Save();
         };
 
+        Data = new GameData();
         balls = new List<Ball>();
     }
 	
 	void Update () {
-        Score = 0;
+        Data.Score = 0;
         foreach (Ball ball in balls) {
             Vector3 distance = ball.transform.position - targetBall.position;
-            Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
+            Data.Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
         }
-        Score *= 10;
+        Data.Score *= 10;
 
-        turnText.text = Turn + "/" + MAX_TURNS + " turns";
-        scoreText.text = "Score: " + (int)Score;
+        turnText.text = Data.Turn + "/" + MAX_TURNS + " turns";
+        scoreText.text = "Score: " + (int)Data.Score;
 
-        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Turn < MAX_TURNS) {
+        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS) {
             FireCurrentBall();
-            Turn++;
+            Data.Turn++;
 
-            if (Turn == MAX_TURNS)
+            if (Data.Turn == MAX_TURNS)
                 OnGameFinished();
         }
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit, 999, groundLayer)){
+        if(Physics.Raycast(ray, out hit, 100, groundLayer)){
             if(hit.collider.tag == "Board"){
                 crosshair.position = hit.point + new Vector3(0, 0.01f, 0);
             }
@@ -153,13 +153,14 @@ public class BallGame : MonoBehaviour {
     public void Save() {
 
         // Create an array containing the BallData from all balls in the scene
-        BallData[] data = balls.Select(ball => ball.BallData).ToArray();
+        BallData[] ballData = balls.Select(ball => ball.BallData).ToArray();
 
-        // Serialize the BallData array to a JSON string.
-        string json = JsonConvert.SerializeObject(data, Formatting.Indented); // We use the Formatting.Indented just for pretty and readable JSON files
+        JObject jsonObject = new JObject();
+        jsonObject.Add("game", JsonConvert.SerializeObject(Data));
+        jsonObject.Add("balls", JsonConvert.SerializeObject(ballData));
 
         // Make a call to our back end manager, who will do all the saving for us.
-        backendManager.SaveGame(saveMenu.SaveName, json);
+        backendManager.SaveGame(saveMenu.SaveName, jsonObject.ToString());
     }
 
     private void OnGameFinished() {
@@ -187,8 +188,8 @@ public class BallGame : MonoBehaviour {
     public void ResetGame() {
         RemoveBalls();
 
-        Score = 0;
-        Turn = 0;
+        Data.Score = 0;
+        Data.Turn = 0;
 
         saveMenu.enabled = true;
         nameMenu.enabled = false;
