@@ -112,6 +112,8 @@ public class BallGame : MonoBehaviour {
         ball.rigidbody.AddForce(target * 80);
 
         balls.Add(ball);
+
+        defaultBall.transform.Rotate(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
     }
 
     /// <summary>
