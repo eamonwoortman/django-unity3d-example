@@ -6,20 +6,33 @@ public class SavegameMenu : BaseMenu {
     public LoadSaveButtonPressed OnSaveButtonPressed;
     public LoadSaveButtonPressed OnLoadButtonPressed;
 
+    public string SaveName {
+        get {
+            return saveName;
+        }
+    }
+
     private const string NoSavegamesFound = "No savegames found";
     private string[] savegameNames = new string[] { NoSavegamesFound };
     private int selectedNameIndex = -1;
     private string saveName = "";
     
     public SavegameMenu() {
-        windowRect = new Rect(10, 10, 200, 200);
+        windowRect = new Rect(Screen.width - 210, Screen.height - 210, 200, 200);
+    }
+
+    private void Start() {
+        backendManager.OnSaveGameSucces += OnSaveGameSuccess;
+        backendManager.OnSaveGameFailed += OnSaveGameFailed;
+    }
+
+    private void OnSaveGameSuccess() {
+    }
+
+    private void OnSaveGameFailed(string error) {
     }
 
     public void SetData(byte[] data) {
-
-    }
-
-    private void SaveGame() {
 
     }
 
@@ -35,10 +48,10 @@ public class SavegameMenu : BaseMenu {
         saveName = GUILayout.TextField(saveName);
         GUILayout.BeginHorizontal();
 
-        GUI.enabled = (saveName != "");
+        GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
             if (OnSaveButtonPressed != null) {
-                OnSaveButtonPressed(saveName);
+                OnSaveButtonPressed(SaveName);
             }
         }
 
