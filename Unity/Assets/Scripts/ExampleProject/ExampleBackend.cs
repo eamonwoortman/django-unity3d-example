@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ public partial class BackendManager {
     public SaveGameSuccess OnSaveGameSucces;
     public SaveGameFailed OnSaveGameFailed;
 
-    public delegate void GamesLoaded();
+    public delegate void GamesLoaded(List<Savegame> games);
     public delegate void GamesLoadedFailed(string errorMsg);
     public GamesLoaded OnGamesLoaded;
     public GamesLoadedFailed OnGamesLoadedFailed;
@@ -85,14 +86,15 @@ public partial class BackendManager {
     }
 
     public void LoadGames() {
-        PerformRequest("savegame", null, OnLoadGames);
+        PerformRequest("savegame", null, OnLoadGames, authenticationToken);
     }
 
     private void OnLoadGames(ResponseType responseType, JToken responseData, string callee)
     {
+        Debug.Log(responseData.ToString());
         if (responseType == ResponseType.Success) {
             if (OnGamesLoaded != null) {
-                OnGamesLoaded();
+                OnGamesLoaded(JsonConvert.DeserializeObject<List<Savegame>>(responseData.ToString()));
             }
         } else {
             if (OnGamesLoadedFailed != null) {
