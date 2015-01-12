@@ -2,12 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public partial class BackendManager {
     public delegate void LoginFailed(string errorMsg);
     public delegate void LoggedIn();
     public LoggedIn OnLoggedIn;
     public LoginFailed OnLoginFailed;
+
+    public delegate void SaveGameSuccess();
+    public delegate void SaveGameFailed(string errorMsg);
+    public SaveGameSuccess OnSaveGameSucces;
+    public SaveGameFailed OnSaveGameFailed;
 
     private string authenticationToken = "";
     
@@ -45,5 +51,45 @@ public partial class BackendManager {
                 }
             }
         }
+    }
+
+    public void SaveGame(string name, string file) {
+        WWWForm form = new WWWForm();
+        form.AddField("name", name);
+        form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(file));
+        PerformFormRequest("savegame", form, OnSaveGame, authenticationToken);
+    }
+
+    private void OnSaveGame(ResponseType responseType, JToken responseData, string callee) {
+        if (responseType == ResponseType.Success) {
+            if (OnSaveGameSucces != null) {
+                OnSaveGameSucces();
+            }
+        } else if (responseType == ResponseType.RequestError) {
+            if (OnSaveGameFailed != null) {
+                OnSaveGameFailed("Could not reach the server. Please try again later.");
+            }
+        } else {
+            string[] errors;
+            if (!ContainsSubfield(responseData, "name", out errors)) {
+                OnSaveGameFailed("Request failed: " + responseData + " - Name was not provided");
+            } else {
+                Debug.Log(responseType);
+                OnSaveGameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
+            }
+        }
+    }
+
+    private bool ContainsSubfield(JToken jsonObject, string key, out string[] values) {
+        JToken fieldToken = jsonObject[key];
+        values = new string[0];
+
+        if (fieldToken == null || !fieldToken.HasValues) {
+            return true;
+        }
+
+        values = fieldToken.Values().ToArray().Select(token => token.Value<string>()).ToArray();
+
+        return values.Length == 0;
     }
 }
