@@ -21,7 +21,7 @@ public class SavegameMenu : BaseMenu {
     private string[] saveGameNames = { NoSavegamesFound };
     
     public SavegameMenu() {
-        windowRect = new Rect(Screen.width - 210, Screen.height - 210, 200, 200);
+        windowRect = new Rect(10, 10, 200, 200);
     }
 
     public void LoadSavegames() {
