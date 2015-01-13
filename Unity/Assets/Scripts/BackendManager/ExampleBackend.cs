@@ -21,6 +21,9 @@ public partial class BackendManager {
     public GamesLoaded OnGamesLoaded;
     public GamesLoadedFailed OnGamesLoadedFailed;
 
+    public delegate void SavegameLoaded(string jsonString);
+    public SavegameLoaded OnSavegameLoaded;
+
     private string authenticationToken = "";
     
     public void Login(string username, string password) {
