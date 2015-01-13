@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-public class BallGame : MonoBehaviour {
+public class BallGame : BaseGame {
 
-    public const int MAX_TURNS = 5;
+    public const int MAX_TURNS = 999;
 
     [SerializeField]
     private Ball defaultBall;
@@ -23,16 +23,7 @@ public class BallGame : MonoBehaviour {
     private LayerMask groundLayer;
 
     [SerializeField]
-    private LoginMenu loginMenu;
-
-    [SerializeField]
-    private SavegameMenu saveMenu;
-
-    [SerializeField]
     private EnterNameMenu nameMenu;
-
-    [SerializeField]
-    private BackendManager backendManager;
 
     [SerializeField]
     private GUIText turnText;
@@ -47,32 +38,13 @@ public class BallGame : MonoBehaviour {
 
     private List<Ball> balls;
 
-    private void Start() {
+    protected override void Start() {
+        base.Start();
 
-        loginMenu.enabled = true;
-        saveMenu.enabled = true;
         nameMenu.enabled = false;
-
-        saveMenu.OnSaveButtonPressed += delegate {
-            Save();
-        };
-
-        saveMenu.OnLoadButtonPressed += delegate(string filename) {
-            StartCoroutine(LoadGame(filename));
-        };
-
-        backendManager.OnLoggedIn += delegate {
-            backendManager.LoadGames();
-        };
 
         Data = new GameData();
         balls = new List<Ball>();
-    }
-
-    private IEnumerator LoadGame(string file) {
-        WWW www = new WWW(file);
-        yield return www;
-        Load(www.text);
     }
 	
 	void Update () {
@@ -104,8 +76,8 @@ public class BallGame : MonoBehaviour {
         }
 	}
 
-    private bool IsMouseOverMenu() {
-        return saveMenu.IsMouseOver() || loginMenu.IsMouseOver() || nameMenu.IsMouseOver();
+    protected override bool IsMouseOverMenu() {
+        return base.IsMouseOverMenu() || nameMenu.IsMouseOver();
     }
 
     private void FireCurrentBall()
@@ -141,7 +113,7 @@ public class BallGame : MonoBehaviour {
     /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
     /// </summary>
     /// <param name="json"></param>
-    public void Load(string jsonString) {
+    public override void Load(string jsonString) {
 
         ResetGame();
 
@@ -167,10 +139,7 @@ public class BallGame : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// Will save the game by serializing all game data and making a request to the server. The name of the save file will be pulled from the save game menu.
-    /// </summary>
-    public void Save() {
+    protected override string Serialize() {
 
         // Create an array containing the BallData from all balls in the scene
         BallData[] ballData = balls.Select(ball => ball.BallData).ToArray();
@@ -179,12 +148,11 @@ public class BallGame : MonoBehaviour {
         jsonObject.Add("game", JsonConvert.SerializeObject(Data));
         jsonObject.Add("balls", JsonConvert.SerializeObject(ballData));
 
-        // Make a call to our back end manager, who will do all the saving for us.
-        backendManager.SaveGame(saveMenu.SaveName, jsonObject.ToString());
+        return jsonObject.ToString();
     }
 
     private void OnGameFinished() {
-        saveMenu.enabled = false;
+        HideSaveMenu();
         nameMenu.enabled = true;
 
         nameMenu.OnCancel += delegate {
@@ -211,7 +179,7 @@ public class BallGame : MonoBehaviour {
         Data.Score = 0;
         Data.Turn = 0;
 
-        saveMenu.enabled = true;
+        ShowSaveMenu();
         nameMenu.enabled = false;
     }
 }
