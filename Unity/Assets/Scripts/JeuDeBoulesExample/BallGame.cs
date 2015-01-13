@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 public class BallGame : BaseGame {
 
-    public const int MAX_TURNS = 999;
+    public const int MAX_TURNS = 5;
+    private const float BALL_VELOCITY_THRESHOLD = 0.005f;
 
     [SerializeField]
     private Ball defaultBall;
@@ -23,7 +24,7 @@ public class BallGame : BaseGame {
     private LayerMask groundLayer;
 
     [SerializeField]
-    private EnterNameMenu nameMenu;
+    private HighscoreMenu highscoreMenu;
 
     [SerializeField]
     private GUIText turnText;
@@ -41,7 +42,19 @@ public class BallGame : BaseGame {
     protected override void Start() {
         base.Start();
 
-        nameMenu.enabled = false;
+        highscoreMenu.enabled = false;
+        highscoreMenu.OnCancel += delegate {
+            ResetGame();
+        };
+
+        backendManager.OnPostScoreSucces += delegate {
+            backendManager.GetAllScores();
+        };
+
+        backendManager.OnScoresLoaded += delegate(List<Score> scores) {
+            highscoreMenu.Scores = scores;
+            highscoreMenu.Loading = false;
+        };
 
         Data = new GameData();
         balls = new List<Ball>();
@@ -77,7 +90,7 @@ public class BallGame : BaseGame {
 	}
 
     protected override bool IsMouseOverMenu() {
-        return base.IsMouseOverMenu() || nameMenu.IsMouseOver();
+        return base.IsMouseOverMenu() || highscoreMenu.IsMouseOver();
     }
 
     private void FireCurrentBall()
@@ -153,15 +166,19 @@ public class BallGame : BaseGame {
 
     private void OnGameFinished() {
         HideSaveMenu();
-        nameMenu.enabled = true;
 
-        nameMenu.OnCancel += delegate {
-            ResetGame();
-        };
+        highscoreMenu.enabled = true;
+        highscoreMenu.Loading = true;
 
-        nameMenu.OnNameEntered += delegate(string name) {
-            ResetGame();
-        };
+        StartCoroutine(PostScores());
+    }
+
+    private IEnumerator PostScores() {
+        // Every 0.5 second, check if velocity of balls is below the BALL_VELOCITY_THRESHOLD, if so, then post scores. 
+        while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
+            yield return new WaitForSeconds(0.5f);
+
+        backendManager.PostScore((int)Data.Score);
     }
 
     private void RemoveBalls() {
@@ -180,6 +197,6 @@ public class BallGame : BaseGame {
         Data.Turn = 0;
 
         ShowSaveMenu();
-        nameMenu.enabled = false;
+        highscoreMenu.enabled = false;
     }
 }
