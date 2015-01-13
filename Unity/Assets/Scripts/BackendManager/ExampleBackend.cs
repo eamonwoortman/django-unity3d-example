@@ -136,7 +136,6 @@ public partial class BackendManager {
 
 
     private void OnPostScore(ResponseType responseType, JToken responseData, string callee) {
-        Debug.Log(responseType + " - " + responseData);
         if (responseType == ResponseType.Success) {
             if (OnPostScoreSucces != null) {
                 OnPostScoreSucces();
