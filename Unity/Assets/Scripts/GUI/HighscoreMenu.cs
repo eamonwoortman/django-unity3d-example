@@ -27,7 +27,7 @@ public class HighscoreMenu : BaseMenu {
     private void ShowWindow(int id) {
 
         if (Loading) {
-            GUILayout.Label("Loading..");
+            GUILayout.Label("Posting highscore..");
         } else {
             foreach (Score score in scores) {
                 GUILayout.Label(score.Updated.ToShortDateString() + " - " + score.Amount.ToString());
