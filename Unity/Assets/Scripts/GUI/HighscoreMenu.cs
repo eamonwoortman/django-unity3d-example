@@ -8,6 +8,7 @@ public class HighscoreMenu : BaseMenu {
 
     public Action OnCancel;
     public bool Loading;
+    public Score newestScore;
 
     public List<Score> Scores {
         get {
@@ -15,6 +16,7 @@ public class HighscoreMenu : BaseMenu {
         }
         set {
             scores = value.OrderBy(s => s.Amount).ThenBy(s => s.Updated).Reverse().ToList();
+            newestScore = scores.OrderByDescending(s => s.Updated).First();
         }
     }
 
@@ -30,7 +32,7 @@ public class HighscoreMenu : BaseMenu {
             GUILayout.Label("Posting highscore..");
         } else {
             foreach (Score score in scores) {
-                GUILayout.Label(score.Updated.ToShortDateString() + " - " + score.Amount.ToString());
+                GUILayout.Label(score.Updated.ToShortDateString() + " - " + score.Amount.ToString() + (newestScore == score ? " <<<" : ""));
             }
             if (GUILayout.Button("OK")) {
                 if (OnCancel != null) {
