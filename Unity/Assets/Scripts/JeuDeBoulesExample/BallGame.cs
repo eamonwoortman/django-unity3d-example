@@ -71,7 +71,7 @@ public class BallGame : BaseGame {
         turnText.text = Data.Turn + "/" + MAX_TURNS + " turns";
         scoreText.text = "Score: " + (int)Data.Score;
 
-        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS) {
+        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS && IsLoggedIn) {
             FireCurrentBall();
             Data.Turn++;
 
@@ -79,6 +79,7 @@ public class BallGame : BaseGame {
                 OnGameFinished();
         }
 
+        crosshair.gameObject.SetActive(IsLoggedIn);
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
