@@ -25,8 +25,8 @@ public abstract class BaseGame : MonoBehaviour {
             saveMenu.enabled = true;
         };
 
-        saveMenu.OnSaveButtonPressed += delegate {
-            Save();
+        saveMenu.OnSaveButtonPressed += delegate (string filename) {
+            Save(filename);
         };
 
         saveMenu.OnLoadButtonPressed += delegate(string filename) {
@@ -41,8 +41,8 @@ public abstract class BaseGame : MonoBehaviour {
         Load(www.text);
     }
 
-    private void Save() {
-        backendManager.SaveGame(saveMenu.SaveName, Serialize());
+    private void Save(string filename) {
+        backendManager.SaveGame(filename, Serialize());
     }
 
     protected virtual bool IsMouseOverMenu() {
