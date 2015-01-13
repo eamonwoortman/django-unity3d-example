@@ -13,10 +13,14 @@ public abstract class BaseGame : MonoBehaviour {
     [SerializeField]
     protected BackendManager backendManager;
 
+    protected bool IsLoggedIn { get; private set; }
+
 	public abstract void Load(string jsonString);
     protected abstract string Serialize();
 
     protected virtual void Start() {
+        IsLoggedIn = false;
+
         loginMenu.enabled = true;
         saveMenu.enabled = false;
 
@@ -24,6 +28,7 @@ public abstract class BaseGame : MonoBehaviour {
             backendManager.LoadGames();
             loginMenu.enabled = false;
             saveMenu.enabled = true;
+            IsLoggedIn = true;
         };
 
         saveMenu.OnSaveButtonPressed += delegate {
