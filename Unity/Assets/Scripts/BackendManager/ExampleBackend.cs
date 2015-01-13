@@ -21,8 +21,10 @@ public partial class BackendManager {
     public GamesLoaded OnGamesLoaded;
     public GamesLoadedFailed OnGamesLoadedFailed;
 
-    public delegate void SavegameLoaded(string jsonString);
-    public SavegameLoaded OnSavegameLoaded;
+    public delegate void ScoresLoaded(List<Score> scores);
+    public delegate void ScoreLoadedFailed(string errorMsg);
+    public ScoresLoaded OnScoresLoaded;
+    public ScoreLoadedFailed OnScoreLoadedFailed;
 
     private string authenticationToken = "";
     
@@ -101,6 +103,22 @@ public partial class BackendManager {
         } else {
             if (OnGamesLoadedFailed != null) {
                 OnGamesLoadedFailed("Could not reach the server. Please try again later.");
+            }
+        }
+    }
+
+    public void GetAllScores() {
+        PerformRequest("score", null, OnGetAllScores, authenticationToken);
+    }
+
+    private void OnGetAllScores(ResponseType responseType, JToken responseData, string callee) {
+        if (responseType == ResponseType.Success) {
+            if (OnScoresLoaded != null) {
+                OnScoresLoaded(JsonConvert.DeserializeObject<List<Score>>(responseData.ToString()));
+            }
+        } else {
+            if (OnScoreLoadedFailed != null) {
+                OnScoreLoadedFailed("Could not reach the server. Please try again later.");
             }
         }
     }
