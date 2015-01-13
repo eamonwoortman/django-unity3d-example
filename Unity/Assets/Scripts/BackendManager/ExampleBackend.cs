@@ -26,6 +26,11 @@ public partial class BackendManager {
     public ScoresLoaded OnScoresLoaded;
     public ScoreLoadedFailed OnScoreLoadedFailed;
 
+    public delegate void PostScoreSucces();
+    public delegate void PostScoreFailed(string errorMsg);
+    public PostScoreSucces OnPostScoreSucces;
+    public PostScoreFailed OnPostScoreFailed;
+
     private string authenticationToken = "";
     
     public void Login(string username, string password) {
@@ -119,6 +124,30 @@ public partial class BackendManager {
         } else {
             if (OnScoreLoadedFailed != null) {
                 OnScoreLoadedFailed("Could not reach the server. Please try again later.");
+            }
+        }
+    }
+
+    public void PostScore(int score) {
+        WWWForm form = new WWWForm();
+        form.AddField("score", score);
+        PerformFormRequest("score", form, OnPostScore, authenticationToken);
+    }
+
+
+    private void OnPostScore(ResponseType responseType, JToken responseData, string callee) {
+        Debug.Log(responseType + " - " + responseData);
+        if (responseType == ResponseType.Success) {
+            if (OnPostScoreSucces != null) {
+                OnPostScoreSucces();
+            }
+        } else if (responseType == ResponseType.RequestError) {
+            if (OnPostScoreFailed != null) {
+                OnPostScoreFailed("Could not reach the server. Please try again later.");
+            }
+        } else {
+            if (OnPostScoreFailed != null) {
+                OnPostScoreFailed("Request failed: " + responseType + " - " + responseData["detail"]);
             }
         }
     }
