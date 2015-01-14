@@ -35,6 +35,7 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void OnSaveGameSuccess() {
+        LoadSavegames();
     }
 
     private void OnSaveGameFailed(string error) {
