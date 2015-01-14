@@ -14,7 +14,9 @@ class OwnedModelSerializer(serializers.ModelSerializer):
 class ScoreSerializer(OwnedModelSerializer):
     class Meta:
         model = Score
-        exclude = ('owner',)
+        fields = ('id', 'score', 'owner_name', 'updated')        
+
+        #exclude = ('owner',)
 
 class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)

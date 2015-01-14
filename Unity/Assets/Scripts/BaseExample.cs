@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class BaseGame : MonoBehaviour {
 
@@ -10,12 +11,16 @@ public abstract class BaseGame : MonoBehaviour {
     private LoginMenu loginMenu;
 
     [SerializeField]
-    private BackendManager backendManager;
+    protected BackendManager backendManager;
+
+    protected bool IsLoggedIn { get; private set; }
 
 	public abstract void Load(string jsonString);
     protected abstract string Serialize();
 
     protected virtual void Start() {
+        IsLoggedIn = false;
+
         loginMenu.enabled = true;
         saveMenu.enabled = false;
 
@@ -23,6 +28,7 @@ public abstract class BaseGame : MonoBehaviour {
             backendManager.LoadGames();
             loginMenu.enabled = false;
             saveMenu.enabled = true;
+            IsLoggedIn = true;
         };
 
         saveMenu.OnSaveButtonPressed += delegate (string filename) {
@@ -32,7 +38,6 @@ public abstract class BaseGame : MonoBehaviour {
         saveMenu.OnLoadButtonPressed += delegate(string filename) {
             StartCoroutine(DownloadSaveFile(filename));
         };
-
     }
 
     private IEnumerator DownloadSaveFile(string file) {

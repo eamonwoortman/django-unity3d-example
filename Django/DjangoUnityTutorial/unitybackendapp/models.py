@@ -11,6 +11,9 @@ class Score(models.Model):
     score = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+        
+    def owner_name(self):
+        return self.owner.username
 
     def __unicode__(self):
         return '%s - %d' % (self.owner.username, self.score)

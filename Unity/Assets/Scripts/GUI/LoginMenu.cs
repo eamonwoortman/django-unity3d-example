@@ -18,7 +18,7 @@ public class LoginMenu : BaseMenu {
     private const float LABEL_WIDTH = 100;
 
     private void Start() {
-        windowRect = new Rect(10, 10, 300, 150);
+        windowRect = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 150);
         backendManager.OnLoggedIn += OnLoggedIn;
         backendManager.OnLoginFailed += OnLoginFailed;
         
