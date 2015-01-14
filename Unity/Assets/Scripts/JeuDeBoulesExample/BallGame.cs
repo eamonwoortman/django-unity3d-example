@@ -175,6 +175,7 @@ public class BallGame : BaseGame {
     }
 
     private IEnumerator PostScores() {
+        yield return new WaitForFixedUpdate();
         // Every 0.5 second, check if velocity of balls is below the BALL_VELOCITY_THRESHOLD, if so, then post scores. 
         while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
             yield return new WaitForSeconds(0.5f);
