@@ -43,7 +43,9 @@ public class SavegameMenu : BaseMenu {
 
     private void OnGamesLoaded(List<Savegame> games) {
         saveGames = games;
-        saveGameNames = saveGames.Select(game => game.Name).ToArray().SubArray(0, Mathf.Min(3, games.Count));
+
+        if(games.Count != 0)
+            saveGameNames = saveGames.Select(game => game.Name).ToArray().SubArray(0, Mathf.Min(3, games.Count));
     }
 
     private void ShowWindow(int id) {
