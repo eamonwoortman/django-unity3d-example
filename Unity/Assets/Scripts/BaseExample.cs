@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-public abstract class BaseGame : MonoBehaviour {
+public abstract class BaseGame<T> : MonoBehaviour {
 
     [SerializeField]
     private SavegameMenu saveMenu;
@@ -13,9 +14,11 @@ public abstract class BaseGame : MonoBehaviour {
     [SerializeField]
     protected BackendManager backendManager;
 
+    public T Data;
+
     protected bool IsLoggedIn { get; private set; }
 
-	public abstract void Load(string jsonString);
+	public abstract void Load(T gameData);
     protected abstract string Serialize();
 
     protected virtual void Start() {
@@ -43,11 +46,13 @@ public abstract class BaseGame : MonoBehaviour {
     private IEnumerator DownloadSaveFile(string file) {
         WWW www = new WWW(file);
         yield return www;
-        Load(www.text);
+
+        T data = JsonConvert.DeserializeObject<T>(www.text);
+        Load(data);
     }
 
     private void Save(string filename) {
-        backendManager.SaveGame(filename, Serialize());
+        backendManager.SaveGame(filename, Serialize(), typeof(T));
     }
 
     protected virtual bool IsMouseOverMenu() {

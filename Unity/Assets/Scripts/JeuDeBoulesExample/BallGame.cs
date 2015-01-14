@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-public class BallGame : BaseGame {
+public class BallGame : BaseGame<JeuDeBoulesData> {
 
     public const int MAX_TURNS = 5;
     private const float BALL_VELOCITY_THRESHOLD = 0.005f;
@@ -35,8 +35,6 @@ public class BallGame : BaseGame {
     [SerializeField]
     private Transform targetBall;
 
-    public GameData Data;
-
     private List<Ball> balls;
 
     protected override void Start() {
@@ -55,9 +53,9 @@ public class BallGame : BaseGame {
             highscoreMenu.Scores = scores;
             highscoreMenu.Loading = false;
         };
-
-        Data = new GameData();
         balls = new List<Ball>();
+
+        Data = new JeuDeBoulesData();
     }
 	
 	void Update () {
@@ -127,21 +125,15 @@ public class BallGame : BaseGame {
     /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
     /// </summary>
     /// <param name="json"></param>
-    public override void Load(string jsonString) {
-
+    public override void Load(JeuDeBoulesData gameData) {
         ResetGame();
 
-        JObject json = JObject.Parse(jsonString);
-
-        Data = JsonConvert.DeserializeObject<GameData>(json.GetValue("game").ToString());
-
-        // Deserialize the JSON string we got from the server into a array of BallData
-        BallData[] data = JsonConvert.DeserializeObject<BallData[]>(json.GetValue("balls").ToString());
+        Data = gameData;
 
         // Now lets loop through the balldata and create an Ball gameobject in our scene, and set its position to that of the BallData
-        foreach (BallData ballData in data) {
+        foreach (BallData ballData in Data.balls) {
 
-            if (!ballData.IsThrown) 
+            if (!ballData.IsThrown)
                 continue;
 
             Ball ball = InitializeBall();
@@ -154,15 +146,10 @@ public class BallGame : BaseGame {
     }
 
     protected override string Serialize() {
-
         // Create an array containing the BallData from all balls in the scene
-        BallData[] ballData = balls.Select(ball => ball.BallData).ToArray();
+        Data.balls = balls.Select(ball => ball.BallData).ToArray();
 
-        JObject jsonObject = new JObject();
-        jsonObject.Add("game", JsonConvert.SerializeObject(Data));
-        jsonObject.Add("balls", JsonConvert.SerializeObject(ballData));
-
-        return jsonObject.ToString();
+        return JsonConvert.SerializeObject(Data);
     }
 
     private void OnGameFinished() {

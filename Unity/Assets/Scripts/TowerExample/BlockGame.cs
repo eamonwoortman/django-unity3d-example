@@ -4,10 +4,9 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-public class BlockGame : BaseGame {
+public class BlockGame : BaseGame<JeuDeBoulesData> {
     /*private LoginMenu loginMenu;
     private SavegameMenu savegameMenu;*/
-    public GameData Data;
     /*
 	void Start () {
         loginMenu = GetComponent<LoginMenu>();
@@ -37,7 +36,7 @@ public class BlockGame : BaseGame {
         savegameMenu.enabled = true;
     }
     */
-    public override void Load(string jsonString) {
+    public override void Load(JeuDeBoulesData data) {
         Debug.Log("Parse stuff");
     }
 

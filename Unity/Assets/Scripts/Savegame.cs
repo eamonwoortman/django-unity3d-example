@@ -8,4 +8,5 @@ public class Savegame {
     public string Name;
     public DateTime Updated;
     public string File;
+    public string Type;
 }
