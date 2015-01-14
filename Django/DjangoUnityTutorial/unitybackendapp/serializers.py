@@ -38,10 +38,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class SavegameDetailSerializer(OwnedModelSerializer):
     class Meta:
         model = Savegame
-        fields = ('name', 'file')        
+        fields = ('name', 'file', 'type')        
 
 class SavegameListSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'name', 'updated', 'file')
+        fields = ('id', 'name', 'updated', 'file', 'type')
         model = Savegame
 

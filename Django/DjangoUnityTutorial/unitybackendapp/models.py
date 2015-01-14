@@ -29,6 +29,7 @@ class Savegame(models.Model):
     file = models.FileField(upload_to=update_filename)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    type = models.CharField(max_length=100)
 
     def __unicode__(self):
         return '%s - %s' % (self.name, self.updated)
