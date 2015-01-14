@@ -73,10 +73,10 @@ public partial class BackendManager {
         WWWForm form = new WWWForm();
         form.AddField("name", name);
         form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(file));
-        PerformFormRequest("savegame", form, OnSaveGame, authenticationToken);
+        PerformFormRequest("savegame", form, OnSaveGameResponse, authenticationToken);
     }
 
-    private void OnSaveGame(ResponseType responseType, JToken responseData, string callee) {
+    private void OnSaveGameResponse(ResponseType responseType, JToken responseData, string callee) {
         if (responseType == ResponseType.Success) {
             if (OnSaveGameSucces != null) {
                 OnSaveGameSucces();
@@ -96,10 +96,10 @@ public partial class BackendManager {
     }
 
     public void LoadGames() {
-        PerformRequest("savegame", null, OnLoadGames, authenticationToken);
+        PerformRequest("savegame", null, OnLoadGamesResponse, authenticationToken);
     }
 
-    private void OnLoadGames(ResponseType responseType, JToken responseData, string callee)
+    private void OnLoadGamesResponse(ResponseType responseType, JToken responseData, string callee)
     {
         if (responseType == ResponseType.Success) {
             if (OnGamesLoaded != null) {
@@ -113,10 +113,10 @@ public partial class BackendManager {
     }
 
     public void GetAllScores() {
-        PerformRequest("score", null, OnGetAllScores, authenticationToken);
+        PerformRequest("score", null, OnGetAllScoresResponse, authenticationToken);
     }
 
-    private void OnGetAllScores(ResponseType responseType, JToken responseData, string callee) {
+    private void OnGetAllScoresResponse(ResponseType responseType, JToken responseData, string callee) {
         if (responseType == ResponseType.Success) {
             if (OnScoresLoaded != null) {
                 OnScoresLoaded(JsonConvert.DeserializeObject<List<Score>>(responseData.ToString()));
@@ -131,11 +131,11 @@ public partial class BackendManager {
     public void PostScore(int score) {
         WWWForm form = new WWWForm();
         form.AddField("score", score);
-        PerformFormRequest("score", form, OnPostScore, authenticationToken);
+        PerformFormRequest("score", form, OnPostScoreResponse, authenticationToken);
     }
 
 
-    private void OnPostScore(ResponseType responseType, JToken responseData, string callee) {
+    private void OnPostScoreResponse(ResponseType responseType, JToken responseData, string callee) {
         if (responseType == ResponseType.Success) {
             if (OnPostScoreSucces != null) {
                 OnPostScoreSucces();
