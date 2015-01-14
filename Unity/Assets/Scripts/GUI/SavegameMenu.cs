@@ -70,7 +70,7 @@ public class SavegameMenu : BaseMenu {
         GUI.enabled = savegamesFound && selectedNameIndex != -1;
         if (GUILayout.Button("Load")) {
             if (OnLoadButtonPressed != null) {
-                OnLoadButtonPressed(saveGames.Find(game => game.Name == saveGameNames[selectedNameIndex]).File);
+                OnLoadButtonPressed(saveGames[selectedNameIndex].File);
             }
         }
         GUI.enabled = true;
