@@ -125,7 +125,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
     /// </summary>
     /// <param name="json"></param>
-    public override void Load(JeuDeBoulesData gameData) {
+    public override void Deserialize(JeuDeBoulesData gameData) {
         ResetGame();
 
         Data = gameData;
@@ -145,11 +145,11 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         }
     }
 
-    protected override string Serialize() {
+    protected override JeuDeBoulesData Serialize() {
         // Create an array containing the BallData from all balls in the scene
         Data.balls = balls.Select(ball => ball.BallData).ToArray();
 
-        return JsonConvert.SerializeObject(Data);
+        return Data;
     }
 
     private void OnGameFinished() {

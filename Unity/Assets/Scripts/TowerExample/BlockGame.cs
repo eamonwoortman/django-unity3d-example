@@ -36,11 +36,11 @@ public class BlockGame : BaseGame<JeuDeBoulesData> {
         savegameMenu.enabled = true;
     }
     */
-    public override void Load(JeuDeBoulesData data) {
+    public override void Deserialize(JeuDeBoulesData data) {
         Debug.Log("Parse stuff");
     }
 
-    protected override string Serialize() {
+    protected override JeuDeBoulesData Serialize() {
         Block[] block = FindObjectsOfType<Block>();
         // Create an array containing the BallData from all balls in the scene
         BlockData[] ballData = block.Select(ball => ball.Data).ToArray();
@@ -49,6 +49,6 @@ public class BlockGame : BaseGame<JeuDeBoulesData> {
         jsonObject.Add("game", JsonConvert.SerializeObject(Data));
         jsonObject.Add("blocks", JsonConvert.SerializeObject(ballData));
 
-        return jsonObject.ToString();
+        return Data;
     }
 }

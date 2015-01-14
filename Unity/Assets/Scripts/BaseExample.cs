@@ -18,8 +18,8 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
     protected bool IsLoggedIn { get; private set; }
 
-	public abstract void Load(T gameData);
-    protected abstract string Serialize();
+	public abstract void Deserialize(T gameData);
+    protected abstract T Serialize();
 
     protected virtual void Start() {
         IsLoggedIn = false;
@@ -35,7 +35,8 @@ public abstract class BaseGame<T> : MonoBehaviour {
         };
 
         saveMenu.OnSaveButtonPressed += delegate (string filename) {
-            Save(filename);
+            backendManager.SaveGame(filename, JsonConvert.SerializeObject(Serialize()), typeof(T));
+
         };
 
         saveMenu.OnLoadButtonPressed += delegate(string filename) {
@@ -48,11 +49,10 @@ public abstract class BaseGame<T> : MonoBehaviour {
         yield return www;
 
         T data = JsonConvert.DeserializeObject<T>(www.text);
-        Load(data);
+        Deserialize(data);
     }
 
     private void Save(string filename) {
-        backendManager.SaveGame(filename, Serialize(), typeof(T));
     }
 
     protected virtual bool IsMouseOverMenu() {
