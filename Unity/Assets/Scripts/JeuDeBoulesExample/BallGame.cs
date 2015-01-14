@@ -146,7 +146,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     }
 
     protected override JeuDeBoulesData Serialize() {
-        // Create an array containing the BallData from all balls in the scene
+        // Fill our data with an array containing the BallData from all balls in the scene
         Data.balls = balls.Select(ball => ball.BallData).ToArray();
 
         return Data;
