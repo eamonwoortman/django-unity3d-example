@@ -7,21 +7,21 @@ public class BlockSpawner : MonoBehaviour {
     public float PushForce = 50f;
 
     private SavegameMenu gameMenu;
-    private List<Block> blocks = new List<Block>();
 
     public void Reset() {
-        int i = blocks.Count;
+        Block[] blocks = FindObjectsOfType<Block>();
+        int i = blocks.Length;
         while (--i >= 0) {
-            Block block = blocks[i];
-            blocks.Remove(block);
-            Destroy(block.gameObject);
+            if (blocks[i].gameObject == BlockPrefab) {
+                continue;
+            }
+            Destroy(blocks[i].gameObject);
+            blocks[i] = null;
         }
-        blocks.Clear();
     }
 
     public void Spawn(BlockData blockData) {
-        GameObject gob = (GameObject)Instantiate(BlockPrefab, blockData.Position, blockData.Rotation);
-        blocks.Add(gob.GetComponent<Block>());
+        Instantiate(BlockPrefab, blockData.Position, blockData.Rotation);
     }
 
     private void Awake() {
@@ -59,8 +59,7 @@ public class BlockSpawner : MonoBehaviour {
         }
         if (Input.GetMouseButtonUp(0)) {
             Vector3 worldPos = GetPosition();
-            GameObject gob = (GameObject)Instantiate(BlockPrefab, worldPos, transform.rotation);
-            blocks.Add(gob.GetComponent<Block>());
+            Instantiate(BlockPrefab, worldPos, transform.rotation);
         }
         if (Input.GetMouseButtonUp(1)) {
             Ray ray=Camera.main.ScreenPointToRay(Input.mousePosition);
