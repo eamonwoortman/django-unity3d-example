@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 public abstract class BaseGame<T> : MonoBehaviour {
 
@@ -21,15 +22,10 @@ public abstract class BaseGame<T> : MonoBehaviour {
     protected abstract void Deserialize(T gameData);
     protected abstract T Serialize();
 
-    U GetOrCreateComponent<U>() where U : Component {
-        U comp = FindObjectOfType<U>();
-        if (comp == null) {
-            comp = gameObject.AddComponent<U>();
-        }
-        return comp;
-    }
 
     protected virtual void Awake() {
+        Data = (T)Activator.CreateInstance(typeof(T));
+
         if (loginMenu == null) {
             loginMenu = GetOrCreateComponent<LoginMenu>();
         }
@@ -48,7 +44,7 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.enabled = false;
 
         backendManager.OnLoggedIn += delegate {
-            backendManager.LoadGames();
+            backendManager.LoadGames(typeof(T).Name);
             loginMenu.enabled = false;
             saveMenu.enabled = true;
             IsLoggedIn = true;
@@ -61,6 +57,18 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.OnLoadButtonPressed += delegate(string filename) {
             StartCoroutine(DownloadSaveFile(filename));
         };
+
+        saveMenu.OnHasSaved += delegate {
+            backendManager.LoadGames(typeof(T).Name);
+        };
+    }
+
+    private U GetOrCreateComponent<U>() where U : Component {
+        U comp = FindObjectOfType<U>();
+        if (comp == null) {
+            comp = gameObject.AddComponent<U>();
+        }
+        return comp;
     }
 
     private IEnumerator DownloadSaveFile(string file) {

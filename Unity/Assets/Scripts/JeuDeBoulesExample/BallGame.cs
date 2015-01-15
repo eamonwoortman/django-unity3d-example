@@ -54,8 +54,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
             highscoreMenu.Loading = false;
         };
         balls = new List<Ball>();
-
-        Data = new JeuDeBoulesData();
     }
 	
 	void Update () {
