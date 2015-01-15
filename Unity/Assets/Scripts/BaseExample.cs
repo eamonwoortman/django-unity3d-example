@@ -18,8 +18,28 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
     protected bool IsLoggedIn { get; private set; }
 
-	public abstract void Deserialize(T gameData);
+    protected abstract void Deserialize(T gameData);
     protected abstract T Serialize();
+
+    U GetOrCreateComponent<U>() where U : Component {
+        U comp = FindObjectOfType<U>();
+        if (comp == null) {
+            comp = gameObject.AddComponent<U>();
+        }
+        return comp;
+    }
+
+    protected virtual void Awake() {
+        if (loginMenu == null) {
+            loginMenu = GetOrCreateComponent<LoginMenu>();
+        }
+        if (saveMenu == null) {
+            saveMenu = GetOrCreateComponent<SavegameMenu>();
+        }
+        if (backendManager == null) {
+            backendManager = GetOrCreateComponent<BackendManager>();
+        }
+    }
 
     protected virtual void Start() {
         IsLoggedIn = false;
@@ -36,7 +56,6 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
         saveMenu.OnSaveButtonPressed += delegate (string filename) {
             backendManager.SaveGame(filename, JsonConvert.SerializeObject(Serialize()), typeof(T));
-
         };
 
         saveMenu.OnLoadButtonPressed += delegate(string filename) {

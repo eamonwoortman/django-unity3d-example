@@ -125,7 +125,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     /// Loads a saved game. It will remove all current balls and will load the ones from the save file. It will also set the score and the turns.
     /// </summary>
     /// <param name="json"></param>
-    public override void Deserialize(JeuDeBoulesData gameData) {
+    protected override void Deserialize(JeuDeBoulesData gameData) {
         ResetGame();
 
         Data = gameData;
