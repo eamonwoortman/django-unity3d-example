@@ -117,3 +117,22 @@ class SavegameAPI(UnityAPIView, ListAPIView):
 
     def get(self, request, *args, **kwargs): 
         return self.list(request, *args, **kwargs)
+
+
+class SavegameListAPI(UnityAPIView, ListAPIView):
+    authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = SavegameListSerializer
+
+    def get_queryset(self):
+        qs = Savegame.objects.all().filter(owner=self.request.user)
+        return qs
+
+    def post(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+        #serializer = SavegameDetailSerializer(data=request.data)
+        #if serializer.is_valid():
+        #    serializer.save(owner=request.user)
+        #    return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

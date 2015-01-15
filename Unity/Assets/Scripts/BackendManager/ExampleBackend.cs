@@ -96,7 +96,9 @@ public partial class BackendManager {
         }
     }
 
-    public void LoadGames() {
+    public void LoadGames(string savegameTypeName) {
+        Dictionary<string, string> fields = new Dictionary<string, string>();
+        fields.Add("SavegameType", savegameTypeName);
         PerformRequest("savegame", null, OnLoadGamesResponse, authenticationToken);
     }
 
