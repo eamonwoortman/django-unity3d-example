@@ -7,6 +7,8 @@ public class SavegameMenu : BaseMenu {
     public delegate void LoadSaveButtonPressed(string filename);
     public LoadSaveButtonPressed OnSaveButtonPressed;
     public LoadSaveButtonPressed OnLoadButtonPressed;
+    public delegate void VoidDelegate();
+    public VoidDelegate OnHasSaved;
 
     public string SaveName {
         get {
@@ -24,10 +26,6 @@ public class SavegameMenu : BaseMenu {
         windowRect = new Rect(10, 10, 200, 200);
     }
 
-    public void LoadSavegames() {
-        backendManager.LoadGames();
-    }
-
     private void Start() {
         backendManager.OnSaveGameSucces += OnSaveGameSuccess;
         backendManager.OnSaveGameFailed += OnSaveGameFailed;
@@ -35,7 +33,9 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void OnSaveGameSuccess() {
-        LoadSavegames();
+        if (OnHasSaved != null) {
+            OnHasSaved();
+        }
     }
 
     private void OnSaveGameFailed(string error) {
