@@ -9,6 +9,7 @@ public class SavegameMenu : BaseMenu {
     public LoadSaveButtonPressed OnLoadButtonPressed;
     public delegate void VoidDelegate();
     public VoidDelegate OnHasSaved;
+    [HideInInspector]
     public string SavegameType;
 
     public string SaveName {
