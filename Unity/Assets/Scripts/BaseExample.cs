@@ -37,8 +37,6 @@ public abstract class BaseGame<T> : MonoBehaviour {
         }
     }
 
-
-
     protected virtual void Start() {
         IsLoggedIn = false;
 
@@ -47,10 +45,7 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.SavegameType = typeof(T).Name;
 
         backendManager.OnLoggedIn += delegate {
-            saveMenu.LoadSavegames();
-            loginMenu.enabled = false;
-            saveMenu.enabled = true;
-            IsLoggedIn = true;
+            Invoke("EnableSaveMenu", 1.0f);
         };
 
         saveMenu.OnSaveButtonPressed += delegate (string filename) {
@@ -60,6 +55,13 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.OnLoadButtonPressed += delegate(string filename) {
             StartCoroutine(DownloadSaveFile(filename));
         };
+    }
+
+    protected virtual void EnableSaveMenu() {
+        saveMenu.LoadSavegames();
+        loginMenu.enabled = false;
+        saveMenu.enabled = true;
+        IsLoggedIn = true;
     }
 
     private U GetOrCreateComponent<U>() where U : Component {
