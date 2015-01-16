@@ -9,6 +9,7 @@ public class SavegameMenu : BaseMenu {
     public LoadSaveButtonPressed OnLoadButtonPressed;
     public delegate void VoidDelegate();
     public VoidDelegate OnHasSaved;
+    public string SavegameType;
 
     public string SaveName {
         get {
@@ -16,14 +17,21 @@ public class SavegameMenu : BaseMenu {
         }
     }
 
-    private const string NoSavegamesFound = "No savegames found";
+    private const string NoSavegamesFoundText = "No savegames found";
+    private const string LoadingGamesText = "Loading games...";
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1;
     private string saveName = "";
-    private string[] saveGameNames = { NoSavegamesFound };
+    private string[] saveGameNames = { NoSavegamesFoundText };
+    private bool isLoading;
     
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, 200);
+    }
+
+
+    public void LoadSavegames() {
+        backendManager.LoadGames(SavegameType);
     }
 
     private void Start() {
@@ -33,26 +41,30 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void OnSaveGameSuccess() {
-        if (OnHasSaved != null) {
-            OnHasSaved();
-        }
+        LoadSavegames();
     }
 
     private void OnSaveGameFailed(string error) {
+        isLoading = false;
+        saveGameNames = new string[] { NoSavegamesFoundText };
     }
 
     private void OnGamesLoaded(List<Savegame> games) {
+        isLoading = false;
         saveGames = games;
 
-        if(games.Count != 0)
+        if (games.Count != 0) {
             saveGameNames = saveGames.Select(game => game.Name).ToArray().SubArray(0, Mathf.Min(3, games.Count));
+        } else {
+            saveGameNames = new string[] { NoSavegamesFoundText };
+        }
     }
 
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
         GUILayout.Label("Save games");
-        bool savegamesFound = (saveGameNames[0] != NoSavegamesFound);
-        GUI.enabled = savegamesFound;
+        bool savegamesFound = (saveGameNames[0] != NoSavegamesFoundText);
+        GUI.enabled = savegamesFound && !isLoading;
         selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1);
         GUI.enabled = true;
         GUILayout.Space(100);
@@ -62,6 +74,8 @@ public class SavegameMenu : BaseMenu {
 
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
+            saveGameNames = new string[] { LoadingGamesText };
+            isLoading = true;
             if (OnSaveButtonPressed != null) {
                 OnSaveButtonPressed(SaveName);
             }
