@@ -86,7 +86,7 @@ public class SavegameMenu : BaseMenu {
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
             if (saveGameNames.Length == 5) {
-                ConfirmPopup.Create("Savegame limit reached", "You have reached the limit of save games(5). Please overwrite a different savegame.", true);
+                ConfirmPopup.Create("Savegame limit reached", "You have reached the limit(5) of savegames. Please overwrite an existing savegame.", true);
             } else {
                 DoSave();
             }
