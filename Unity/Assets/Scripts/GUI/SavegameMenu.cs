@@ -21,13 +21,13 @@ public class SavegameMenu : BaseMenu {
     private const string NoSavegamesFoundText = "No savegames found";
     private const string LoadingGamesText = "Loading games...";
     private List<Savegame> saveGames;
-    private int selectedNameIndex = -1;
+    private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
     private string[] saveGameNames = { NoSavegamesFoundText };
     private bool isLoading;
     
     public SavegameMenu() {
-        windowRect = new Rect(10, 10, 200, 200);
+        windowRect = new Rect(10, 10, 200, 235);
     }
 
     public void LoadSavegames() {
@@ -74,7 +74,10 @@ public class SavegameMenu : BaseMenu {
         bool savegamesFound = (saveGameNames[0] != NoSavegamesFoundText);
         GUI.enabled = savegamesFound && !isLoading;
         selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1);
-        
+        if (selectedNameIndex != oldSelectedNameIndex) {
+            saveName = saveGameNames[selectedNameIndex];
+            oldSelectedNameIndex = selectedNameIndex;
+        }
         GUI.enabled = true;
         GUILayout.FlexibleSpace();
         saveName = GUILayout.TextField(saveName);
