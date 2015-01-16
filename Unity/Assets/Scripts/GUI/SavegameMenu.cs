@@ -66,9 +66,9 @@ public class SavegameMenu : BaseMenu {
         bool savegamesFound = (saveGameNames[0] != NoSavegamesFoundText);
         GUI.enabled = savegamesFound && !isLoading;
         selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1);
+        
         GUI.enabled = true;
-        GUILayout.Space(100);
-
+        GUILayout.FlexibleSpace();
         saveName = GUILayout.TextField(saveName);
         GUILayout.BeginHorizontal();
 
