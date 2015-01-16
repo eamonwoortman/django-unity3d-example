@@ -4,10 +4,12 @@ using System.Collections;
 public class ConfirmPopup : MonoBehaviour {
     public const int WINDOW_ID = 5;
     public const int WIDTH = 300;
-    public const int HEIGHT = 150;
+    public const int HEIGHT = 160;
 
     public string Title = "Unnamed popup";
     public string Text = "Lorum Ipsum Yolo Swaggings";
+    public bool IsNotification;
+
     public delegate void VoidDelegate();
     public VoidDelegate OnConfirmed;
     public VoidDelegate OnCanceled;
@@ -15,11 +17,12 @@ public class ConfirmPopup : MonoBehaviour {
 
     private Rect windowRect;
 
-    public static ConfirmPopup Create(string title, string text) {
+    public static ConfirmPopup Create(string title, string text, bool isNotification = false) {
         GameObject gob = new GameObject("ConfirmPopup - " + title);
         ConfirmPopup popup = gob.AddComponent<ConfirmPopup>();
         popup.Title = title;
         popup.Text = text;
+        popup.IsNotification = isNotification;
         return popup;
     }
 
@@ -53,7 +56,7 @@ public class ConfirmPopup : MonoBehaviour {
             Close();
         }
 
-        if (GUILayout.Button("Cancel")) {
+        if (!IsNotification && GUILayout.Button("Cancel")) {
             if (OnCanceled != null) {
                 OnCanceled();
             }

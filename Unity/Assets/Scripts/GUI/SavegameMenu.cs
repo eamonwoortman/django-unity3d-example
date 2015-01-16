@@ -29,7 +29,6 @@ public class SavegameMenu : BaseMenu {
         windowRect = new Rect(10, 10, 200, 200);
     }
 
-
     public void LoadSavegames() {
         backendManager.LoadGames(SavegameType);
     }
@@ -54,9 +53,17 @@ public class SavegameMenu : BaseMenu {
         saveGames = games;
 
         if (games.Count != 0) {
-            saveGameNames = saveGames.Select(game => game.Name).ToArray().SubArray(0, Mathf.Min(3, games.Count));
+            saveGameNames = saveGames.Select(game => game.Name).ToArray();
         } else {
             saveGameNames = new string[] { NoSavegamesFoundText };
+        }
+    }
+
+    private void DoSave() {
+        saveGameNames = new string[] { LoadingGamesText };
+        isLoading = true;
+        if (OnSaveButtonPressed != null) {
+            OnSaveButtonPressed(SaveName);
         }
     }
 
@@ -74,10 +81,10 @@ public class SavegameMenu : BaseMenu {
 
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
-            saveGameNames = new string[] { LoadingGamesText };
-            isLoading = true;
-            if (OnSaveButtonPressed != null) {
-                OnSaveButtonPressed(SaveName);
+            if (saveGameNames.Length == 5) {
+                ConfirmPopup.Create("Savegame limit reached", "You have reached the limit of save games(5). Please overwrite a different savegame.", true);
+            } else {
+                DoSave();
             }
         }
 
