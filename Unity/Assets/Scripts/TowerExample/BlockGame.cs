@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 public class BlockGame : BaseGame<BlockGameData> {
     private BlockSpawner blockSpawner;
 
-
     protected override void Awake() {
         base.Awake();
         blockSpawner = FindObjectOfType<BlockSpawner>();
+        blockSpawner.enabled = false;
     }
 
     protected override void Deserialize(BlockGameData data) {
@@ -24,5 +24,10 @@ public class BlockGame : BaseGame<BlockGameData> {
         BlockData[] blockData = FindObjectsOfType<Block>().Select(block => block.Data).ToArray();
         Data.Blocks = blockData;
         return Data;
+    }
+
+    protected override void EnableSaveMenu() {
+        base.EnableSaveMenu();
+        blockSpawner.enabled = true;
     }
 }
