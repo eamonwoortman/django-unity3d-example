@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ConfirmPopup : MonoBehaviour {
+public class ConfirmPopup : BaseMenu {
     public const int WINDOW_ID = 5;
     public const int WIDTH = 300;
     public const int HEIGHT = 160;
@@ -14,8 +14,6 @@ public class ConfirmPopup : MonoBehaviour {
     public VoidDelegate OnConfirmed;
     public VoidDelegate OnCanceled;
     public bool DontDestroyGameobject;
-
-    private Rect windowRect;
 
     public static ConfirmPopup Create(string title, string text, bool isNotification = false) {
         GameObject gob = new GameObject("ConfirmPopup - " + title);

@@ -103,7 +103,6 @@ public class SavegameMenu : BaseMenu {
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
             int saveId = GetSaveId();
-            /*if (saveGameNames.Length > 0 && selectedNameIndex > -1 && saveName == saveGameNames[selectedNameIndex]) {*/
             if (saveId != -1) {
                 ConfirmPopup popup = ConfirmPopup.Create("Overwriting savegame", "You are about to overwrite the savegame '"+saveName+"', are you sure?");
                 popup.OnConfirmed += OverwriteConfirmed;

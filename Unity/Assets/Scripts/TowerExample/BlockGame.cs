@@ -30,4 +30,12 @@ public class BlockGame : BaseGame<BlockGameData> {
         base.EnableSaveMenu();
         blockSpawner.enabled = true;
     }
+
+    private void Update() {
+        if (CanClick()) {
+            blockSpawner.enabled = true;
+        } else {
+            blockSpawner.enabled = false;
+        }
+    }
 }

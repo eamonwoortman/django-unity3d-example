@@ -59,6 +59,15 @@ public abstract class BaseGame<T> : MonoBehaviour {
         };
     }
 
+    protected bool CanClick() {
+        foreach (BaseMenu menu in FindObjectsOfType<BaseMenu>()) {
+            if (menu.IsMouseOver()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected virtual void EnableSaveMenu() {
         saveMenu.LoadSavegames();
         loginMenu.enabled = false;
