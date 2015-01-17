@@ -69,11 +69,14 @@ public partial class BackendManager {
         }
     }
 
-    public void SaveGame(string name, string file, Type type) {
+    public void SaveGame(Savegame savegame) {
         WWWForm form = new WWWForm();
-        form.AddField("name", name);
-        form.AddField("type", type.ToString());
-        form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(file));
+        if (savegame.Id != -1) {
+            form.AddField("id", savegame.Id);
+        }
+        form.AddField("name", savegame.Name);
+        form.AddField("type", savegame.Type);
+        form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(savegame.File));
         PerformFormRequest("savegame", form, OnSaveGameResponse, authenticationToken);
     }
 

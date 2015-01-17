@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class SavegameMenu : BaseMenu {
-    public delegate void LoadSaveButtonPressed(string filename);
-    public LoadSaveButtonPressed OnSaveButtonPressed;
-    public LoadSaveButtonPressed OnLoadButtonPressed;
+    public delegate void LoadButtonPressed(string filename);
+    public delegate void SaveButtonPressed(string filename, int savegameId);
+
+    public SaveButtonPressed OnSaveButtonPressed;
+    public LoadButtonPressed OnLoadButtonPressed;
     public delegate void VoidDelegate();
     public VoidDelegate OnHasSaved;
     [HideInInspector]
@@ -60,12 +62,27 @@ public class SavegameMenu : BaseMenu {
         }
     }
 
+    private int GetSaveId() {
+        foreach (Savegame savegame in saveGames) {
+            if (savegame.Name == saveName) {
+                return savegame.Id;
+            }
+        }
+        return -1;
+    }
+
     private void DoSave() {
         saveGameNames = new string[] { LoadingGamesText };
         isLoading = true;
+        int saveId = GetSaveId();
+
         if (OnSaveButtonPressed != null) {
-            OnSaveButtonPressed(SaveName);
+            OnSaveButtonPressed(SaveName, saveId);
         }
+    }
+
+    private void OverwriteConfirmed() {
+        DoSave();
     }
 
     private void ShowWindow(int id) {
@@ -85,7 +102,12 @@ public class SavegameMenu : BaseMenu {
 
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
-            if (saveGameNames.Length == 5) {
+            int saveId = GetSaveId();
+            /*if (saveGameNames.Length > 0 && selectedNameIndex > -1 && saveName == saveGameNames[selectedNameIndex]) {*/
+            if (saveId != -1) {
+                ConfirmPopup popup = ConfirmPopup.Create("Overwriting savegame", "You are about to overwrite the savegame '"+saveName+"', are you sure?");
+                popup.OnConfirmed += OverwriteConfirmed;
+            } else if (saveGameNames.Length == 5) {
                 ConfirmPopup.Create("Savegame limit reached", "You have reached the limit(5) of savegames. Please overwrite an existing savegame.", true);
             } else {
                 DoSave();

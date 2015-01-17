@@ -48,8 +48,10 @@ public abstract class BaseGame<T> : MonoBehaviour {
             Invoke("EnableSaveMenu", 1.0f);
         };
 
-        saveMenu.OnSaveButtonPressed += delegate (string filename) {
-            backendManager.SaveGame(filename, JsonConvert.SerializeObject(Serialize()), typeof(T));
+        saveMenu.OnSaveButtonPressed += delegate (string filename, int savegameId) {
+            Savegame savegame = new Savegame() { Id = savegameId, Name = filename, 
+                Type = typeof(T).Name, File = JsonConvert.SerializeObject(Serialize()) };
+            backendManager.SaveGame(savegame);
         };
 
         saveMenu.OnLoadButtonPressed += delegate(string filename) {

@@ -107,9 +107,20 @@ class SavegameAPI(UnityAPIView, ListAPIView):
     def get_queryset(self):
         qs = Savegame.objects.all().filter(owner=self.request.user)
         return qs
+        
+    def get_object(self, request):
+        try:
+            return Savegame.objects.get(pk=request.data['id'])
+        except:
+            return None
 
     def post(self, request, *args, **kwargs):
-        serializer = SavegameDetailSerializer(data=request.data)
+        savegame = self.get_object(request)
+        if(savegame is None):
+            serializer = SavegameDetailSerializer(data=request.data)
+        else: 
+            serializer = SavegameDetailSerializer(savegame, data=request.data)
+
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

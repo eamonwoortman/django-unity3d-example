@@ -35,8 +35,8 @@ class Savegame(models.Model):
         return '%s - %s' % (self.name, self.updated)
 
 class SavegameAdmin(admin.ModelAdmin):
-    fields = ('owner', 'name', 'file')
-    list_display = ['owner', 'name', 'created', 'updated']
+    fields = ('id', 'owner', 'name', 'file')
+    list_display = ['id', 'owner', 'name', 'created', 'updated']
 
 
 admin.site.register(Score)
