@@ -136,7 +136,9 @@ class SavegameListAPI(UnityAPIView, ListAPIView):
     serializer_class = SavegameListSerializer
 
     def get_queryset(self):
-        qs = Savegame.objects.all().filter(owner=self.request.user)
+        if 'SavegameType' not in self.request.data: 
+            return Savegame.objects.none()
+        qs = Savegame.objects.all().filter(owner=self.request.user, type=self.request.data['SavegameType'])
         return qs
 
     def post(self, request, *args, **kwargs):

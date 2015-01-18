@@ -25,7 +25,7 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
     protected virtual void Awake() {
         Data = (T)Activator.CreateInstance(typeof(T));
-
+        
         if (loginMenu == null) {
             loginMenu = GetOrCreateComponent<LoginMenu>();
         }

@@ -100,9 +100,9 @@ public partial class BackendManager {
     }
 
     public void LoadGames(string savegameTypeName) {
-        Dictionary<string, string> fields = new Dictionary<string, string>();
+        Dictionary<string, object> fields = new Dictionary<string, object>();
         fields.Add("SavegameType", savegameTypeName);
-        PerformRequest("savegame", null, OnLoadGamesResponse, authenticationToken);
+        PerformRequest("getsavegames", fields, OnLoadGamesResponse, authenticationToken);
     }
 
     private void OnLoadGamesResponse(ResponseType responseType, JToken responseData, string callee)
