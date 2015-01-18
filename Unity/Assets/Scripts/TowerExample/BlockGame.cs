@@ -32,7 +32,7 @@ public class BlockGame : BaseGame<BlockGameData> {
     }
 
     private void Update() {
-        if (CanClick()) {
+        if (IsLoggedIn && CanClick()) {
             blockSpawner.enabled = true;
         } else {
             blockSpawner.enabled = false;
