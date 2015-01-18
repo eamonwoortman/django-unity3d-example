@@ -25,8 +25,8 @@ public class SavegameMenu : BaseMenu {
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
-    private string[] saveGameNames = { NoSavegamesFoundText };
-    private bool isLoading;
+    private string[] saveGameNames = { LoadingGamesText };
+    private bool isLoading = true;
     
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, 235);
