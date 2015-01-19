@@ -113,7 +113,7 @@ public class LoginMenu : BaseMenu {
         GUILayout.Label("Remember me?", GUILayout.Width(LABEL_WIDTH));
         rememberMe = GUILayout.Toggle(rememberMe, "");
         GUILayout.EndHorizontal();
-        
+        GUILayout.Space(10);
         GUILayout.Label("Status: " + status);
         GUI.enabled = filledIn;
         Event e = Event.current;
