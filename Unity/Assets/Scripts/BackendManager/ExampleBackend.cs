@@ -57,10 +57,10 @@ public partial class BackendManager {
     private string authenticationToken = "";
     
     public void Login(string username, string password) {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", username);
-        fields.Add("password", password);
-        PerformRequest("getauthtoken", fields, OnLoginResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddField("password", password);
+        Send(RequestType.Post, "getauthtoken", form, OnLoginResponse);
     }
 
     private void OnLoginResponse(ResponseType responseType, JToken responseData, string callee) {
@@ -100,7 +100,7 @@ public partial class BackendManager {
         form.AddField("name", savegame.Name);
         form.AddField("type", savegame.Type);
         form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(savegame.File));
-        PerformFormRequest("savegame", form, OnSaveGameResponse, authenticationToken);
+        Send(RequestType.Post, "savegame", form, OnSaveGameResponse, authenticationToken);
     }
 
     private void OnSaveGameResponse(ResponseType responseType, JToken responseData, string callee) {
@@ -123,9 +123,9 @@ public partial class BackendManager {
     }
 
     public void LoadGames(string savegameTypeName) {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("SavegameType", savegameTypeName);
-        PerformRequest("getsavegames", fields, OnLoadGamesResponse, authenticationToken);
+        WWWForm form = new WWWForm();
+        form.AddField("SavegameType", savegameTypeName);
+        Send(RequestType.Get, "getsavegames", form, OnLoadGamesResponse, authenticationToken);
     }
 
     private void OnLoadGamesResponse(ResponseType responseType, JToken responseData, string callee)
@@ -142,7 +142,7 @@ public partial class BackendManager {
     }
 
     public void GetAllScores() {
-        PerformRequest("score", null, OnGetAllScoresResponse, authenticationToken);
+        Send(RequestType.Get, "score", null, OnGetAllScoresResponse, authenticationToken);
     }
 
     private void OnGetAllScoresResponse(ResponseType responseType, JToken responseData, string callee) {
@@ -160,7 +160,7 @@ public partial class BackendManager {
     public void PostScore(int score) {
         WWWForm form = new WWWForm();
         form.AddField("score", score);
-        PerformFormRequest("score", form, OnPostScoreResponse, authenticationToken);
+        Send(RequestType.Get, "score", form, OnPostScoreResponse, authenticationToken);
     }
 
 

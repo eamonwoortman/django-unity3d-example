@@ -72,7 +72,7 @@ public class BackendTester : MonoBehaviour {
     void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
         string[] splittedStr = callee.Split('_');
         if (splittedStr.Length != 2) {
-            Debug.LogWarning("Could not split callee string into multiple strings");
+            Debug.LogWarning("Could not split callee string into multiple strings, callee=" + callee);
             return;
         }
         int testNumber;
@@ -100,10 +100,10 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was an error telling us we need an email
     /// </summary>
     void Test_1() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", "testuser");
-        fields.Add("password", "superpassword");
-        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("username", "testuser");
+        form.AddField("password", "superpassword");
+        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
     }
     void Validate_1(ResponseType responseType, JToken responseData) {
         const string invalidEmailMsg = "This field may not be blank.";
@@ -116,11 +116,11 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was an error telling us the username should be unique
     /// </summary>
     void Test_2() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", AdminUsername);
-        fields.Add("password", "superpassword");
-        fields.Add("email", "test@test.com");
-        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("username", AdminUsername);
+        form.AddField("password", "superpassword");
+        form.AddField("email", "test@test.com");
+        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
     }
     void Validate_2(ResponseType responseType, JToken responseData) {
         const string uniqueUsernameMsg = "This field must be unique.";
@@ -134,21 +134,21 @@ public class BackendTester : MonoBehaviour {
     /// </summary>
     private string randomUsername, password, email;
     private void DeleteCreatedUser() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", randomUsername);
-        fields.Add("password", password);
-        fields.Add("email", email);
-        backendManager.PerformRequest("deleteuser", fields, null);
+        WWWForm form = new WWWForm();
+        form.AddField("username", randomUsername);
+        form.AddField("password", password);
+        form.AddField("email", email);
+        backendManager.Send(RequestType.Post, "deleteuser", form);
     }
     void Test_3() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
+        WWWForm form = new WWWForm();
         randomUsername = "test" + System.Guid.NewGuid().ToString().Substring(0, 8);
         password = "superpassword";
         email = "test@test.com";
-        fields.Add("username", randomUsername);
-        fields.Add("password", password);
-        fields.Add("email", email);
-        backendManager.PerformRequest("registeruser", fields, OnBackendResponse);
+        form.AddField("username", randomUsername);
+        form.AddField("password", password);
+        form.AddField("email", email);
+        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
     }
     void Validate_3(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
@@ -162,10 +162,10 @@ public class BackendTester : MonoBehaviour {
     /// </summary>
     private string authToken;
      void Test_4() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", AdminUsername);
-        fields.Add("password", AdminPassword);
-        backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("username", AdminUsername);
+        form.AddField("password", AdminPassword);
+        backendManager.Send(RequestType.Post, "getauthtoken", form, OnBackendResponse);
     }
     void Validate_4(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
@@ -178,10 +178,10 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response contains an error about having invalid credentials
     /// </summary>
     void Test_5() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("username", AdminUsername);
-        fields.Add("password", "someotherpassword");
-        backendManager.PerformRequest("getauthtoken", fields, OnBackendResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("username", AdminUsername);
+        form.AddField("password", "someotherpassword");
+        backendManager.Send(RequestType.Post, "getauthtoken", form, OnBackendResponse);
     }
     void Validate_5(ResponseType responseType, JToken responseData) {
         const string invalidCredentialsMsg = "Unable to log in with provided credentials.";
@@ -194,9 +194,9 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was a 401, authentication failed
     /// </summary>
     void Test_6() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("score", 1337);
-        backendManager.PerformRequest("score", fields, OnBackendResponse);
+        WWWForm form = new WWWForm();
+        form.AddField("score", 1337);
+        backendManager.Send(RequestType.Post, "score", form, OnBackendResponse);
     }
     void Validate_6(ResponseType responseType, JToken responseData) {
         const string noAuthCredentialsMsg = "Authentication credentials were not provided.";
@@ -209,9 +209,9 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was a 403 and we're able to get the validation errors
     /// </summary>
     void Test_7() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("TEST", "TEST");
-        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
+        WWWForm form = new WWWForm();
+        form.AddField("TEST", "TEST");
+        backendManager.Send(RequestType.Post, "score", form, OnBackendResponse, authToken);
     }
     void Validate_7(ResponseType responseType, JToken responseData) {
         const string emptyFieldMsg = "This field is required.";
@@ -224,9 +224,9 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was a 201 and an object has been created
     /// </summary>
     void Test_8() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("score", 1337);
-        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
+        WWWForm form = new WWWForm();
+        form.AddField("score", 1337);
+        backendManager.Send(RequestType.Post, "score", form, OnBackendResponse, authToken);
     }
     void Validate_8(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != success, it's: " + responseType);
@@ -239,9 +239,9 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was an error telling us the score is invalid
     /// </summary>
     void Test_9() {
-        Dictionary<string, object> fields = new Dictionary<string, object>();
-        fields.Add("score", "yoloswaggings");
-        backendManager.PerformRequest("score", fields, OnBackendResponse, authToken);
+        WWWForm form = new WWWForm();
+        form.AddField("score", "yoloswaggings");
+        backendManager.Send(RequestType.Post, "score", form, OnBackendResponse, authToken);
     }
     void Validate_9(ResponseType responseType, JToken responseData) {
         const string invalidIntegerMsg = "A valid integer is required.";
@@ -254,10 +254,10 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response contains an array of scores
     /// </summary>
     void Test_10() {
-        backendManager.PerformRequest("score", null, OnBackendResponse, authToken);
+        backendManager.Send(RequestType.Get, "score", null, OnBackendResponse, authToken);
     }
     void Validate_10(ResponseType responseType, JToken responseData) {
-        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType + ", data="+responseData);
         JArray jArray = (JArray)responseData;
         Assert(jArray != null, "responseData was not a valid JArray");
         Assert(jArray.Count > 0, "jsonArray does not have any elements");
@@ -275,13 +275,11 @@ public class BackendTester : MonoBehaviour {
         return Convert.ToBase64String(bytesToEncode);
     }
     void Test_11() {
-        //Dictionary<string, object> fields = new Dictionary<string, object>();
-        //fields.Add("name", "best save1");
-        //fields.Add("saveblob", ToBase64(LONG_SAVE_STR));
         WWWForm form = new WWWForm();
         form.AddField("name", "best save1");
+        form.AddField("type", "TestDataType");
         form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(LONG_SAVE_STR));
-        backendManager.PerformFormRequest("savegame", form, OnBackendResponse, authToken);
+        backendManager.Send(RequestType.Post, "savegame", form, OnBackendResponse, authToken);
     }
     void Validate_11(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);

@@ -103,7 +103,6 @@ class GetAuthToken(GenericAPIView):
     renderer_classes = (renderers.JSONRenderer,)
 
     def post(self, request):
-        print  'GETAUTHTOKEN, request=%r'%request.data
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']

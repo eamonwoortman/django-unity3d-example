@@ -79,92 +79,46 @@ public partial class BackendManager : MonoBehaviour {
 
 
     //---- Private Methods ----//
-    /// <summary>Performs a request to the backend.</summary>
-    /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
-    /// <param name="fields">A list of fields that are send as parameters to the backend</param>
-    /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
-    /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
-    public void PerformRequest(string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null, string authToken = "") {
-        string url = hostUrl + command;
-        WWW request;
-        WWWForm wwwForm = new WWWForm();
-        Hashtable headers = new Hashtable();
-
-        //make sure we get a json response
-        headers.Add("Accept", "application/json");
-        //also, add the authentication token, if we have one
-        if (authToken != "") {
-            //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
-            headers.Add("Authorization", "Token " + authToken);
-        }
-
-        if (fields != null) {
-            foreach (KeyValuePair<string, object> pair in fields) {
-                wwwForm.AddField(pair.Key, pair.Value.ToString());
-            }
-            request = new WWW(url, wwwForm.data, headers);
-        } else {
-            request = new WWW(url, null , headers);
-        }
-
-        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-        string callee = stackTrace.GetFrame(1).GetMethod().Name;
-        StartCoroutine(HandleRequest(request, onResponse, callee));
-    }
 
     /// <summary>Performs a request to the backend.</summary>
+    /// <param name="type">The request type(Get, Post, Update, Delete)</param>
     /// <param name="command">Command that is pasted after the url to backend. For example: "localhost:8000/api/" + command</param>
     /// <param name="wwwForm">A WWWForm to send with the request</param>
     /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
     /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
-    public void PerformFormRequest(string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
+    public void Send(RequestType type, string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
         WWW request;
-        Hashtable headers = wwwForm.headers;
+        Hashtable headers;
+        byte[] postData;
+
+        if (wwwForm == null) {
+            wwwForm = new WWWForm();
+            postData = new byte[] { 1 };
+        } else {
+            postData = wwwForm.data;
+        }
+
+        headers = wwwForm.headers;
+        
         //make sure we get a json response
         headers.Add("Accept", "application/json");
+
+        //also add the correct request method
+        headers.Add("UNITY_METHOD", type.ToString().ToUpper());
+
         //also, add the authentication token, if we have one
         if (authToken != "") {
             //for more information about token authentication, see: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
             headers.Add("Authorization", "Token " + authToken);
         }
-            
-        request = new WWW(url, wwwForm.data, headers);
+        request = new WWW(url, postData, headers);
 
         System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
         string callee = stackTrace.GetFrame(1).GetMethod().Name;
         StartCoroutine(HandleRequest(request, onResponse, callee));
     }
-
-    public void Send(RequestType type, string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null, string authToken = "") {
-
-        string url = hostUrl + command;
-        WWW request;
-        WWWForm wwwForm = new WWWForm();
-        Hashtable headers = new Hashtable();
-
-        headers.Add("UNITY_METHOD", type.ToString());
-
-        if (authToken != "") {
-            wwwForm.AddField("Authorization", "Token " + authToken);
-        }
-
-        if (fields != null) {
-            foreach (KeyValuePair<string, object> pair in fields) {
-                wwwForm.AddField(pair.Key, pair.Value.ToString());
-            }
-            request = new WWW(url, wwwForm.data, headers);
-        } else {
-            request = new WWW(url, null, headers);
-        }
-
-        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-        string callee = stackTrace.GetFrame(1).GetMethod().Name;
-        StartCoroutine(HandleRequest(request, onResponse, callee));
-    }
-
-
-
+    
     IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
         //Wait till request is done
         while (true) {
