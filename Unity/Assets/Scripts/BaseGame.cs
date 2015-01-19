@@ -112,6 +112,8 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
         T data = JsonConvert.DeserializeObject<T>(www.text);
         Deserialize(data);
+
+        saveMenu.SetStatus("Game is loaded.");
     }
 
     private void Save(string filename) {

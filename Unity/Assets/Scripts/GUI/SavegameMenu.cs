@@ -46,6 +46,7 @@ public class SavegameMenu : BaseMenu {
     private const string NoSavegamesFoundText = "No savegames found";
     private const string LoadingGamesText = "Loading games...";
     private const string SavingGameText = "Saving game...";
+    private const string LoadingGameText = "Loading game...";
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
@@ -143,6 +144,7 @@ public class SavegameMenu : BaseMenu {
 
         GUI.enabled = savegamesFound && selectedNameIndex != -1;
         if (GUILayout.Button("Load")) {
+            statusText = LoadingGameText;
             if (OnLoadButtonPressed != null) {
                 OnLoadButtonPressed(saveGames[selectedNameIndex].File);
             }
@@ -158,7 +160,7 @@ public class SavegameMenu : BaseMenu {
         windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
     }
 
-    public void RefreshSaveGames() {
-
+    public void SetStatus(string status) {
+        statusText = status;
     }
 }
