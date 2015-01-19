@@ -53,6 +53,7 @@ public class SavegameMenu : BaseMenu {
     private string[] saveGameNames = { LoadingGamesText };
     private bool isLoading = true;
     private string statusText = LoadingGamesText;
+    private bool isExpanded;
 
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, 260);
@@ -118,6 +119,11 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void ShowWindow(int id) {
+        isExpanded = GUILayout.Toggle(isExpanded, "  Show/Hide");
+        if (!isExpanded) {
+            return;
+        }
+
         GUILayout.BeginVertical();
         GUILayout.Label("Save games");
         bool savegamesFound = (saveGameNames[0] != NoSavegamesFoundText);
@@ -166,6 +172,11 @@ public class SavegameMenu : BaseMenu {
 
     private void OnGUI() {
         GUI.skin = Skin;
+        if (isExpanded) {
+            windowRect.height = 260;
+        } else {
+            windowRect.height = 50;
+        }
         windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
     }
 
