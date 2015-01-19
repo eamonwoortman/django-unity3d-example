@@ -45,17 +45,20 @@ public class SavegameMenu : BaseMenu {
 
     private const string NoSavegamesFoundText = "No savegames found";
     private const string LoadingGamesText = "Loading games...";
+    private const string SavingGameText = "Saving game...";
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
     private string[] saveGameNames = { LoadingGamesText };
     private bool isLoading = true;
-    
+    private string statusText = LoadingGamesText;
+
     public SavegameMenu() {
-        windowRect = new Rect(10, 10, 200, 235);
+        windowRect = new Rect(10, 10, 200, 260);
     }
 
     public void LoadSavegames() {
+        statusText = LoadingGamesText;
         backendManager.LoadGames(SavegameType);
     }
 
@@ -83,6 +86,7 @@ public class SavegameMenu : BaseMenu {
         } else {
             saveGameNames = new string[] { NoSavegamesFoundText };
         }
+        statusText = "";
     }
 
     private int GetSaveId() {
@@ -95,7 +99,7 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void DoSave() {
-        saveGameNames = new string[] { LoadingGamesText };
+        statusText = SavingGameText;
         isLoading = true;
         int saveId = GetSaveId();
 
@@ -121,6 +125,7 @@ public class SavegameMenu : BaseMenu {
         GUI.enabled = true;
         GUILayout.FlexibleSpace();
         saveName = GUILayout.TextField(saveName);
+        GUILayout.Label("Status: " + statusText);
         GUILayout.BeginHorizontal();
 
         GUI.enabled = (SaveName != "");
