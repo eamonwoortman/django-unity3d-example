@@ -111,6 +111,10 @@ public class SavegameMenu : BaseMenu {
 
     private void OverwriteConfirmed() {
         DoSave();
+        enabled = true;
+    }
+    private void PopupClosed() {
+        enabled = true;
     }
 
     private void ShowWindow(int id) {
@@ -135,8 +139,13 @@ public class SavegameMenu : BaseMenu {
             if (saveId != -1) {
                 ConfirmPopup popup = ConfirmPopup.Create("Overwriting savegame", "You are about to overwrite the savegame '"+saveName+"', are you sure?");
                 popup.OnConfirmed += OverwriteConfirmed;
+                popup.OnCanceled += PopupClosed;
+                enabled = false;
             } else if (saveGameNames.Length == 5) {
-                ConfirmPopup.Create("Savegame limit reached", "You have reached the limit(5) of savegames. Please overwrite an existing savegame.", true);
+                ConfirmPopup popup = ConfirmPopup.Create("Savegame limit reached", "You have reached the limit(5) of savegames. Please overwrite an existing savegame.", true);
+                popup.OnCanceled += PopupClosed;
+                popup.OnConfirmed += PopupClosed;
+                enabled = false;
             } else {
                 DoSave();
             }
