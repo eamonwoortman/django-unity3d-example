@@ -43,6 +43,13 @@ public enum ResponseType {
     RequestError
 }
 
+public enum RequestType {
+    Get,
+    Post,
+    Update,
+    Delete
+}
+
 public partial class BackendManager : MonoBehaviour {
     //---- Public Delegates ----//
     /// <summary>
@@ -128,6 +135,34 @@ public partial class BackendManager : MonoBehaviour {
         string callee = stackTrace.GetFrame(1).GetMethod().Name;
         StartCoroutine(HandleRequest(request, onResponse, callee));
     }
+
+    public void Send(RequestType type, string command, Dictionary<string, object> fields = null, RequestResponseDelegate onResponse = null, string authToken = "") {
+
+        string url = hostUrl + command;
+        WWW request;
+        WWWForm wwwForm = new WWWForm();
+        Hashtable headers = new Hashtable();
+
+        headers.Add("UNITY_METHOD", type.ToString());
+
+        if (authToken != "") {
+            wwwForm.AddField("Authorization", "Token " + authToken);
+        }
+
+        if (fields != null) {
+            foreach (KeyValuePair<string, object> pair in fields) {
+                wwwForm.AddField(pair.Key, pair.Value.ToString());
+            }
+            request = new WWW(url, wwwForm.data, headers);
+        } else {
+            request = new WWW(url, null, headers);
+        }
+
+        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+        string callee = stackTrace.GetFrame(1).GetMethod().Name;
+        StartCoroutine(HandleRequest(request, onResponse, callee));
+    }
+
 
 
     IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
