@@ -36,21 +36,8 @@ from rest_framework import mixins
 from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameDetailSerializer, SavegameListSerializer
 from unitybackendapp.models import Score, Savegame
 
-class UnityAPIView(GenericAPIView):
-    """
-    The UnityAPIView replaces the response status code with 200 
-    and adds a REAL_STATUS_CODE header containing the original status code. 
-    This is required to work with Unity3D's WWW class since 
-    it doesn't read the response body if the status code is anything other than 200
-    """
-    def finalize_response(self, request, *args, **kwargs):
-        response = super(UnityAPIView, self).finalize_response(request, *args, **kwargs)
-        response["REAL_STATUS"] = '%s %s' % (response.status_code, response.status_text)
-        response.status_code = 200
-        return response
-
 class ScoreAPI(mixins.ListModelMixin,
-               UnityAPIView):
+               GenericAPIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
@@ -89,7 +76,7 @@ class ScoreAPI(mixins.ListModelMixin,
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class RegisterUser(UnityAPIView):
+class RegisterUser(GenericAPIView):
     def post(self, request, format=None):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
@@ -98,7 +85,7 @@ class RegisterUser(UnityAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
-class DeleteUser(UnityAPIView):
+class DeleteUser(GenericAPIView):
     def post(self, request, format=None):
         try:
             user = User.objects.get(username=request.data['username'], email=request.data['email'])
@@ -109,20 +96,21 @@ class DeleteUser(UnityAPIView):
             return Response('Could not find that user', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class GetAuthToken(UnityAPIView):
+class GetAuthToken(GenericAPIView):
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
     renderer_classes = (renderers.JSONRenderer,)
 
     def post(self, request):
+        print  'GETAUTHTOKEN, request=%r'%request.data
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
-class SavegameAPI(UnityAPIView, ListAPIView):
+class SavegameAPI(GenericAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer
@@ -149,11 +137,7 @@ class SavegameAPI(UnityAPIView, ListAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, *args, **kwargs): 
-        return self.list(request, *args, **kwargs)
-
-
-class SavegameListAPI(UnityAPIView, ListAPIView):
+class SavegameListAPI(ListAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer
