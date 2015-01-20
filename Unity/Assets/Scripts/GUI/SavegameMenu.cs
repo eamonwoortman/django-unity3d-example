@@ -47,6 +47,7 @@ public class SavegameMenu : BaseMenu {
     private const string LoadingGamesText = "Loading games...";
     private const string SavingGameText = "Saving game...";
     private const string LoadingGameText = "Loading game...";
+    private const int DefaultHeight = 275;
 
     private static GUIContent deleteButtonContent = new GUIContent("-", "delete");
     private List<Savegame> saveGames;
@@ -59,7 +60,7 @@ public class SavegameMenu : BaseMenu {
     private int deleteSavegameIndex = -1;
 
     public SavegameMenu() {
-        windowRect = new Rect(10, 10, 200, 260);
+        windowRect = new Rect(10, 10, 200, DefaultHeight);
     }
 
     public void LoadSavegames() {
@@ -225,7 +226,7 @@ public class SavegameMenu : BaseMenu {
     private void OnGUI() {
         GUI.skin = Skin;
         if (isExpanded) {
-            windowRect.height = 260;
+            windowRect.height = DefaultHeight;
         } else {
             windowRect.height = 50;
         }
