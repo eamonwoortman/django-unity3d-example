@@ -61,11 +61,9 @@ class ScoreAPI(mixins.ListModelMixin,
         """
         Post a new score
         """
-        data = MultiValueDict(request.DATA)
-        #force the authenticated user as the owner
-        data['user'] = request.user.pk
+        data = request.data
         #first try to see if there already exists an object with that user and score
-        score = self.get_object(data['user'], data['score'] if 'score' in data else -1)
+        score = self.get_object(request.user.pk, data['score'] if 'score' in data else -1)
         if score != None:
             serializer = ScoreSerializer(score, data=data)
         else:
