@@ -55,7 +55,7 @@ public class BackendTester : MonoBehaviour {
     void ValidateSubfield(JToken jsonObject, string key, string value) {
         JToken fieldToken = jsonObject[key];
         Assert(fieldToken != null, key + " field can't be found");
-        Assert(fieldToken.HasValues, "score field does not have any values");
+        Assert(fieldToken.HasValues, key + " field does not have any values");
 
         JToken[] fieldValidationErrors = fieldToken.Values().ToArray();
         bool found = false;
@@ -66,7 +66,7 @@ public class BackendTester : MonoBehaviour {
                 break;
             }
         }
-        Assert(found, "error strings of namefield does not contain the value '" + value + "'");
+        Assert(found, "error strings of '"+key+"' field does not contain the value '" + value + "'");
     }
 
     void OnBackendResponse(ResponseType responseType, JToken responseData, string callee) {
@@ -106,7 +106,7 @@ public class BackendTester : MonoBehaviour {
         backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
     }
     void Validate_1(ResponseType responseType, JToken responseData) {
-        const string invalidEmailMsg = "This field may not be blank.";
+        const string invalidEmailMsg = "This field is required.";
         Assert(responseType == ResponseType.ErrorFromServer, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "email", invalidEmailMsg);
     }
