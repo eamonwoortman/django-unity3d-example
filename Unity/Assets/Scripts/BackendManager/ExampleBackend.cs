@@ -100,7 +100,12 @@ public partial class BackendManager {
         form.AddField("name", savegame.Name);
         form.AddField("type", savegame.Type);
         form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(savegame.File));
-        Send(RequestType.Post, "savegame", form, OnSaveGameResponse, authenticationToken);
+        if (savegame.Id == -1) {
+            Send(RequestType.Post, "savegame", form, OnSaveGameResponse, authenticationToken);
+        } else {
+            Send(RequestType.Put, "savegame/" + savegame.Id + "/", form, OnSaveGameResponse, authenticationToken);
+        }
+        
     }
 
     private void OnSaveGameResponse(ResponseType responseType, JToken responseData, string callee) {
@@ -125,7 +130,7 @@ public partial class BackendManager {
     public void LoadGames(string savegameTypeName) {
         WWWForm form = new WWWForm();
         form.AddField("SavegameType", savegameTypeName);
-        Send(RequestType.Get, "getsavegames", form, OnLoadGamesResponse, authenticationToken);
+        Send(RequestType.Get, "savegames/", form, OnLoadGamesResponse, authenticationToken);
     }
 
     private void OnLoadGamesResponse(ResponseType responseType, JToken responseData, string callee)

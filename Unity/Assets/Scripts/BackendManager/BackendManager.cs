@@ -40,13 +40,14 @@ public enum ResponseType {
     ErrorFromServer,
     ParseError,
     BackendDisabled,
-    RequestError
+    RequestError,
+    PageNotFound
 }
 
 public enum RequestType {
     Get,
     Post,
-    Update,
+    Put,
     Delete
 }
 
@@ -105,7 +106,7 @@ public partial class BackendManager : MonoBehaviour {
         headers.Add("Accept", "application/json");
 
         //also add the correct request method
-        headers.Add("UNITY_METHOD", type.ToString().ToUpper());
+        headers.Add("X-UNITY-METHOD", type.ToString().ToUpper());
 
         //also, add the authentication token, if we have one
         if (authToken != "") {
@@ -154,9 +155,15 @@ public partial class BackendManager : MonoBehaviour {
         } catch (Exception ex) {
             if (onResponse != null) {
                 if (!responseSuccessful) {
-                    Debug.Log("Could not parse the response, request.text=" + request.text);
-                    Debug.Log("Exception=" + ex.ToString());
-                    onResponse(ResponseType.ParseError, null, callee);
+                    if (statusCode == 404) {
+                        //404's should not be treated as unparsable
+                        Debug.LogWarning("Page not found: " + request.url);
+                        onResponse(ResponseType.PageNotFound, null, callee);
+                    } else {
+                        Debug.Log("Could not parse the response, request.text=" + request.text);
+                        Debug.Log("Exception=" + ex.ToString());
+                        onResponse(ResponseType.ParseError, null, callee);
+                    }
                 } else {
                     if (request.text == "") {
                         onResponse(ResponseType.Success, null, callee);

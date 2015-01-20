@@ -29,7 +29,7 @@ from rest_framework import parsers
 from rest_framework import renderers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView
+from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework import mixins
@@ -109,7 +109,7 @@ class GetAuthToken(GenericAPIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
-class SavegameAPI(GenericAPIView):
+class SavegameAPI(ListCreateAPIView, UpdateAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer
@@ -117,41 +117,10 @@ class SavegameAPI(GenericAPIView):
     def get_queryset(self):
         qs = Savegame.objects.all().filter(owner=self.request.user)
         return qs
-        
-    def get_object(self, request):
-        try:
-            return Savegame.objects.get(pk=request.data['id'])
-        except:
-            return None
 
-    def post(self, request, *args, **kwargs):
-        savegame = self.get_object(request)
-        if(savegame is None):
-            serializer = SavegameDetailSerializer(data=request.data)
-        else: 
-            serializer = SavegameDetailSerializer(savegame, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class SavegameListAPI(ListAPIView):
-    authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = SavegameListSerializer
-
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         if 'SavegameType' not in self.request.data: 
-            return Savegame.objects.none()
-        qs = Savegame.objects.all().filter(owner=self.request.user, type=self.request.data['SavegameType'])
-        return qs
-
-    def post(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-        #serializer = SavegameDetailSerializer(data=request.data)
-        #if serializer.is_valid():
-        #    serializer.save(owner=request.user)
-        #    return Response(serializer.data, status=status.HTTP_201_CREATED)
-        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response([])
+        instance = self.get_queryset().filter(type=self.request.data['SavegameType'])
+        serializer = self.get_serializer(instance, many=True)
+        return Response(serializer.data)

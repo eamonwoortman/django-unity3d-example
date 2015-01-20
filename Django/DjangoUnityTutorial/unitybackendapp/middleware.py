@@ -35,9 +35,9 @@ class Unity3DMiddleware(object):
         Replaces the request method with the method defined in the 
         UNITY_METHOD header field(if specified).
         """
-        if 'HTTP_UNITY_METHOD' in request.META:
-            method = request.META['HTTP_UNITY_METHOD']
-            if method in ['POST', 'DELETE', 'UPDATE', 'GET']:
+        if 'HTTP_X_UNITY_METHOD' in request.META:
+            method = request.META['HTTP_X_UNITY_METHOD']
+            if method in ['POST', 'DELETE', 'PUT', 'GET']:
                 request.method = method
             
     def process_response(self, request, response):
@@ -46,6 +46,6 @@ class Unity3DMiddleware(object):
         original status code and text.
         """
         if 'application/json' in request.META.get('HTTP_ACCEPT'):
-            response["REAL_STATUS"] = '%s %s' % (response.status_code, response.status_text)
+            response["REAL_STATUS"] = '%s %s' % (response.status_code, getattr(response, 'status_text', ''))
             response.status_code = 200
         return response
