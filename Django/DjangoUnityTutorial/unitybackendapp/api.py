@@ -117,6 +117,9 @@ class SavegameAPI(ListCreateAPIView, UpdateAPIView):
     def get_queryset(self):
         qs = Savegame.objects.all().filter(owner=self.request.user)
         return qs
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def list(self, request, *args, **kwargs):
         if 'SavegameType' not in self.request.data: 
