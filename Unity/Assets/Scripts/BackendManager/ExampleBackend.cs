@@ -39,6 +39,11 @@ public partial class BackendManager {
     public SaveGameSuccess OnSaveGameSucces;
     public SaveGameFailed OnSaveGameFailed;
 
+    public delegate void DeleteSavegameSuccess();
+    public delegate void DeleteSavegameFailed(string errorMsg);
+    public DeleteSavegameSuccess OnDeleteSavegameSucces;
+    public DeleteSavegameFailed OnDeleteSavegameFailed;
+
     public delegate void GamesLoaded(List<Savegame> games);
     public delegate void GamesLoadedFailed(string errorMsg);
     public GamesLoaded OnGamesLoaded;
@@ -168,6 +173,27 @@ public partial class BackendManager {
         Send(RequestType.Get, "score", form, OnPostScoreResponse, authenticationToken);
     }
 
+    private void OnDeleteSavegameResponse(ResponseType responseType, JToken responseData, string callee) {
+        if (responseType == ResponseType.Success) {
+            if (OnDeleteSavegameSucces != null) {
+                OnDeleteSavegameSucces();
+            }
+        } else if (responseType == ResponseType.RequestError) {
+            if (OnDeleteSavegameFailed != null) {
+                OnDeleteSavegameFailed("Could not reach the server. Please try again later.");
+            }
+        } else {
+            if (OnDeleteSavegameFailed != null) {
+                OnDeleteSavegameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
+            }
+        }
+    }
+
+    public void DeleteSavegame(int index) {
+        WWWForm form = new WWWForm();
+        form.AddField("id", index);
+        Send(RequestType.Delete, "savegame/" + index + "/", form, OnSaveGameResponse, authenticationToken);
+    }
 
     private void OnPostScoreResponse(ResponseType responseType, JToken responseData, string callee) {
         if (responseType == ResponseType.Success) {

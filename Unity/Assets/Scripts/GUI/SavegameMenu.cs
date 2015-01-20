@@ -47,6 +47,8 @@ public class SavegameMenu : BaseMenu {
     private const string LoadingGamesText = "Loading games...";
     private const string SavingGameText = "Saving game...";
     private const string LoadingGameText = "Loading game...";
+
+    private static GUIContent deleteButtonContent = new GUIContent("-", "delete");
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
@@ -54,6 +56,7 @@ public class SavegameMenu : BaseMenu {
     private bool isLoading = true;
     private string statusText = LoadingGamesText;
     private bool isExpanded;
+    private int deleteSavegameIndex = -1;
 
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, 260);
@@ -68,6 +71,7 @@ public class SavegameMenu : BaseMenu {
         backendManager.OnSaveGameSucces += OnSaveGameSuccess;
         backendManager.OnSaveGameFailed += OnSaveGameFailed;
         backendManager.OnGamesLoaded += OnGamesLoaded;
+
         isExpanded = PlayerPrefs.GetInt("expandSaveMenu", 1) == 1 ? true : false;
     }
 
@@ -92,9 +96,13 @@ public class SavegameMenu : BaseMenu {
         statusText = "";
     }
 
-    private int GetSaveId() {
+    private int GetSaveIdByIndex(int index) {
+        return GetSaveId(saveGameNames[index]);
+    }
+         
+    private int GetSaveId(string savegameName) {
         foreach (Savegame savegame in saveGames) {
-            if (savegame.Name == saveName) {
+            if (savegame.Name == savegameName) {
                 return savegame.Id;
             }
         }
@@ -104,7 +112,7 @@ public class SavegameMenu : BaseMenu {
     private void DoSave() {
         statusText = SavingGameText;
         isLoading = true;
-        int saveId = GetSaveId();
+        int saveId = GetSaveId(saveName);
 
         if (OnSaveButtonPressed != null) {
             OnSaveButtonPressed(SaveName, saveId);
@@ -117,6 +125,27 @@ public class SavegameMenu : BaseMenu {
     }
     private void PopupClosed() {
         enabled = true;
+    }
+
+
+    private void OnSaveDeleted() {
+        statusText = "Savegame deleted.";
+        enabled = true;
+        LoadSavegames();
+    }
+
+    private void OnSaveDeletedFailed(string errString) {
+        statusText = "Deletion failed: " + errString;
+        enabled = true;
+    }
+
+    private void DeleteConfirmed() {
+        enabled = true;
+        isLoading = true;
+        statusText = "Deleting savegame...";
+
+        int savegameId = GetSaveIdByIndex(deleteSavegameIndex);
+        backendManager.DeleteSavegame(savegameId);
     }
 
     private void ShowWindow(int id) {
@@ -134,11 +163,28 @@ public class SavegameMenu : BaseMenu {
         GUILayout.Label("Save games");
         bool savegamesFound = (saveGameNames[0] != NoSavegamesFoundText);
         GUI.enabled = savegamesFound && !isLoading;
-        selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1);
+
+        GUILayout.BeginHorizontal();
+        selectedNameIndex = GUILayout.SelectionGrid(selectedNameIndex, saveGameNames, 1, GUILayout.Width(150));
         if (selectedNameIndex != oldSelectedNameIndex) {
             saveName = saveGameNames[selectedNameIndex];
             oldSelectedNameIndex = selectedNameIndex;
         }
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginVertical();
+        for (int i = 0; i < saveGameNames.Length; i++) {
+            if (GUILayout.Button(deleteButtonContent, GUILayout.Width(21), GUILayout.Height(21))) {
+                deleteSavegameIndex = i;
+                ConfirmPopup popup = ConfirmPopup.Create("Deleting savegame", "You are about to delete the savegame '" + saveGameNames[i] + "', are you sure?");
+                popup.OnConfirmed += DeleteConfirmed;
+                popup.OnCanceled += PopupClosed;
+                enabled = false;
+            }
+        } 
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
+
         GUI.enabled = true;
         GUILayout.FlexibleSpace();
         saveName = GUILayout.TextField(saveName);
@@ -147,7 +193,7 @@ public class SavegameMenu : BaseMenu {
 
         GUI.enabled = (SaveName != "");
         if (GUILayout.Button("Save")) {
-            int saveId = GetSaveId();
+            int saveId = GetSaveId(saveName);
             if (saveId != -1) {
                 ConfirmPopup popup = ConfirmPopup.Create("Overwriting savegame", "You are about to overwrite the savegame '"+saveName+"', are you sure?");
                 popup.OnConfirmed += OverwriteConfirmed;
