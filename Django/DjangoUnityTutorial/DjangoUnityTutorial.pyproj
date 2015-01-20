@@ -40,6 +40,9 @@
     <Compile Include="unitybackendapp\api.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="unitybackendapp\middleware.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="unitybackendapp\models.py" />
     <Compile Include="unitybackendapp\serializers.py">
       <SubType>Code</SubType>
