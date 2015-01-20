@@ -99,9 +99,6 @@ public partial class BackendManager {
 
     public void SaveGame(Savegame savegame) {
         WWWForm form = new WWWForm();
-        if (savegame.Id != -1) {
-            form.AddField("id", savegame.Id);
-        }
         form.AddField("name", savegame.Name);
         form.AddField("type", savegame.Type);
         form.AddBinaryData("file", System.Text.Encoding.UTF8.GetBytes(savegame.File));
@@ -190,9 +187,7 @@ public partial class BackendManager {
     }
 
     public void DeleteSavegame(int index) {
-        WWWForm form = new WWWForm();
-        form.AddField("id", index);
-        Send(RequestType.Delete, "savegame/" + index + "/", form, OnSaveGameResponse, authenticationToken);
+        Send(RequestType.Delete, "savegame/" + index + "/", null, OnSaveGameResponse, authenticationToken);
     }
 
     private void OnPostScoreResponse(ResponseType responseType, JToken responseData, string callee) {
