@@ -49,16 +49,15 @@
      <Compile Include="Assets\Scripts\BackendManager\BackendManager.cs" />
      <Compile Include="Assets\Scripts\BackendManager\BackendTester.cs" />
      <Compile Include="Assets\Scripts\BackendManager\ExampleBackend.cs" />
-     <Compile Include="Assets\Scripts\BaseGame.cs" />
      <Compile Include="Assets\Scripts\GUI\BaseMenu.cs" />
      <Compile Include="Assets\Scripts\GUI\ConfirmPopup.cs" />
      <Compile Include="Assets\Scripts\GUI\HighscoreMenu.cs" />
      <Compile Include="Assets\Scripts\GUI\LoginMenu.cs" />
      <Compile Include="Assets\Scripts\GUI\SavegameMenu.cs" />
      <Compile Include="Assets\Scripts\JeuDeBoulesExample\Ball.cs" />
-     <Compile Include="Assets\Scripts\JeuDeBoulesExample\BallData.cs" />
      <Compile Include="Assets\Scripts\JeuDeBoulesExample\BallGame.cs" />
-     <Compile Include="Assets\Scripts\JeuDeBoulesExample\JeuDeBoulesData.cs" />
+     <Compile Include="Assets\Scripts\JeuDeBoulesExample\Data\BallData.cs" />
+     <Compile Include="Assets\Scripts\JeuDeBoulesExample\Data\JeuDeBoulesData.cs" />
      <Compile Include="Assets\Scripts\JsonDotNet\Source\Aot\EnumerationExtension.cs" />
      <Compile Include="Assets\Scripts\JsonDotNet\Source\Bson\BsonBinaryType.cs" />
      <Compile Include="Assets\Scripts\JsonDotNet\Source\Bson\BsonBinaryWriter.cs" />
@@ -375,13 +374,14 @@
      <Compile Include="Assets\Scripts\JsonDotNet\Source\WinRT\Utilities\RT_TypeExtensions.cs" />
      <Compile Include="Assets\Scripts\JsonDotNet\Source\WinRT\Utilities\RT_ValidationUtils.cs" />
      <Compile Include="Assets\Scripts\Misc\ExtensionMethods.cs" />
-     <Compile Include="Assets\Scripts\Savegame.cs" />
-     <Compile Include="Assets\Scripts\Score.cs" />
+     <Compile Include="Assets\Scripts\Shared\BaseGame.cs" />
+     <Compile Include="Assets\Scripts\Shared\Savegame.cs" />
+     <Compile Include="Assets\Scripts\Shared\Score.cs" />
      <Compile Include="Assets\Scripts\TowerExample\Block.cs" />
-     <Compile Include="Assets\Scripts\TowerExample\BlockData.cs" />
      <Compile Include="Assets\Scripts\TowerExample\BlockGame.cs" />
-     <Compile Include="Assets\Scripts\TowerExample\BlockGameData.cs" />
      <Compile Include="Assets\Scripts\TowerExample\BlockSpawner.cs" />
+     <Compile Include="Assets\Scripts\TowerExample\Data\BlockData.cs" />
+     <Compile Include="Assets\Scripts\TowerExample\Data\BlockGameData.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
