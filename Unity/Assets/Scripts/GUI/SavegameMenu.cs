@@ -68,6 +68,7 @@ public class SavegameMenu : BaseMenu {
         backendManager.OnSaveGameSucces += OnSaveGameSuccess;
         backendManager.OnSaveGameFailed += OnSaveGameFailed;
         backendManager.OnGamesLoaded += OnGamesLoaded;
+        isExpanded = PlayerPrefs.GetInt("expandSaveMenu", 1) == 1 ? true : false;
     }
 
     private void OnSaveGameSuccess() {
@@ -119,7 +120,12 @@ public class SavegameMenu : BaseMenu {
     }
 
     private void ShowWindow(int id) {
-        isExpanded = GUILayout.Toggle(isExpanded, "  Show/Hide");
+        bool newIsExpanded = GUILayout.Toggle(isExpanded, "  Show/Hide");
+        if (newIsExpanded != isExpanded) {
+            isExpanded = newIsExpanded;
+            PlayerPrefs.SetInt("expandSaveMenu", isExpanded ? 1 : 0);
+        }
+
         if (!isExpanded) {
             return;
         }
