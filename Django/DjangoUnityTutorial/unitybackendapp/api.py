@@ -109,7 +109,7 @@ class GetAuthToken(GenericAPIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
-class SavegameAPI(ListCreateAPIView, UpdateAPIView):
+class SavegameAPI(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SavegameListSerializer

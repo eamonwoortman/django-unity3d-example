@@ -274,6 +274,11 @@ public class BackendTester : MonoBehaviour {
         byte[] bytesToEncode = System.Text.Encoding.UTF8.GetBytes(inputText);
         return Convert.ToBase64String(bytesToEncode);
     }
+    private void DeleteSavegame(int savegameId) {
+        WWWForm form = new WWWForm();
+        form.AddField("id", savegameId);
+        backendManager.Send(RequestType.Delete, "savegame/" + savegameId + "/", form, null, authToken);
+    }
     void Test_11() {
         WWWForm form = new WWWForm();
         form.AddField("name", "best save1");
@@ -283,6 +288,8 @@ public class BackendTester : MonoBehaviour {
     }
     void Validate_11(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
+        int savegameId = responseData.Value<int>("id");
+        DeleteSavegame(savegameId);
         //Debug.Log("ReponseData=" + responseData);
     }
 }
