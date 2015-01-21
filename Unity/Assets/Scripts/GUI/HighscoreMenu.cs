@@ -28,24 +28,20 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class HighscoreMenu : BaseMenu {
-
     public Action OnClose;
-    public bool Loading;
     public Score newestScore;
-
     public List<Score> Scores {
         get {
             return scores;
         }
         set {
-            scores = value.OrderBy(s => s.Amount).ThenBy(s => s.Updated).Reverse().ToList();
-            newestScore = scores.OrderByDescending(s => s.Updated).First();
+
         }
     }
 
     private const int Height = 500;
     private const int Width = 300;
-
+    private bool loading;
     private List<Score> scores;
 
     public HighscoreMenu() {
@@ -53,13 +49,14 @@ public class HighscoreMenu : BaseMenu {
     }
 
     void Start() {
-        Loading = true;
+        loading = true;
         backendManager.OnScoresLoaded += OnScoresLoaded;
-        backendManager.GetAllScores();
     }
 
-    private void OnScoresLoaded(List<Score> scores) {
-        Loading = false;
+    private void OnScoresLoaded(List<Score> newScores) {
+        scores = newScores.OrderBy(s => s.Amount).ThenBy(s => s.Updated).Reverse().ToList();
+        newestScore = scores.OrderByDescending(s => s.Updated).First();
+        loading = false;
     }
 
     private void DrawHeader() {
@@ -73,7 +70,7 @@ public class HighscoreMenu : BaseMenu {
 
     private void DrawScore(int place, Score score) {
         GUILayout.BeginHorizontal();
-        GUILayout.Label(place + ".", GUILayout.Width(15));
+        GUILayout.Label(place + ".", GUILayout.Width(20));
         GUILayout.Label(score.Owner_Name, GUILayout.Width(75));
         GUILayout.Label(score.Updated.ToShortDateString(), GUILayout.Width(75));
         GUILayout.Label(score.Amount.ToString(), GUILayout.Width(50));
@@ -97,7 +94,7 @@ public class HighscoreMenu : BaseMenu {
 
         GUILayout.Space(10);
 
-        if (Loading) {
+        if (loading) {
             GUILayout.Label("Loading..");
             return;
         }

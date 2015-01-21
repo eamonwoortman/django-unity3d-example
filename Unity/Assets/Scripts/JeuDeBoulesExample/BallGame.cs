@@ -72,10 +72,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
             backendManager.GetAllScores();
         };
 
-        backendManager.OnScoresLoaded += delegate(List<Score> scores) {
-            highscoreMenu.Scores = scores;
-            highscoreMenu.Loading = false;
-        };
         balls = new List<Ball>();
     }
 	
@@ -177,8 +173,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         HideSaveMenu();
 
         highscoreMenu.enabled = true;
-        highscoreMenu.Loading = true;
-
         StartCoroutine(PostScores());
     }
 
