@@ -49,7 +49,7 @@ public class SavegameMenu : BaseMenu {
     private const string LoadingGameText = "Loading game...";
     private const int DefaultHeight = 275;
 
-    private static GUIContent deleteButtonContent = new GUIContent("-", "delete");
+    private static GUIContent deleteButtonContent = new GUIContent("x", "delete");
     private List<Savegame> saveGames;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
     private string saveName = "";
@@ -176,7 +176,7 @@ public class SavegameMenu : BaseMenu {
         for (int i = 0; i < saveGameNames.Length; i++) {
             if (GUILayout.Button(deleteButtonContent, GUILayout.Width(21), GUILayout.Height(21))) {
                 deleteSavegameIndex = i;
-                ConfirmPopup popup = ConfirmPopup.Create("Deleting savegame", "You are about to delete the savegame '" + saveGameNames[i] + "', are you sure?");
+                ConfirmPopup popup = ConfirmPopup.Create("Deleting savegame", "You are about to DELETE the savegame '" + saveGameNames[i] + "', are you sure?");
                 popup.OnConfirmed += DeleteConfirmed;
                 popup.OnCanceled += PopupClosed;
                 enabled = false;
