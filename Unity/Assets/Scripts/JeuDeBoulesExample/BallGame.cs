@@ -58,6 +58,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     [SerializeField]
     private Transform targetBall;
 
+    [SerializeField]
+    private Transform cubeSpawner;
+
     private List<Ball> balls;
 
     protected override void Start() {
@@ -203,6 +206,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
         ShowSaveMenu();
         highscoreMenu.enabled = false;
+
+        targetBall.position = cubeSpawner.position + new Vector3(Random.Range(-2, 2), 0, Random.Range(-0.5f, 0.5f));
+        targetBall.rotation = Random.rotation;
     }
 
 }
