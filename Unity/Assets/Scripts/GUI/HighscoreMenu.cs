@@ -32,16 +32,7 @@ public class HighscoreMenu : BaseMenu {
     public Score newestScore;
     public float currentScore;
 
-    public List<Score> Scores {
-        get {
-            return scores;
-        }
-        set {
-
-        }
-    }
-
-    private const int Height = 500;
+    private const int Height = 300;
     private const int Width = 300;
     private bool loading;
     private List<Score> scores;
@@ -116,7 +107,6 @@ public class HighscoreMenu : BaseMenu {
         }
         GUILayout.FlexibleSpace();
 
-        DrawLine();
         if (GUILayout.Button("OK")) {
             if (OnClose != null) {
                 OnClose();
