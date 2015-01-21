@@ -30,6 +30,8 @@ using System.Linq;
 public class HighscoreMenu : BaseMenu {
     public Action OnClose;
     public Score newestScore;
+    public float currentScore;
+
     public List<Score> Scores {
         get {
             return scores;
@@ -55,7 +57,7 @@ public class HighscoreMenu : BaseMenu {
 
     private void OnScoresLoaded(List<Score> newScores) {
         scores = newScores.OrderBy(s => s.Amount).ThenBy(s => s.Updated).Reverse().ToList();
-        newestScore = scores.OrderByDescending(s => s.Updated).First();
+        newestScore = scores.OrderByDescending(s => s.Updated).FirstOrDefault(s => s.Amount == (int)currentScore);
         loading = false;
     }
 
@@ -74,7 +76,7 @@ public class HighscoreMenu : BaseMenu {
         GUILayout.Label(score.Owner_Name, GUILayout.Width(75));
         GUILayout.Label(score.Updated.ToShortDateString(), GUILayout.Width(75));
         GUILayout.Label(score.Amount.ToString(), GUILayout.Width(50));
-        if (newestScore == score) {
+        if (newestScore != null && newestScore == score) {
             GUILayout.Label(" <<<");
         }
         GUILayout.EndHorizontal();
@@ -106,6 +108,11 @@ public class HighscoreMenu : BaseMenu {
         int place = 1;
         foreach (Score score in scores) {
             DrawScore(place++, score);
+        }
+
+        if (newestScore == null) {
+            DrawLine();
+            GUILayout.Label("Your score of " + (int)currentScore + " didn't make it to the board!");
         }
         GUILayout.FlexibleSpace();
 

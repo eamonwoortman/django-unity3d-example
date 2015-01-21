@@ -182,6 +182,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
             yield return new WaitForSeconds(0.5f);
 
+        highscoreMenu.currentScore = Data.Score;
         backendManager.PostScore((int)Data.Score);
     }
 
