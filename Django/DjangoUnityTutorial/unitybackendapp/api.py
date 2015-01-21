@@ -29,7 +29,7 @@ from rest_framework import parsers
 from rest_framework import renderers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework import mixins
@@ -73,26 +73,15 @@ class ScoreAPI(mixins.ListModelMixin,
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class RegisterUser(GenericAPIView):
-    def post(self, request, format=None):
-        serializer = CreateUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     
-class DeleteUser(GenericAPIView):
-    def post(self, request, format=None):
-        try:
-            user = User.objects.get(username=request.data['username'], email=request.data['email'])
-            if user.check_password(request.data['password']) is False:
-                raise Exception('Invalid password')
-            user.delete()
-        except:
-            return Response('Could not find that user', status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class UserAPI(DestroyAPIView, CreateAPIView):
+    serializer_class = CreateUserSerializer
+
+    def perform_destroy(self, instance):
+        user = User.objects.get(username=request.data['username'], email=request.data['email'])
+        if user.check_password(request.data['password']) is False:
+            return Response('You are not authorized to do that.', status=status.HTTP_401_UNAUTHORIZED)
+        instance.delete()
 
 class GetAuthToken(GenericAPIView):
     throttle_classes = ()
