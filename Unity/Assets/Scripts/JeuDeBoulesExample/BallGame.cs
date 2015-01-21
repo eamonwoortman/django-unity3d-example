@@ -64,7 +64,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         base.Start();
 
         highscoreMenu.enabled = false;
-        highscoreMenu.OnCancel += delegate {
+        highscoreMenu.OnClose += delegate {
             ResetGame();
         };
 
@@ -209,4 +209,5 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         ShowSaveMenu();
         highscoreMenu.enabled = false;
     }
+
 }

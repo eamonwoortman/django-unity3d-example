@@ -28,14 +28,8 @@ using Newtonsoft.Json;
 using System;
 
 public abstract class BaseGame<T> : MonoBehaviour {
-
-    [SerializeField]
     private SavegameMenu saveMenu;
-
-    [SerializeField]
     private LoginMenu loginMenu;
-
-    [SerializeField]
     protected BackendManager backendManager;
 
     public T Data;
@@ -63,7 +57,7 @@ public abstract class BaseGame<T> : MonoBehaviour {
     protected virtual void Start() {
         IsLoggedIn = false;
 
-        loginMenu.enabled = true;
+        //loginMenu.enabled = true;
         saveMenu.enabled = false;
         saveMenu.SavegameType = typeof(T).Name;
 

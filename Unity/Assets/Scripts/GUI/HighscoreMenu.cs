@@ -29,7 +29,7 @@ using System.Linq;
 
 public class HighscoreMenu : BaseMenu {
 
-    public Action OnCancel;
+    public Action OnClose;
     public bool Loading;
     public Score newestScore;
 
@@ -43,31 +43,86 @@ public class HighscoreMenu : BaseMenu {
         }
     }
 
+    private const int Height = 500;
+    private const int Width = 300;
+
     private List<Score> scores;
 
     public HighscoreMenu() {
-        windowRect = new Rect(Screen.width  / 2 - 100, Screen.height / 2 - 100, 200, 200);
+        windowRect = new Rect(Screen.width / 2 - Width / 2, Screen.height / 2 - Height / 2, Width, Height);
     }
-    
+
+    void Start() {
+        Loading = true;
+        backendManager.OnScoresLoaded += OnScoresLoaded;
+        backendManager.GetAllScores();
+    }
+
+    private void OnScoresLoaded(List<Score> scores) {
+        Loading = false;
+    }
+
+    private void DrawHeader() {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("#", GUILayout.Width(15));
+        GUILayout.Label("Name", GUILayout.Width(75));
+        GUILayout.Label("Date", GUILayout.Width(75));
+        GUILayout.Label("Score", GUILayout.Width(40));
+        GUILayout.EndHorizontal();
+    }
+
+    private void DrawScore(int place, Score score) {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(place + ".", GUILayout.Width(15));
+        GUILayout.Label(score.Owner_Name, GUILayout.Width(75));
+        GUILayout.Label(score.Updated.ToShortDateString(), GUILayout.Width(75));
+        GUILayout.Label(score.Amount.ToString(), GUILayout.Width(50));
+        if (newestScore == score) {
+            GUILayout.Label(" <<<");
+        }
+        GUILayout.EndHorizontal();
+    }
+
+    private void DrawLine() {
+        const int num = 40;
+        string lineStr = "";
+        for (int i = 0; i < num; i++) {
+            lineStr += "_";
+        }
+        GUILayout.Label(lineStr);
+    }
     private void ShowWindow(int id) {
+        DrawHeader();
+        DrawLine();
+
+        GUILayout.Space(10);
 
         if (Loading) {
-            GUILayout.Label("Posting highscore..");
-        } else {
-            foreach (Score score in scores) {
-                GUILayout.Label(score.Updated.ToShortDateString() + " - " + score.Amount.ToString() + (newestScore == score ? " <<<" : ""));
-            }
-            if (GUILayout.Button("OK")) {
-                if (OnCancel != null) {
-                    OnCancel();
-                }
+            GUILayout.Label("Loading..");
+            return;
+        }
+
+        if (scores == null) {
+            return;
+        }
+
+        int place = 1;
+        foreach (Score score in scores) {
+            DrawScore(place++, score);
+        }
+        GUILayout.FlexibleSpace();
+
+        DrawLine();
+        if (GUILayout.Button("OK")) {
+            if (OnClose != null) {
+                OnClose();
             }
         }
     }
 
     private void OnGUI() {
         GUI.skin = Skin;
-        windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Highscore");
+        windowRect = GUILayout.Window(1, windowRect, ShowWindow, "Highscore");
     }
 	
 }

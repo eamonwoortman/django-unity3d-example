@@ -89,7 +89,7 @@ public class ConfirmPopup : BaseMenu {
     }
 
     private void OnGUI() {
-        GUILayout.Window(WINDOW_ID, windowRect, ConfirmWindow, Title, GUILayout.MaxHeight(300));
+        GUILayout.Window(0, windowRect, ConfirmWindow, Title, GUILayout.MaxHeight(300));
     }
 	
 }

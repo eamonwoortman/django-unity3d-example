@@ -34,5 +34,7 @@ public class Score {
     [JsonProperty("score")]
     public int Amount;
 
+    public string Owner_Name;
+
     public DateTime Updated;
 }

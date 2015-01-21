@@ -153,6 +153,6 @@ public class LoginMenu : BaseMenu {
 
     private void OnGUI() {
         GUI.skin = Skin;
-        windowRect = GUILayout.Window(1, windowRect, ShowWindow, "Login menu");
+        windowRect = GUILayout.Window(2, windowRect, ShowWindow, "Login menu");
     }
 }

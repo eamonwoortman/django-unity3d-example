@@ -230,7 +230,7 @@ public class SavegameMenu : BaseMenu {
         } else {
             windowRect.height = 50;
         }
-        windowRect = GUILayout.Window(0, windowRect, ShowWindow, "Load/save menu");
+        windowRect = GUILayout.Window(3, windowRect, ShowWindow, "Load/save menu");
     }
 
     public void SetStatus(string status) {
