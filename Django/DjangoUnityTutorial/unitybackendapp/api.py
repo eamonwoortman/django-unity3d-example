@@ -32,48 +32,19 @@ from rest_framework.response import Response
 from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework import mixins
-from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameDetailSerializer, SavegameListSerializer
+from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameSerializer
 from unitybackendapp.models import Score, Savegame
 
-class ScoreAPI(mixins.ListModelMixin,
-               GenericAPIView):
+class ScoreAPI(ListCreateAPIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
     
-    def pre_save(self, obj):
-        obj.author = self.request.user
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def get_object(self, pk, score):
-        try:
-            score_int = int(score)
-            return Score.objects.get(user=pk, score=score_int)
-        except:
-            return None
-
-    def post(self, request, format=None):
-        """
-        Post a new score
-        """
-        data = request.data
-        #first try to see if there already exists an object with that user and score
-        score = self.get_object(request.user.pk, data['score'] if 'score' in data else -1)
-        if score != None:
-            serializer = ScoreSerializer(score, data=data)
-        else:
-            serializer = ScoreSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 class UserAPI(DestroyAPIView, CreateAPIView):
     serializer_class = CreateUserSerializer
 
@@ -99,7 +70,7 @@ class GetAuthToken(GenericAPIView):
 class SavegameAPI(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = SavegameListSerializer
+    serializer_class = SavegameSerializer
 
     def get_queryset(self):
         qs = Savegame.objects.all().filter(owner=self.request.user)

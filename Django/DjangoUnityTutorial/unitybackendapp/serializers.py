@@ -58,12 +58,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.save() 
         return user
 
-class SavegameDetailSerializer(OwnedModelSerializer):
-    class Meta:
-        model = Savegame
-        fields = ('id', 'name', 'file', 'type')        
 
-class SavegameListSerializer(serializers.ModelSerializer):
+class SavegameSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'name', 'updated', 'file', 'type')
         model = Savegame

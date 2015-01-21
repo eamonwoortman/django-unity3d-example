@@ -167,7 +167,7 @@ public partial class BackendManager {
     public void PostScore(int score) {
         WWWForm form = new WWWForm();
         form.AddField("score", score);
-        Send(RequestType.Get, "score", form, OnPostScoreResponse, authenticationToken);
+        Send(RequestType.Post, "score", form, OnPostScoreResponse, authenticationToken);
     }
 
     private void OnDeleteSavegameResponse(ResponseType responseType, JToken responseData, string callee) {
