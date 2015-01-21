@@ -43,13 +43,33 @@ public class Ball : MonoBehaviour {
     }
 
     private BallData ballData;
+    private Color startColor;
+    private Color targetColor;
 
-    void Awake(){
+    private void Awake(){
+        startColor = targetColor = renderer.material.GetColor("_SpecColor");
         ballData = new BallData();
     }
 
-	void Start () {
+	private void Start () {
         gameObject.name = "Ball";
         Camera.main.RenderToCubemap(cubemap);
 	}
+
+    float nextChangeTime;
+    private void Update() {
+        Color currColor = renderer.material.GetColor("_SpecColor");
+        Color newColor = Color.Lerp(currColor, targetColor, Time.deltaTime * 2f);
+        renderer.material.SetColor("_SpecColor", newColor);
+
+        if (Time.time > nextChangeTime) {
+            if (targetColor == startColor) {
+                targetColor = new Color(UnityEngine.Random.Range(0, 1f), UnityEngine.Random.Range(0, 1f), UnityEngine.Random.Range(0, 1f));
+            } else {
+                targetColor = startColor;
+            }
+
+            nextChangeTime = Time.time + 1.5f;
+        }
+    }
 }
