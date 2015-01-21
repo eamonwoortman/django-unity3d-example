@@ -1,0 +1,2 @@
+The floor texture('tile_marble') is from OpenGameArt: http://opengameart.org/content/niebs-tesseract-textures
+The wall texture(wall02) is done by Krijn Hakkert.
