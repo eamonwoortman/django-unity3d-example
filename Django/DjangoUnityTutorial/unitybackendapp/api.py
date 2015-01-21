@@ -42,6 +42,9 @@ class ScoreAPI(ListCreateAPIView):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
     
+    def filter_queryset(self, queryset):
+        return queryset.order_by('-score')[0:5]
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

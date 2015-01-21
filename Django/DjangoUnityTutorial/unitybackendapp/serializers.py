@@ -22,24 +22,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import serializers, filters
 from unitybackendapp.models import Score, Savegame
 
-"""
-A serializer which autosets the owner field
-snippet from 'bartvandendriessche', see https://github.com/tomchristie/django-rest-framework/issues/729#issuecomment-35377747
-"""
-class OwnedModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        read_only_fields = ['owner']
-        exclude = ('owner',)
-
-class ScoreSerializer(OwnedModelSerializer):
+class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
-        fields = ('id', 'score', 'owner_name', 'updated')        
-
-        #exclude = ('owner',)
+        fields = ('id', 'score', 'owner_name', 'updated')
 
 class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
