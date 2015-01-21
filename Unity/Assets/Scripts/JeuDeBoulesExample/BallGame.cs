@@ -58,6 +58,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     [SerializeField]
     private Transform targetBall;
 
+    [SerializeField]
+    private Transform cubeSpawner;
+
     private List<Ball> balls;
 
     protected override void Start() {
@@ -172,7 +175,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     private void OnGameFinished() {
         HideSaveMenu();
 
-        highscoreMenu.enabled = true;
         StartCoroutine(PostScores());
     }
 
@@ -180,8 +182,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         yield return new WaitForFixedUpdate();
         // Every 0.5 second, check if velocity of balls is below the BALL_VELOCITY_THRESHOLD, if so, then post scores. 
         while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
 
+        highscoreMenu.enabled = true;
         highscoreMenu.currentScore = Data.Score;
         backendManager.PostScore((int)Data.Score);
     }
@@ -203,6 +206,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
         ShowSaveMenu();
         highscoreMenu.enabled = false;
+
+        targetBall.position = cubeSpawner.position + new Vector3(Random.Range(-2, 2), 0, Random.Range(-0.5f, 0.5f));
+        targetBall.rotation = Random.rotation;
     }
 
 }
