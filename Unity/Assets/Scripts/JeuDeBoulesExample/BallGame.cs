@@ -56,7 +56,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     private GUIText scoreText;
 
     [SerializeField]
-    private Transform targetBall;
+    private Transform targetCube;
 
     [SerializeField]
     private Transform cubeSpawner;
@@ -67,12 +67,17 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         base.Start();
 
         highscoreMenu.enabled = false;
-        highscoreMenu.OnClose += delegate {
-            ResetGame();
+
+        // Setup a delegate which will trigger when we succesfully posted a new highscore to the server.
+        backendManager.OnPostScoreSucces += delegate {
+
+            // Do a GET request on the server for all the highscores. Whenever this is successfull, the highscore menu will automatticlly be triggered and opened
+            backendManager.GetAllScores();
         };
 
-        backendManager.OnPostScoreSucces += delegate {
-            backendManager.GetAllScores();
+        // Setup a delegate for when we close the highscore screen. This will reset the game and set it up for a new round of play
+        highscoreMenu.OnClose += delegate {
+            ResetGame();
         };
 
         balls = new List<Ball>();
@@ -81,7 +86,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 	void Update () {
         Data.Score = 0;
         foreach (Ball ball in balls) {
-            Vector3 distance = ball.transform.position - targetBall.position;
+            Vector3 distance = ball.transform.position - targetCube.position;
             Data.Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
         }
         Data.Score *= 10;
@@ -106,6 +111,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
                 crosshair.position = hit.point + new Vector3(0, 0.01f, 0);
             }
         }
+
+        defaultBall.transform.LookAt(crosshair);
+        defaultBall.transform.Rotate(0, 180, 90);
 	}
 
     protected override bool IsMouseOverMenu() {
@@ -180,12 +188,15 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
     private IEnumerator PostScores() {
         yield return new WaitForFixedUpdate();
+
         // Every 0.5 second, check if velocity of balls is below the BALL_VELOCITY_THRESHOLD, if so, then post scores. 
         while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
             yield return new WaitForSeconds(2f);
 
         highscoreMenu.enabled = true;
         highscoreMenu.currentScore = Data.Score;
+
+        // Post our final score to the back-end. When this request is succesfull, it will trigger the ExampleBackend.OnPostScoreSucces() delegate. 
         backendManager.PostScore((int)Data.Score);
     }
 
@@ -197,7 +208,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         balls.Clear();
     }
 
-
     public void ResetGame() {
         RemoveBalls();
 
@@ -207,8 +217,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         ShowSaveMenu();
         highscoreMenu.enabled = false;
 
-        targetBall.position = cubeSpawner.position + new Vector3(Random.Range(-2, 2), 0, Random.Range(-0.5f, 0.5f));
-        targetBall.rotation = Random.rotation;
+        // Set our target cube at the random position and rotation
+        targetCube.position = cubeSpawner.position + new Vector3(Random.Range(-2, 2), 0, Random.Range(-0.5f, 0.5f));
+        targetCube.rotation = Random.rotation;
     }
 
 }
