@@ -6,8 +6,8 @@
     <RootNamespace>DjangoUnityTutorial</RootNamespace>
     <InterpreterId>{eba16978-c342-470e-839b-14803adefae6}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
-    <PythonRunWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
-    <PythonDebugWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
+    <PythonRunWebServerCommandArguments>runssslerver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
+    <PythonDebugWebServerCommandArguments>runsslserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
     <WebBrowserPort>8000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
