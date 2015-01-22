@@ -129,6 +129,10 @@ public partial class BackendManager {
         }
     }
 
+    /// <summary>
+    /// Does a GET request at the server, getting you all the savegames of the giving samegame type. On success, the OnGamesLoaded delegate will be called. On fail, the OnGamesLoadedFailed will be called.
+    /// </summary>
+    /// <param name="savegameTypeName">The name of the savegame type you wish to get. Example: JeuDeBouleData</param>
     public void LoadGames(string savegameTypeName) {
         WWWForm form = new WWWForm();
         form.AddField("SavegameType", savegameTypeName);
@@ -148,6 +152,9 @@ public partial class BackendManager {
         }
     }
 
+    /// <summary>
+    /// Does a GET request at the backend, getting you all scores. When succesfull, the OnScoresLoaded delegate will be called. When failing, the OnScoresLoadedFailed delegate will be called.
+    /// </summary>
     public void GetAllScores() {
         Send(RequestType.Get, "score", null, OnGetAllScoresResponse, authenticationToken);
     }
@@ -164,6 +171,10 @@ public partial class BackendManager {
         }
     }
 
+    /// <summary>
+    /// Does a POST request to the backend, containing the score of the player.
+    /// </summary>
+    /// <param name="score"></param>
     public void PostScore(int score) {
         WWWForm form = new WWWForm();
         form.AddField("score", score);
