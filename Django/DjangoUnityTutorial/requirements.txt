@@ -1,3 +1,3 @@
-django<2
-djangorestframework
-django-sslserver
+Django==1.7.2
+djangorestframework==3.0.2
+django-sslserver==0.14
