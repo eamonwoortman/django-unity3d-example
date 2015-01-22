@@ -25,9 +25,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 public class JeuDeBoulesData {
     public BallData[] balls;
     public int Turn = 0;
-    public float Score = 0;
+    public Vector3 TargetPosition = Vector3.zero;
+    public Quaternion TargetRotation = Quaternion.identity;
 }

@@ -62,6 +62,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     private Transform cubeSpawner;
 
     private List<Ball> balls;
+    private float Score;
 
     protected override void Start() {
         base.Start();
@@ -84,15 +85,15 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     }
 	
 	void Update () {
-        Data.Score = 0;
+        Score = 0;
         foreach (Ball ball in balls) {
             Vector3 distance = ball.transform.position - targetCube.position;
-            Data.Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
+            Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
         }
-        Data.Score *= 10;
+        Score *= 10;
 
         turnText.text = "Turns: " + Data.Turn + " / " + MAX_TURNS;
-        scoreText.text = "Score: " + (int)Data.Score;
+        scoreText.text = "Score: " + (int)Score;
 
         if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS && IsLoggedIn) {
             FireCurrentBall();
@@ -129,8 +130,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
         ball.rigidbody.isKinematic = false;
         ball.collider.enabled = true;
-        ball.BallData.IsThrown = true;
-
         ball.rigidbody.AddForce(target * 80);
 
         balls.Add(ball);
@@ -161,9 +160,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         // Now lets loop through the balldata and create an Ball gameobject in our scene, and set its position to that of the BallData
         foreach (BallData ballData in Data.balls) {
 
-            if (!ballData.IsThrown)
-                continue;
-
             Ball ball = InitializeBall();
             ball.transform.position = ballData.Position;
             ball.rigidbody.isKinematic = false;
@@ -171,11 +167,17 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
             balls.Add(ball);
         }
+
+        targetCube.position = Data.TargetPosition;
+        targetCube.rotation = Data.TargetRotation;
     }
 
     protected override JeuDeBoulesData Serialize() {
         // Fill our data with an array containing the BallData from all balls in the scene
         Data.balls = balls.Select(ball => ball.BallData).ToArray();
+
+        Data.TargetPosition = targetCube.position;
+        Data.TargetRotation = targetCube.rotation;
 
         return Data;
     }
@@ -194,10 +196,10 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
             yield return new WaitForSeconds(2f);
 
         highscoreMenu.enabled = true;
-        highscoreMenu.currentScore = Data.Score;
+        highscoreMenu.currentScore = Score;
 
         // Post our final score to the back-end. When this request is succesfull, it will trigger the ExampleBackend.OnPostScoreSucces() delegate. 
-        backendManager.PostScore((int)Data.Score);
+        backendManager.PostScore((int)Score);
     }
 
     private void RemoveBalls() {
@@ -211,7 +213,6 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     public void ResetGame() {
         RemoveBalls();
 
-        Data.Score = 0;
         Data.Turn = 0;
 
         ShowSaveMenu();

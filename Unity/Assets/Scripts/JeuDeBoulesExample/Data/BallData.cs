@@ -30,5 +30,4 @@ using UnityEngine;
 public class BallData
 {
     public Vector3 Position = Vector3.zero;
-    public bool IsThrown = false;
 }
