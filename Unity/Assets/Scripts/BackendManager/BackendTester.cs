@@ -28,14 +28,19 @@ public class BackendTester : MonoBehaviour {
         StartTests();
     }
 
-    void StartTests() {
-        MethodInfo method = GetType().GetMethod("Test_1", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (method != null) {
-            Debug.Log("Starting test 1...");
-            method.Invoke(this, null);
-        } else {
-            Debug.LogWarning("Could not find Test1 method, please add a test method.");
+    private bool StartTest(int testNumber) {
+        MethodInfo method = GetType().GetMethod("Test_"+testNumber, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (method == null) {
+            return false;
         }
+
+        Debug.Log("Starting test " + testNumber + "...");
+        method.Invoke(this, null);
+        return true;
+    }
+
+    void StartTests() {
+        StartTest(1);
     }
 
     void Assert(bool statement, string message) {
@@ -94,11 +99,7 @@ public class BackendTester : MonoBehaviour {
         }
 
         //now find and start a new test
-        MethodInfo method = GetType().GetMethod("Test_" + (testNumber + 1), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (method != null) {
-            Debug.Log("Starting test " + (testNumber + 1));
-            method.Invoke(this, null);
-        } else {
+        if (!StartTest(testNumber + 1)) {
             Debug.Log("All tests are done!");
         }
     }
