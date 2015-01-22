@@ -57,7 +57,6 @@ public abstract class BaseGame<T> : MonoBehaviour {
     protected virtual void Start() {
         IsLoggedIn = false;
 
-        //loginMenu.enabled = true;
         saveMenu.enabled = false;
         saveMenu.SavegameType = typeof(T).Name;
 
@@ -92,12 +91,18 @@ public abstract class BaseGame<T> : MonoBehaviour {
         IsLoggedIn = true;
     }
 
-    private U GetOrCreateComponent<U>() where U : Component {
-        U comp = FindObjectOfType<U>();
-        if (comp == null) {
-            comp = gameObject.AddComponent<U>();
-        }
-        return comp;
+
+    
+    protected virtual bool IsMouseOverMenu() {
+        return saveMenu.IsMouseOver() || loginMenu.IsMouseOver();
+    }
+
+    protected void ShowSaveMenu() {
+        saveMenu.enabled = true;
+    }
+
+    protected void HideSaveMenu() {
+        saveMenu.enabled = false;
     }
 
     private IEnumerator DownloadSaveFile(string file) {
@@ -110,18 +115,12 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.SetStatus("Game is loaded.");
     }
 
-    private void Save(string filename) {
+    private U GetOrCreateComponent<U>() where U : Component {
+        U comp = FindObjectOfType<U>();
+        if (comp == null) {
+            comp = gameObject.AddComponent<U>();
+        }
+        return comp;
     }
 
-    protected virtual bool IsMouseOverMenu() {
-        return saveMenu.IsMouseOver() || loginMenu.IsMouseOver();
-    }
-
-    protected void ShowSaveMenu() {
-        saveMenu.enabled = true;
-    }
-
-    protected void HideSaveMenu() {
-        saveMenu.enabled = false;
-    }
 }
