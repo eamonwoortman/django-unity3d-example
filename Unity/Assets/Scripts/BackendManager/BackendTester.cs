@@ -29,13 +29,12 @@ public class BackendTester : MonoBehaviour {
     }
 
     void StartTests() {
-        MethodInfo[] methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        float waitTime = 0.1f;
-        foreach (MethodInfo methodInfo in methods) {
-            if (methodInfo.Name.StartsWith("Test_")) {
-                Invoke(methodInfo.Name, waitTime);
-                waitTime += 0.5f;
-            }
+        MethodInfo method = GetType().GetMethod("Test_1", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (method != null) {
+            Debug.Log("Starting test 1...");
+            method.Invoke(this, null);
+        } else {
+            Debug.LogWarning("Could not find Test1 method, please add a test method.");
         }
     }
 
@@ -92,6 +91,15 @@ public class BackendTester : MonoBehaviour {
         } catch (Exception ex) {
             Debug.LogWarning("[TEST " + testNumber + "] FAILED");
             Debug.LogWarning("[TEST " + testNumber + "] EXCEPTION: " + ex.InnerException);
+        }
+
+        //now find and start a new test
+        MethodInfo method = GetType().GetMethod("Test_" + (testNumber + 1), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (method != null) {
+            Debug.Log("Starting test " + (testNumber + 1));
+            method.Invoke(this, null);
+        } else {
+            Debug.Log("All tests are done!");
         }
     }
 
