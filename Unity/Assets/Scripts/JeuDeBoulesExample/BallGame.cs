@@ -91,7 +91,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         }
         Data.Score *= 10;
 
-        turnText.text = Data.Turn + "/" + MAX_TURNS + " turns";
+        turnText.text = "Turns: " + Data.Turn + " / " + MAX_TURNS;
         scoreText.text = "Score: " + (int)Data.Score;
 
         if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS && IsLoggedIn) {
