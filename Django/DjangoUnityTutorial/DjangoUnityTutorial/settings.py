@@ -5,7 +5,7 @@ Django settings for DjangoUnityTutorial project.
 from os import path
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = (
@@ -126,6 +126,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'sslserver',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
