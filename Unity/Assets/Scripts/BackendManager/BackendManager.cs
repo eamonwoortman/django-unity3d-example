@@ -63,13 +63,10 @@ public partial class BackendManager : MonoBehaviour {
 
 
     //---- URLS ----//
-    [SerializeField]
     public bool UseProduction = false;
-    [SerializeField]
+    public bool Secure;
     public string ProductionUrl = "http://foobar:8000/api/";
-    [SerializeField]
     public string DevelopmentUrl = "http://localhost:8000/api/";
-
 
     //---- Private Properties ----//
     string hostUrl {
@@ -77,7 +74,6 @@ public partial class BackendManager : MonoBehaviour {
             return UseProduction ? ProductionUrl : DevelopmentUrl;
         }
     }
-
 
     //---- Private Methods ----//
 
@@ -89,6 +85,11 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
     public void Send(RequestType type, string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         string url = hostUrl + command;
+
+        if (Secure) {
+            url = url.Replace("http", "https");
+        }
+
         WWW request;
         Hashtable headers;
         byte[] postData;
