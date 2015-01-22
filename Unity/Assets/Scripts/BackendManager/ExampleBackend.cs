@@ -61,6 +61,12 @@ public partial class BackendManager {
 
     private string authenticationToken = "";
     
+    /// <summary>
+    /// Does a POST request to the backend, trying to get an authentication token. On succes, it will save the auth token for further use. On success, the OnLoggedIn
+    /// delegate will be called. On fail, the OnLoginFailed delegate will be called.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
     public void Login(string username, string password) {
         WWWForm form = new WWWForm();
         form.AddField("username", username);
@@ -97,6 +103,11 @@ public partial class BackendManager {
         }
     }
 
+    /// <summary>
+    /// Does a POST or PUT request to the server, depending on if the SaveGame you provide has an id or not. If the id is present, the savegame will be updated by of PUT request. Else
+    /// a new savegame will be POST'ed to the server. On success, the OnSaveGameSuccess delegate will be called. On fail, the OnSaveGameFailed delegate will be called.
+    /// </summary>
+    /// <param name="savegame"></param>
     public void SaveGame(Savegame savegame) {
         WWWForm form = new WWWForm();
         form.AddField("name", savegame.Name);
@@ -181,26 +192,6 @@ public partial class BackendManager {
         Send(RequestType.Post, "score", form, OnPostScoreResponse, authenticationToken);
     }
 
-    private void OnDeleteSavegameResponse(ResponseType responseType, JToken responseData, string callee) {
-        if (responseType == ResponseType.Success) {
-            if (OnDeleteSavegameSucces != null) {
-                OnDeleteSavegameSucces();
-            }
-        } else if (responseType == ResponseType.RequestError) {
-            if (OnDeleteSavegameFailed != null) {
-                OnDeleteSavegameFailed("Could not reach the server. Please try again later.");
-            }
-        } else {
-            if (OnDeleteSavegameFailed != null) {
-                OnDeleteSavegameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
-            }
-        }
-    }
-
-    public void DeleteSavegame(int index) {
-        Send(RequestType.Delete, "savegame/" + index + "/", null, OnSaveGameResponse, authenticationToken);
-    }
-
     private void OnPostScoreResponse(ResponseType responseType, JToken responseData, string callee) {
         if (responseType == ResponseType.Success) {
             if (OnPostScoreSucces != null) {
@@ -217,6 +208,38 @@ public partial class BackendManager {
         }
     }
 
+    /// <summary>
+    /// Does a DELETE request to the backend, trying to delete the savegame with the id you provided. On success, the OnDeleteSavegameSucces will be called.
+    /// On fail, the OnDeleteSavegameFailed will be called.
+    /// </summary>
+    /// <param name="index"></param>
+    public void DeleteSavegame(int index) {
+        Send(RequestType.Delete, "savegame/" + index + "/", null, OnSaveGameResponse, authenticationToken);
+    }
+
+    private void OnDeleteSavegameResponse(ResponseType responseType, JToken responseData, string callee) {
+        if (responseType == ResponseType.Success) {
+            if (OnDeleteSavegameSucces != null) {
+                OnDeleteSavegameSucces();
+            }
+        } else if (responseType == ResponseType.RequestError) {
+            if (OnDeleteSavegameFailed != null) {
+                OnDeleteSavegameFailed("Could not reach the server. Please try again later.");
+            }
+        } else {
+            if (OnDeleteSavegameFailed != null) {
+                OnDeleteSavegameFailed("Request failed: " + responseType + " - " + responseData["detail"]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Helper method which will check and fill the given string[] array, if the given JToken has the given key
+    /// </summary>
+    /// <param name="jsonObject"></param>
+    /// <param name="key"></param>
+    /// <param name="values"></param>
+    /// <returns></returns>
     private bool ContainsSubfield(JToken jsonObject, string key, out string[] values) {
         JToken fieldToken = jsonObject[key];
         values = new string[0];
