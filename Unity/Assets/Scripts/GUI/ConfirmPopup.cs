@@ -33,7 +33,6 @@ public class ConfirmPopup : BaseMenu {
     public string Text = "Lorum Ipsum Yolo Swaggings";
     public bool IsNotification;
 
-    public delegate void VoidDelegate();
     public VoidDelegate OnConfirmed;
     public VoidDelegate OnCanceled;
     public bool DontDestroyGameobject;

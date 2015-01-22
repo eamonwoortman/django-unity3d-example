@@ -32,8 +32,8 @@ public class SavegameMenu : BaseMenu {
 
     public SaveButtonPressed OnSaveButtonPressed;
     public LoadButtonPressed OnLoadButtonPressed;
-    public delegate void VoidDelegate();
     public VoidDelegate OnHasSaved;
+
     [HideInInspector]
     public string SavegameType;
 

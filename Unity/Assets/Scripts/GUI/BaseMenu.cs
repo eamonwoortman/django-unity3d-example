@@ -26,6 +26,8 @@ using System.Collections;
 
 public class BaseMenu : MonoBehaviour {
     public GUISkin Skin;
+    public delegate void VoidDelegate();
+
     protected Rect windowRect;
     protected BackendManager backendManager;
 

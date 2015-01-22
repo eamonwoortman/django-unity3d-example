@@ -28,128 +28,96 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class LoginMenu : BaseMenu {
-    public delegate void LoggedIn();
-    public LoggedIn HasLoggedIn;
+public class SignupMenu : BaseMenu {
+    public delegate void SignedUp();
+    public SignedUp OnSignup;
+
+    public VoidDelegate OnCancel;
+
     private string status = "";
-    private string username = "", password = "";
-    private bool loggingIn = false;
+    private string username = "", email = "", password = "", password_confirm = "";
+    private bool signingUp = false;
     private float nextStatusChange;
     private int dotNumber = 1;
-    private bool rememberMe = false;
     private bool hasFocussed = false;
     private const float LABEL_WIDTH = 110;
-    private SignupMenu signupMenu;
 
     private void Start() {
-        windowRect = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 150);
-        backendManager.OnLoggedIn += OnLoggedIn;
-        backendManager.OnLoginFailed += OnLoginFailed;
-        signupMenu = GetComponent<SignupMenu>();
-        signupMenu.enabled = false;
-        signupMenu.OnCancel += OnSignupCancel;
-        signupMenu.OnSignup += OnSignupSucces;
-
-        if (PlayerPrefs.HasKey("x1")) {
-            username = PlayerPrefs.GetString("x2").FromBase64();
-            password = PlayerPrefs.GetString("x1").FromBase64();
-            rememberMe = true;
-        }
+        windowRect = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 210);
+        backendManager.OnSignupSuccess += OnSignupSuccess;
+        backendManager.OnSignupFailed += OnSignupFailed;
     }
 
-    private void OnSignupCancel() {
-        signupMenu.enabled = false;
-        enabled = true;
+    private void OnSignupFailed(string error) {
+        status = "Signup error: \n\n" + error;
+        signingUp = false;
     }
 
-    private void OnSignupSucces() {
-        enabled = true;
-    }
+    private void OnSignupSuccess() {
+        status = "Signup successful!";
+        signingUp = false;
 
-
-
-    private void SaveCredentials() {
-        PlayerPrefs.SetString("x2", username.ToBase64());
-        PlayerPrefs.SetString("x1", password.ToBase64());
-    }
-
-    private void RemoveCredentials() {
-        if (PlayerPrefs.HasKey("x1")) {
-            PlayerPrefs.DeleteAll();
-        }
-    }
-
-    private void OnLoginFailed(string error) {
-        status = "Login error: " + error;
-        loggingIn = false;
-    }
-
-    private void OnLoggedIn() {
-        status = "Logged in!";
-        loggingIn = false;
-
-        if (rememberMe) {
-            SaveCredentials();
-        } else {
-            RemoveCredentials();
-        }
-
-        if (HasLoggedIn != null) {
-            HasLoggedIn();
+        if (OnSignup != null) {
+            OnSignup();
         }
     }
 
 
-    private void DoLogin() {
-        if (loggingIn) {
-            Debug.LogWarning("Already logging in, returning.");
+    private void DoSignup() {
+        if (signingUp) {
+            Debug.LogWarning("Already signing up, returning.");
             return;
         }
-        loggingIn = true;
-        backendManager.Login(username, password);
+        signingUp = true;
+        backendManager.Signup(username, email, password);
     }
 
     private void ShowWindow(int id) {
         GUILayout.BeginVertical();
-        GUILayout.Label("Please enter your username and password");
-        bool filledIn = (username != "" && password != "");
+        GUILayout.Label("Please enter your details and signup");
+        bool filledIn = (username != "" && email != "" && password != "" && password_confirm != "");
 
         GUILayout.BeginHorizontal();
         GUI.SetNextControlName("usernameField");
         GUILayout.Label("Username", GUILayout.Width(LABEL_WIDTH));
         username = GUILayout.TextField(username, 30);
         GUILayout.EndHorizontal();
-        
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Email", GUILayout.Width(LABEL_WIDTH));
+        email = GUILayout.TextField(email, 50);
+        GUILayout.EndHorizontal();
+
         GUILayout.BeginHorizontal();
         GUILayout.Label("Password", GUILayout.Width(LABEL_WIDTH));
         password = GUILayout.PasswordField(password, '*', 30);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Remember me?", GUILayout.Width(LABEL_WIDTH));
-        rememberMe = GUILayout.Toggle(rememberMe, "");
+        GUILayout.Label("Repeat password", GUILayout.Width(LABEL_WIDTH));
+        password_confirm = GUILayout.PasswordField(password_confirm, '*', 30);
         GUILayout.EndHorizontal();
 
-        GUILayout.FlexibleSpace();
         GUILayout.Label("Status: " + status);
         GUI.enabled = filledIn;
         Event e = Event.current;
         if (filledIn && e.isKey && e.keyCode == KeyCode.Return) {
-            DoLogin();
+            DoSignup();
         }
 
+        GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Login")) {
-            DoLogin();
-        }
         if (GUILayout.Button("Signup")) {
-            enabled = false;
-            signupMenu.enabled = true;
+            DoSignup();
+        }
+        GUI.enabled = true;
+        if (GUILayout.Button("Cancel")) {
+            if (OnCancel != null) {
+                OnCancel();
+            }
         }
         GUILayout.EndHorizontal();
 
-        GUI.enabled = true;
-         
         GUILayout.EndVertical();
 
         if (!hasFocussed) {
@@ -159,13 +127,13 @@ public class LoginMenu : BaseMenu {
     }
 
     private void Update() {
-        if(!loggingIn) {
+        if(!signingUp) {
             return;
         }
 
         if (Time.time > nextStatusChange) {
             nextStatusChange = Time.time + 0.5f;
-            status = "Logging in";
+            status = "Signing up";
             for (int i = 0; i < dotNumber; i++) {
                 status += ".";
             }
@@ -177,6 +145,6 @@ public class LoginMenu : BaseMenu {
 
     private void OnGUI() {
         GUI.skin = Skin;
-        windowRect = GUILayout.Window(2, windowRect, ShowWindow, "Login menu");
+        windowRect = GUILayout.Window(4, windowRect, ShowWindow, "Signup menu");
     }
 }

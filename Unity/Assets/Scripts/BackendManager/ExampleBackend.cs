@@ -34,6 +34,11 @@ public partial class BackendManager {
     public LoggedIn OnLoggedIn;
     public LoginFailed OnLoginFailed;
 
+    public delegate void SignupFailed(string errorMsg);
+    public delegate void SignupSuccess();
+    public SignupSuccess OnSignupSuccess;
+    public SignupFailed OnSignupFailed;
+
     public delegate void SaveGameSuccess();
     public delegate void SaveGameFailed(string errorMsg);
     public SaveGameSuccess OnSaveGameSucces;
@@ -102,6 +107,48 @@ public partial class BackendManager {
             }
         }
     }
+
+
+    /// <summary>
+    /// Does a POST request to the backend, trying to get an authentication token. On succes, it will save the auth token for further use. On success, the OnLoggedIn
+    /// delegate will be called. On fail, the OnLoginFailed delegate will be called.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    public void Signup(string username, string email, string password) {
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddField("email", email);
+        form.AddField("password", password);
+        Send(RequestType.Post, "signup", form, OnSignupResponse);
+    }
+
+    private void OnSignupResponse(ResponseType responseType, JToken responseData, string callee) {
+        if (responseType == ResponseType.Success) {
+            if (OnSignupSuccess != null) {
+                OnSignupSuccess();
+            }
+        } else if (responseType == ResponseType.RequestError) {
+            if (OnSignupFailed != null) {
+                OnSignupFailed("Could not reach the server. Please try again later.");
+            }
+        } else if (responseType == ResponseType.ErrorFromServer) {
+            string errors = "";
+            JObject obj = (JObject)responseData;
+            foreach (KeyValuePair<string, JToken> pair in obj) {
+                errors += "[" + pair.Key + "] ";
+                foreach (string errStr in pair.Value) {
+                    errors += errStr;
+                }
+                errors += '\n';
+            }
+            if (OnSignupFailed != null) {
+                OnSignupFailed(errors);
+            }
+        }
+    }
+
 
     /// <summary>
     /// Does a POST or PUT request to the server, depending on if the SaveGame you provide has an id or not. If the id is present, the savegame will be updated by of PUT request. Else

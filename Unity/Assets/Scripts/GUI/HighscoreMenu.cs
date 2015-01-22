@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class HighscoreMenu : BaseMenu {
-    public Action OnClose;
+    public VoidDelegate OnClose;
     public Score newestScore;
     public float currentScore;
 
