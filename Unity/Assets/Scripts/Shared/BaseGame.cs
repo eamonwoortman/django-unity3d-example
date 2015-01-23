@@ -44,13 +44,13 @@ public abstract class BaseGame<T> : MonoBehaviour {
         Data = (T)Activator.CreateInstance(typeof(T));
         
         if (loginMenu == null) {
-            loginMenu = GetOrCreateComponent<LoginMenu>();
+            loginMenu = gameObject.GetOrCreateComponent<LoginMenu>();
         }
         if (saveMenu == null) {
-            saveMenu = GetOrCreateComponent<SavegameMenu>();
+            saveMenu = gameObject.GetOrCreateComponent<SavegameMenu>();
         }
         if (backendManager == null) {
-            backendManager = GetOrCreateComponent<BackendManager>();
+            backendManager = gameObject.GetOrCreateComponent<BackendManager>();
         }
     }
 
@@ -114,13 +114,4 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
         saveMenu.SetStatus("Game is loaded.");
     }
-
-    private U GetOrCreateComponent<U>() where U : Component {
-        U comp = FindObjectOfType<U>();
-        if (comp == null) {
-            comp = gameObject.AddComponent<U>();
-        }
-        return comp;
-    }
-
 }

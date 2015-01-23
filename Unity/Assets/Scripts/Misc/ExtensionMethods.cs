@@ -23,6 +23,7 @@
 
 using System;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 public static class ExtensionMethods {
     public static JToken GetValue(this JObject jobject, string propertyName) {
@@ -48,5 +49,13 @@ public static class ExtensionMethods {
         T[] result = new T[length];
         Array.Copy(data, index, result, 0, length);
         return result;
+    }
+    
+    public static U GetOrCreateComponent<U>(this GameObject gameObject) where U : Component {
+        U comp = Component.FindObjectOfType<U>();
+        if (comp == null) {
+            comp = gameObject.AddComponent<U>();
+        }
+        return comp;
     }
 }

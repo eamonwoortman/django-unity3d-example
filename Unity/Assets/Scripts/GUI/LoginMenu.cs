@@ -45,7 +45,8 @@ public class LoginMenu : BaseMenu {
         windowRect = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 150);
         backendManager.OnLoggedIn += OnLoggedIn;
         backendManager.OnLoginFailed += OnLoginFailed;
-        signupMenu = GetComponent<SignupMenu>();
+        
+        signupMenu = gameObject.GetOrCreateComponent<SignupMenu>();
         signupMenu.enabled = false;
         signupMenu.OnCancel += OnSignupCancel;
         signupMenu.OnSignup += OnSignupSucces;
