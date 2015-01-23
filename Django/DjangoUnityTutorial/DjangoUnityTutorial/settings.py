@@ -126,7 +126,6 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'sslserver',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -142,6 +141,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+
+    # Uncomment the next line to enable SSL
+    #'sslserver',
 )
 
 # A sample logging configuration. The only tangible logging
