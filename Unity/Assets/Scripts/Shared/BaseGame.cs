@@ -109,9 +109,12 @@ public abstract class BaseGame<T> : MonoBehaviour {
         WWW www = new WWW(file);
         yield return www;
 
-        T data = JsonConvert.DeserializeObject<T>(www.text);
-        Deserialize(data);
-
-        saveMenu.SetStatus("Game is loaded.");
+        if (www.error != null) {
+            saveMenu.SetStatus("Error loading game: '" + www.error + "'");
+        } else {
+            T data = JsonConvert.DeserializeObject<T>(www.text);
+            Deserialize(data);
+            saveMenu.SetStatus("Game is loaded.");
+        }
     }
-}
+} 
