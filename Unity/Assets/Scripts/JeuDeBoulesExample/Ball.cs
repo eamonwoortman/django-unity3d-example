@@ -26,10 +26,6 @@ using System.Collections;
 using System;
 
 public class Ball : MonoBehaviour {
-
-    [SerializeField]
-    private Cubemap cubemap;
-
     public BallData BallData {
         get {
             ballData.Position = transform.position;
@@ -42,21 +38,26 @@ public class Ball : MonoBehaviour {
         }
     }
 
+    [SerializeField]
+    private Cubemap cubemap;
+
     private BallData ballData;
     private Color startColor;
     private Color targetColor;
+    float nextChangeTime;
 
     private void Awake(){
         startColor = targetColor = renderer.material.GetColor("_SpecColor");
+
+        //let's not render the GUI on the cubemap
+        Camera.main.GetComponent<GUILayer>().enabled = false;
+        Camera.main.RenderToCubemap(cubemap);
+        Camera.main.GetComponent<GUILayer>().enabled = true;
+
+        gameObject.name = "Ball";
         ballData = new BallData();
     }
 
-	private void Start () {
-        gameObject.name = "Ball";
-        Camera.main.RenderToCubemap(cubemap);
-	}
-
-    float nextChangeTime;
     private void Update() {
         Color currColor = renderer.material.GetColor("_SpecColor");
         Color newColor = Color.Lerp(currColor, targetColor, Time.deltaTime * 2f);
