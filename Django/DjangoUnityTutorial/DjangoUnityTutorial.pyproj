@@ -4,10 +4,10 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>DjangoUnityTutorial</Name>
     <RootNamespace>DjangoUnityTutorial</RootNamespace>
-    <InterpreterId>{eba16978-c342-470e-839b-14803adefae6}</InterpreterId>
+    <InterpreterId>{a4a06340-a5bd-491c-a38a-dd558f4573db}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
-    <PythonRunWebServerCommandArguments>runssslerver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
-    <PythonDebugWebServerCommandArguments>runsslserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
+    <PythonRunWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
+    <PythonDebugWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
     <WebBrowserPort>8000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
