@@ -49,7 +49,7 @@ public class LoginMenu : BaseMenu {
         signupMenu = gameObject.GetOrCreateComponent<SignupMenu>();
         signupMenu.enabled = false;
         signupMenu.OnCancel += OnSignupCancel;
-        signupMenu.OnSignup += OnSignupSucces;
+        signupMenu.OnSignedUp += OnSignupSucces;
 
         if (PlayerPrefs.HasKey("x1")) {
             username = PlayerPrefs.GetString("x2").FromBase64();

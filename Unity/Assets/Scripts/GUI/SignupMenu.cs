@@ -30,7 +30,7 @@ using System;
 
 public class SignupMenu : BaseMenu {
     public delegate void SignedUp();
-    public SignedUp OnSignup;
+    public SignedUp OnSignedUp;
 
     public VoidDelegate OnCancel;
 
@@ -57,8 +57,8 @@ public class SignupMenu : BaseMenu {
         status = "Signup successful!";
         signingUp = false;
 
-        if (OnSignup != null) {
-            OnSignup();
+        if (OnSignedUp != null) {
+            OnSignedUp();
         }
     }
 
