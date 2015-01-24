@@ -21,31 +21,18 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using UnityEngine;
-using System.Collections;
 using System;
+using UnityEngine;
 
 public class Ball : MonoBehaviour {
-    public BallData BallData {
-        get {
-            ballData.Position = transform.position;
-            return ballData;
-        }
-
-        set {
-            ballData = value;
-            transform.position = value.Position;
-        }
-    }
+    public BallData Data;
 
     [SerializeField]
     private Cubemap cubemap;
-
-    private BallData ballData;
+    private float nextChangeTime;
     private Color startColor;
     private Color targetColor;
-    float nextChangeTime;
-
+    
     private void Awake(){
         startColor = targetColor = renderer.material.GetColor("_SpecColor");
 
@@ -55,7 +42,7 @@ public class Ball : MonoBehaviour {
         Camera.main.GetComponent<GUILayer>().enabled = true;
 
         gameObject.name = "Ball";
-        ballData = new BallData();
+        Data = new BallData();
     }
 
     private void Update() {
@@ -72,5 +59,6 @@ public class Ball : MonoBehaviour {
 
             nextChangeTime = Time.time + 1.5f;
         }
+        Data.Position = transform.position;
     }
 }

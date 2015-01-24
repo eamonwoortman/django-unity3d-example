@@ -95,7 +95,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         turnText.text = "Turns: " + Data.Turn + " / " + MAX_TURNS;
         scoreText.text = "Score: " + (int)Score;
 
-        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS && IsLoggedIn) {
+        if (Input.GetMouseButtonDown(0) && !IsMouseOverMenu() && Data.Turn < MAX_TURNS && isLoggedIn) {
             FireCurrentBall();
             Data.Turn++;
 
@@ -103,7 +103,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
                 OnGameFinished();
         }
 
-        crosshair.gameObject.SetActive(IsLoggedIn);
+        crosshair.gameObject.SetActive(isLoggedIn);
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -174,7 +174,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
     protected override JeuDeBoulesData Serialize() {
         // Fill our data with an array containing the BallData from all balls in the scene
-        Data.balls = balls.Select(ball => ball.BallData).ToArray();
+        Data.balls = balls.Select(ball => ball.Data).ToArray();
 
         Data.TargetPosition = targetCube.position;
         Data.TargetRotation = targetCube.rotation;
@@ -196,7 +196,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
             yield return new WaitForSeconds(2f);
 
         highscoreMenu.enabled = true;
-        highscoreMenu.currentScore = Score;
+        highscoreMenu.CurrentScore = Score;
 
         // Post our final score to the back-end. When this request is succesfull, it will trigger the ExampleBackend.OnPostScoreSucces() delegate. 
         backendManager.PostScore((int)Score);

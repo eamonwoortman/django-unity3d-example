@@ -22,32 +22,54 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
-using System.IO;
 using System;
+using System.Collections;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
-using System.Linq;
 using Newtonsoft.Json.Linq;
-
 
 //---- Public Enums ----//
 public enum ResponseType {
-    Success,
-    ErrorFromClient,
-    ErrorFromServer,
-    ParseError,
-    BackendDisabled,
+    /// <summary>
+    /// ClientError, the client could not perform the request(eg. could not reach destination host)
+    /// </summary>
+    ClientError,
+    /// <summary>
+    /// PageNotFound, the page could not be found(invalid url)
+    /// </summary>
+    PageNotFound,
+    /// <summary>
+    /// The server returned an error regarding the request, which can be invalid post data or invalid authentication for example
+    /// </summary>
     RequestError,
-    PageNotFound
+    /// <summary>
+    /// The server returned an error but the response body could not be parsed
+    /// </summary>
+    ParseError,
+    /// <summary>
+    /// Success, if the server returns content it will be parsed into a JObject or JArray.
+    /// </summary>
+    Success,
 }
 
+/// <summary>
+/// The type of the request(sets the HTTP method)
+/// </summary>
 public enum RequestType {
+    /// <summary>
+    /// GET
+    /// </summary>
     Get,
+    /// <summary>
+    /// POST
+    /// </summary>
     Post,
+    /// <summary>
+    /// PUT
+    /// </summary>
     Put,
+    /// <summary>
+    /// DELETE
+    /// </summary>
     Delete
 }
 
@@ -84,15 +106,14 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="onResponse">A callback which will be called when we retrieve the response</param>
     /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
     public void Send(RequestType type, string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
+        WWW request;
+        Hashtable headers;
+        byte[] postData;
         string url = hostUrl + command;
 
         if (Secure) {
             url = url.Replace("http", "https");
         }
-
-        WWW request;
-        Hashtable headers;
-        byte[] postData;
 
         if (wwwForm == null) {
             wwwForm = new WWWForm();
@@ -121,7 +142,7 @@ public partial class BackendManager : MonoBehaviour {
         StartCoroutine(HandleRequest(request, onResponse, callee));
     }
     
-    IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
+    private IEnumerator HandleRequest(WWW request, RequestResponseDelegate onResponse, string callee) {
         //Wait till request is done
         while (true) {
             if (request.isDone) {
@@ -133,7 +154,7 @@ public partial class BackendManager : MonoBehaviour {
         //catch proper client errors(eg. can't reach the server)
         if (!String.IsNullOrEmpty(request.error)) {
             if (onResponse != null) {
-                onResponse(ResponseType.RequestError, null, callee);
+                onResponse(ResponseType.ClientError, null, callee);
             }
             yield break;
         }
@@ -180,7 +201,7 @@ public partial class BackendManager : MonoBehaviour {
 
         if (!responseSuccessful) {
             if (onResponse != null) {
-                onResponse(ResponseType.ErrorFromServer, responseObj, callee);
+                onResponse(ResponseType.RequestError, responseObj, callee);
             }
             yield break;
         }

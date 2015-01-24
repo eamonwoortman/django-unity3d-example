@@ -29,14 +29,15 @@ public class ConfirmPopup : BaseMenu {
     public const int WIDTH = 300;
     public const int HEIGHT = 160;
 
-    public string Title = "Unnamed popup";
-    public string Text = "Lorum Ipsum Yolo Swaggings";
     public bool IsNotification;
-
-    public VoidDelegate OnConfirmed;
-    public VoidDelegate OnCanceled;
     public bool DontDestroyGameobject;
 
+    public string Title = "Unnamed popup";
+    public string Text = "Lorum Ipsum Yolo Swaggings";
+    
+    public VoidDelegate OnConfirmed;
+    public VoidDelegate OnCanceled;
+    
     public static ConfirmPopup Create(string title, string text, bool isNotification = false) {
         GameObject gob = new GameObject("ConfirmPopup - " + title);
         ConfirmPopup popup = gob.AddComponent<ConfirmPopup>();
@@ -90,5 +91,4 @@ public class ConfirmPopup : BaseMenu {
     private void OnGUI() {
         GUILayout.Window(0, windowRect, ConfirmWindow, Title, GUILayout.MaxHeight(300));
     }
-	
 }

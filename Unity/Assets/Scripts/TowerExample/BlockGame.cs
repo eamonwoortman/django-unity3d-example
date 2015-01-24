@@ -24,8 +24,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 public class BlockGame : BaseGame<BlockGameData> {
     private BlockSpawner blockSpawner;
@@ -55,7 +53,7 @@ public class BlockGame : BaseGame<BlockGameData> {
     }
 
     private void Update() {
-        if (IsLoggedIn && CanClick()) {
+        if (isLoggedIn && CanClick()) {
             blockSpawner.enabled = true;
         } else {
             blockSpawner.enabled = false;

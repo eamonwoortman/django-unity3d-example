@@ -21,20 +21,13 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Newtonsoft.Json;
 
 public class Score {
     public int Id;
-
     [JsonProperty("score")]
     public int Amount;
-
     public string Owner_Name;
-
     public DateTime Updated;
 }

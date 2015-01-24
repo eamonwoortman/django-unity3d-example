@@ -25,15 +25,11 @@ using UnityEngine;
 using System.Collections;
 
 public class BaseMenu : MonoBehaviour {
-    public GUISkin Skin;
     public delegate void VoidDelegate();
+    public GUISkin Skin;
 
     protected Rect windowRect;
     protected BackendManager backendManager;
-
-    public bool InRect(Vector3 mousePosition) {
-        return windowRect.Contains(mousePosition);
-    }
 
     public bool IsMouseOver() {
         Vector3 mp = Input.mousePosition;
@@ -47,5 +43,9 @@ public class BaseMenu : MonoBehaviour {
             Debug.LogWarning("BackendManager not found, disabling menu.");
             enabled = false;
         }
+    }
+
+    private bool InRect(Vector3 mousePosition) {
+        return windowRect.Contains(mousePosition);
     }
 }

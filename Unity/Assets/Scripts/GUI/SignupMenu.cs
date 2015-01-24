@@ -29,19 +29,18 @@ using System.Linq;
 using System;
 
 public class SignupMenu : BaseMenu {
-    public delegate void SignedUp();
-    public SignedUp OnSignedUp;
-
+    public VoidDelegate OnSignedUp;
     public VoidDelegate OnCancel;
 
-    private string status = "";
-    private string username = "", email = "", password = "", password_confirm = "";
-    private bool signingUp = false;
-    private float nextStatusChange;
-    private int dotNumber = 1;
-    private bool hasFocussed = false;
     private const float LABEL_WIDTH = 110;
 
+    private bool hasFocussed = false;
+    private bool signingUp = false;
+    private int dotNumber = 1;
+    private float nextStatusChange;
+    private string status = "";
+    private string username = "", email = "", password = "", password_confirm = "";
+    
     private void Start() {
         windowRect = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 210);
         backendManager.OnSignupSuccess += OnSignupSuccess;
@@ -57,7 +56,7 @@ public class SignupMenu : BaseMenu {
         status = "Signup successful!";
         signingUp = false;
 
-        Invoke("FinishSignup", 1.5f);        
+        Invoke("FinishSignup", 1.5f);
     }
 
     private void FinishSignup() {
@@ -72,8 +71,8 @@ public class SignupMenu : BaseMenu {
             Debug.LogWarning("Already signing up, returning.");
             return;
         }
-        signingUp = true;
         backendManager.Signup(username, email, password);
+        signingUp = true;
     }
 
     private void ShowWindow(int id) {
@@ -121,7 +120,6 @@ public class SignupMenu : BaseMenu {
             }
         }
         GUILayout.EndHorizontal();
-
         GUILayout.EndVertical();
 
         if (!hasFocussed) {

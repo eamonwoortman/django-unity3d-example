@@ -21,20 +21,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using System;
+using System.Collections;
+using Newtonsoft.Json;
+using UnityEngine;
 
 public abstract class BaseGame<T> : MonoBehaviour {
-    private SavegameMenu saveMenu;
-    private LoginMenu loginMenu;
-    protected BackendManager backendManager;
-
     public T Data;
 
-    protected bool IsLoggedIn { get; private set; }
+    protected BackendManager backendManager;
+    protected bool isLoggedIn { get; private set; }
+
+    private SavegameMenu saveMenu;
+    private LoginMenu loginMenu;
 
     protected abstract void Deserialize(T gameData);
     protected abstract T Serialize();
@@ -55,8 +54,7 @@ public abstract class BaseGame<T> : MonoBehaviour {
     }
 
     protected virtual void Start() {
-        IsLoggedIn = false;
-
+        isLoggedIn = false;
         saveMenu.enabled = false;
         saveMenu.SavegameType = typeof(T).Name;
 
@@ -88,11 +86,9 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.LoadSavegames();
         loginMenu.enabled = false;
         saveMenu.enabled = true;
-        IsLoggedIn = true;
+        isLoggedIn = true;
     }
 
-
-    
     protected virtual bool IsMouseOverMenu() {
         return saveMenu.IsMouseOver() || loginMenu.IsMouseOver();
     }
@@ -117,4 +113,4 @@ public abstract class BaseGame<T> : MonoBehaviour {
             saveMenu.SetStatus("Game is loaded.");
         }
     }
-} 
+}

@@ -21,11 +21,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public partial class BackendManager {
@@ -64,6 +64,7 @@ public partial class BackendManager {
     public PostScoreSucces OnPostScoreSucces;
     public PostScoreFailed OnPostScoreFailed;
 
+    // the authentication token will be set when a user has logged in
     private string authenticationToken = "";
     
     /// <summary>
@@ -85,7 +86,7 @@ public partial class BackendManager {
             if (OnLoggedIn != null) {
                 OnLoggedIn();
             }
-        } else if (responseType == ResponseType.RequestError) {
+        } else if (responseType == ResponseType.ClientError) {
             if (OnLoginFailed != null) {
                 OnLoginFailed("Could not reach the server. Please try again later.");
             }
@@ -129,11 +130,11 @@ public partial class BackendManager {
             if (OnSignupSuccess != null) {
                 OnSignupSuccess();
             }
-        } else if (responseType == ResponseType.RequestError) {
+        } else if (responseType == ResponseType.ClientError) {
             if (OnSignupFailed != null) {
                 OnSignupFailed("Could not reach the server. Please try again later.");
             }
-        } else if (responseType == ResponseType.ErrorFromServer) {
+        } else if (responseType == ResponseType.RequestError) {
             string errors = "";
             JObject obj = (JObject)responseData;
             foreach (KeyValuePair<string, JToken> pair in obj) {
@@ -173,7 +174,7 @@ public partial class BackendManager {
             if (OnSaveGameSucces != null) {
                 OnSaveGameSucces();
             }
-        } else if (responseType == ResponseType.RequestError) {
+        } else if (responseType == ResponseType.ClientError) {
             if (OnSaveGameFailed != null) {
                 OnSaveGameFailed("Could not reach the server. Please try again later.");
             }
@@ -244,7 +245,7 @@ public partial class BackendManager {
             if (OnPostScoreSucces != null) {
                 OnPostScoreSucces();
             }
-        } else if (responseType == ResponseType.RequestError) {
+        } else if (responseType == ResponseType.ClientError) {
             if (OnPostScoreFailed != null) {
                 OnPostScoreFailed("Could not reach the server. Please try again later.");
             }
@@ -269,7 +270,7 @@ public partial class BackendManager {
             if (OnDeleteSavegameSucces != null) {
                 OnDeleteSavegameSucces();
             }
-        } else if (responseType == ResponseType.RequestError) {
+        } else if (responseType == ResponseType.ClientError) {
             if (OnDeleteSavegameFailed != null) {
                 OnDeleteSavegameFailed("Could not reach the server. Please try again later.");
             }
@@ -296,7 +297,6 @@ public partial class BackendManager {
         }
 
         values = fieldToken.Values().ToArray().Select(token => token.Value<string>()).ToArray();
-
         return values.Length == 0;
     }
 }

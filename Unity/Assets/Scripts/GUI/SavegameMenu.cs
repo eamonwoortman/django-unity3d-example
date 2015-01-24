@@ -37,11 +37,7 @@ public class SavegameMenu : BaseMenu {
     [HideInInspector]
     public string SavegameType;
 
-    public string SaveName {
-        get {
-            return saveName;
-        }
-    }
+    private static GUIContent deleteButtonContent = new GUIContent("x", "delete");
 
     private const string NoSavegamesFoundText = "No savegames found";
     private const string LoadingGamesText = "Loading games...";
@@ -49,15 +45,14 @@ public class SavegameMenu : BaseMenu {
     private const string LoadingGameText = "Loading game...";
     private const int DefaultHeight = 275;
 
-    private static GUIContent deleteButtonContent = new GUIContent("x", "delete");
-    private List<Savegame> saveGames;
+    private bool isLoading = true;
+    private bool isExpanded;
     private int selectedNameIndex = -1, oldSelectedNameIndex = -1;
+    private int deleteSavegameIndex = -1;
     private string saveName = "";
     private string[] saveGameNames = { LoadingGamesText };
-    private bool isLoading = true;
     private string statusText = LoadingGamesText;
-    private bool isExpanded;
-    private int deleteSavegameIndex = -1;
+    private List<Savegame> saveGames;
 
     public SavegameMenu() {
         windowRect = new Rect(10, 10, 200, DefaultHeight);
@@ -66,6 +61,10 @@ public class SavegameMenu : BaseMenu {
     public void LoadSavegames() {
         statusText = LoadingGamesText;
         backendManager.LoadGames(SavegameType);
+    }
+
+    public void SetStatus(string status) {
+        statusText = status;
     }
 
     private void Start() {
@@ -116,7 +115,7 @@ public class SavegameMenu : BaseMenu {
         int saveId = GetSaveId(saveName);
 
         if (OnSaveButtonPressed != null) {
-            OnSaveButtonPressed(SaveName, saveId);
+            OnSaveButtonPressed(saveName, saveId);
         }
     }
 
@@ -183,7 +182,6 @@ public class SavegameMenu : BaseMenu {
             }
         } 
         GUILayout.EndVertical();
-
         GUILayout.EndHorizontal();
 
         GUI.enabled = true;
@@ -192,7 +190,7 @@ public class SavegameMenu : BaseMenu {
         GUILayout.Label("Status: " + statusText);
         GUILayout.BeginHorizontal();
 
-        GUI.enabled = (SaveName != "");
+        GUI.enabled = (saveName != "");
         if (GUILayout.Button("Save")) {
             int saveId = GetSaveId(saveName);
             if (saveId != -1) {
@@ -231,9 +229,5 @@ public class SavegameMenu : BaseMenu {
             windowRect.height = 50;
         }
         windowRect = GUILayout.Window(3, windowRect, ShowWindow, "Load/save menu");
-    }
-
-    public void SetStatus(string status) {
-        statusText = status;
     }
 }

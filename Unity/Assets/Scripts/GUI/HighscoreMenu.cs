@@ -22,33 +22,32 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using UnityEngine;
-using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class HighscoreMenu : BaseMenu {
     public VoidDelegate OnClose;
-    public Score newestScore;
-    public float currentScore;
+    public float CurrentScore;
 
     private const int Height = 300;
     private const int Width = 300;
     private bool loading;
     private List<Score> scores;
+    private Score newestScore;
 
     public HighscoreMenu() {
         windowRect = new Rect(Screen.width / 2 - Width / 2, Screen.height / 2 - Height / 2, Width, Height);
     }
 
-    void Start() {
+    private void Start() {
         loading = true;
         backendManager.OnScoresLoaded += OnScoresLoaded;
     }
 
     private void OnScoresLoaded(List<Score> newScores) {
         scores = newScores.OrderBy(s => s.Amount).ThenBy(s => s.Updated).Reverse().ToList();
-        newestScore = scores.OrderByDescending(s => s.Updated).FirstOrDefault(s => s.Amount == (int)currentScore);
+        newestScore = scores.OrderByDescending(s => s.Updated).FirstOrDefault(s => s.Amount == (int)CurrentScore);
         loading = false;
     }
 
@@ -81,6 +80,7 @@ public class HighscoreMenu : BaseMenu {
         }
         GUILayout.Label(lineStr);
     }
+
     private void ShowWindow(int id) {
         DrawHeader();
         DrawLine();
@@ -103,7 +103,7 @@ public class HighscoreMenu : BaseMenu {
 
         if (newestScore == null) {
             DrawLine();
-            GUILayout.Label("Your score of " + (int)currentScore + " didn't make it to the board!");
+            GUILayout.Label("Your score of " + (int)CurrentScore + " didn't make it to the board!");
         }
         GUILayout.FlexibleSpace();
 
@@ -118,5 +118,4 @@ public class HighscoreMenu : BaseMenu {
         GUI.skin = Skin;
         windowRect = GUILayout.Window(1, windowRect, ShowWindow, "Highscore");
     }
-	
 }

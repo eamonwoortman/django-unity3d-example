@@ -22,8 +22,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class BlockSpawner : MonoBehaviour {
     public GameObject BlockPrefab;
@@ -64,13 +62,7 @@ public class BlockSpawner : MonoBehaviour {
     }
 
     private bool CanClick() {
-        Vector3 mp = Input.mousePosition;
-        mp.y = Mathf.Abs(mp.y - Screen.height);
-
-        if (gameMenu == null) {
-            return true;
-        }
-        if (gameMenu.IsMouseOver()) {
+        if (gameMenu != null && gameMenu.IsMouseOver()) {
             return false;
         }
         return true;
@@ -80,12 +72,14 @@ public class BlockSpawner : MonoBehaviour {
         if (!CanClick()) {
             return;
         }
+
         if (Input.GetMouseButtonUp(0)) {
             Vector3 worldPos = GetPosition();
             Instantiate(BlockPrefab, worldPos, transform.rotation);
         }
+
         if (Input.GetMouseButtonUp(1)) {
-            Ray ray=Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f) && hit.transform.name.Contains("Block")) {
                 Rigidbody rigidbody = hit.transform.GetComponent<Rigidbody>();

@@ -21,24 +21,21 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using UnityEngine;
-using System.Collections;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Linq;
 using System;
+using UnityEngine;
 
 public class LoginMenu : BaseMenu {
     public delegate void LoggedIn();
     public LoggedIn HasLoggedIn;
-    private string status = "";
-    private string username = "", password = "";
+
+    private const float LABEL_WIDTH = 110;
     private bool loggingIn = false;
-    private float nextStatusChange;
-    private int dotNumber = 1;
     private bool rememberMe = false;
     private bool hasFocussed = false;
-    private const float LABEL_WIDTH = 110;
+    private int dotNumber = 1;
+    private float nextStatusChange;
+    private string status = "";
+    private string username = "", password = "";
     private SignupMenu signupMenu;
 
     private void Start() {
