@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\GUI\HighscoreMenu.cs" />
      <Compile Include="Assets\Scripts\GUI\LoginMenu.cs" />
      <Compile Include="Assets\Scripts\GUI\SavegameMenu.cs" />
+     <Compile Include="Assets\Scripts\GUI\SignupMenu.cs" />
      <Compile Include="Assets\Scripts\JeuDeBoulesExample\Ball.cs" />
      <Compile Include="Assets\Scripts\JeuDeBoulesExample\BallGame.cs" />
      <Compile Include="Assets\Scripts\JeuDeBoulesExample\Data\BallData.cs" />
