@@ -297,6 +297,5 @@ public class BackendTester : MonoBehaviour {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         int savegameId = responseData.Value<int>("id");
         DeleteSavegame(savegameId);
-        //Debug.Log("ReponseData=" + responseData);
     }
 }
