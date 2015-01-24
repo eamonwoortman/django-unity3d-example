@@ -48,8 +48,8 @@ public class LoginMenu : BaseMenu {
         
         signupMenu = gameObject.GetOrCreateComponent<SignupMenu>();
         signupMenu.enabled = false;
-        signupMenu.OnCancel += OnSignupCancel;
-        signupMenu.OnSignedUp += OnSignupSucces;
+        signupMenu.OnCancel += OnSignupCancelOrSuccess;
+        signupMenu.OnSignedUp += OnSignupCancelOrSuccess;
 
         if (PlayerPrefs.HasKey("x1")) {
             username = PlayerPrefs.GetString("x2").FromBase64();
@@ -58,17 +58,10 @@ public class LoginMenu : BaseMenu {
         }
     }
 
-    private void OnSignupCancel() {
-        signupMenu.enabled = false;
+    private void OnSignupCancelOrSuccess() {
         enabled = true;
     }
-
-    private void OnSignupSucces() {
-        enabled = true;
-    }
-
-
-
+    
     private void SaveCredentials() {
         PlayerPrefs.SetString("x2", username.ToBase64());
         PlayerPrefs.SetString("x1", password.ToBase64());

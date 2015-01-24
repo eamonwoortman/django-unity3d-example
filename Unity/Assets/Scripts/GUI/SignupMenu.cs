@@ -57,11 +57,15 @@ public class SignupMenu : BaseMenu {
         status = "Signup successful!";
         signingUp = false;
 
+        Invoke("FinishSignup", 1.5f);        
+    }
+
+    private void FinishSignup() {
         if (OnSignedUp != null) {
             OnSignedUp();
         }
+        enabled = false;
     }
-
 
     private void DoSignup() {
         if (signingUp) {
