@@ -67,30 +67,32 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
     protected override void Start() {
         base.Start();
 
+        balls = new List<Ball>();
         highscoreMenu.enabled = false;
 
         // Setup a delegate which will trigger when we succesfully posted a new highscore to the server.
-        backendManager.OnPostScoreSucces += delegate {
-
-            // Do a GET request on the server for all the highscores. Whenever this is successfull, the highscore menu will automatticlly be triggered and opened
-            backendManager.GetAllScores();
-        };
+        backendManager.OnPostScoreSucces += OnPostScoreSuccess;
 
         // Setup a delegate for when we close the highscore screen. This will reset the game and set it up for a new round of play
-        highscoreMenu.OnClose += delegate {
-            ResetGame();
-        };
-
-        balls = new List<Ball>();
+        highscoreMenu.OnClose += ResetGame;
     }
-	
-	void Update () {
+
+    private void OnPostScoreSuccess() {
+        // Do a GET request on the server for all the highscores. Whenever this is successfull, the highscore menu will automatticlly be triggered and opened
+        backendManager.GetAllScores();
+    }
+
+    private void UpdateScore() {
         Score = 0;
         foreach (Ball ball in balls) {
             Vector3 distance = ball.transform.position - targetCube.position;
             Score += Mathf.Max(0.0f, 5.0f - distance.magnitude);
         }
         Score *= 10;
+    }
+
+	private void Update () {
+        UpdateScore();
 
         turnText.text = "Turns: " + Data.Turn + " / " + MAX_TURNS;
         scoreText.text = "Score: " + (int)Score;

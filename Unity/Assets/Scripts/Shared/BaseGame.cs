@@ -58,19 +58,9 @@ public abstract class BaseGame<T> : MonoBehaviour {
         saveMenu.enabled = false;
         saveMenu.SavegameType = typeof(T).Name;
 
-        backendManager.OnLoggedIn += delegate {
-            Invoke("EnableSaveMenu", 1.0f);
-        };
-
-        saveMenu.OnSaveButtonPressed += delegate (string filename, int savegameId) {
-            Savegame savegame = new Savegame() { Id = savegameId, Name = filename, 
-                Type = typeof(T).Name, File = JsonConvert.SerializeObject(Serialize()) };
-            backendManager.SaveGame(savegame);
-        };
-
-        saveMenu.OnLoadButtonPressed += delegate(string filename) {
-            StartCoroutine(DownloadSaveFile(filename));
-        };
+        backendManager.OnLoggedIn += OnLoggedIn;
+        saveMenu.OnSaveButtonPressed += OnSaveButtonPressed;
+        saveMenu.OnLoadButtonPressed += OnLoadButtonPressed;
     }
 
     protected bool CanClick() {
@@ -99,6 +89,22 @@ public abstract class BaseGame<T> : MonoBehaviour {
 
     protected void HideSaveMenu() {
         saveMenu.enabled = false;
+    }
+
+    private void OnLoggedIn() {
+        Invoke("EnableSaveMenu", 1.0f);
+    }
+
+    private void OnSaveButtonPressed(string filename, int savegameId) {
+        Savegame savegame = new Savegame() {
+            Id = savegameId, Name = filename,
+            Type = typeof(T).Name, File = JsonConvert.SerializeObject(Serialize())
+        };
+        backendManager.SaveGame(savegame);
+    }
+
+    private void OnLoadButtonPressed(string filename) {
+        StartCoroutine(DownloadSaveFile(filename));
     }
 
     private IEnumerator DownloadSaveFile(string file) {
