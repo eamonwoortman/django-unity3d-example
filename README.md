@@ -25,32 +25,52 @@ To have a minimal backend this example project should include the following feat
 
 ### How do I get set up? ###
 
-**Django**
+***Django***
+We start of by installing our tools for working with/on our Django project.
 
 * Download and install Visual Studio 2013
 * Download and install Python 2.7
 * Download and install Python Tools for Visual Studio
+
+After we have installed the required tools, we have to ready our environment. We do this by creating a new virtual environment and synchronizing the database.
+
 * Open the solution and either choose or set up a virtual environment(right-click Environments->Add virtual environment), name it 'django-unity'
 * Synchronize the database by right-clicking the project->Python->Django Sync DB...
 * You will be asked to enter a username and password for the super user, use 'admin' for both username and password
+You are now done.
 
 
-**Unity3D**
+***Unity3D***
 
 * Download and install Unity3D (v4.3 or higher)
 * Simply open the Unity project in the Unity editor
-
+*NOTE: depending on which Unity version you are using, you may get a decrepation warning as this project was created using Unity 4.3*
 
 ### Getting started ###
 
-**Django**
+***Django***
+
+* If you haven't already done so, open the solution in Visual Studio 
 * Start debugging by pressing F5 or clicking the Play button
+*This will run the Django Debug server and open your webbrowser at http://localhost:8000/ which displays a friendly "Hello world" message*
+* Optionally explore th admin page at http://localhost:8000/admin/ by logging in with the admin/admin credentials
 
 
-**Unity3D**
+***Unity3D***
+
+* If you haven't already done so, open the solution in the Unity3D editor
 * Either load the main scene which contains the tester or open one of the two example scenes
 * Press play
 
+### List of API routes ###
+* ^api/score
+* ^api/signup
+* ^api/deleteuser
+* ^api/getauthtoken
+* ^api/savegame/(?P<pk>\d+)/$
+* ^api/savegame
+* ^api/savegames/
+* ^uploads\/(?P<path>.*)$
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
