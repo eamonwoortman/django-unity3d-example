@@ -24,8 +24,8 @@ To have a minimal backend this example project should include the following feat
 * Python tools v2.1 for Visual Studio 
 
 ### How do I get set up? ###
-
 ***Django***
+
 We start of by installing our tools for working with/on our Django project.
 
 * Download and install Visual Studio 2013
@@ -44,6 +44,7 @@ You are now done.
 
 * Download and install Unity3D (v4.3 or higher)
 * Simply open the Unity project in the Unity editor
+
 *NOTE: depending on which Unity version you are using, you may get a decrepation warning as this project was created using Unity 4.3*
 
 ### Getting started ###
@@ -63,14 +64,24 @@ You are now done.
 * Press play
 
 ### List of API routes ###
-* ^api/score
-* ^api/signup
-* ^api/deleteuser
-* ^api/getauthtoken
-* ^api/savegame/(?P<pk>\d+)/$
-* ^api/savegame
-* ^api/savegames/
-* ^uploads\/(?P<path>.*)$
+
+* /api/score
+ * GET
+ * POST 
+* /api/user
+ * POST
+ * DELETE
+* /api/getauthtoken
+ * POST
+* /api/savegame/(?P<pk>\d+)/$
+ * PUT
+ * DELETE
+* /api/savegame
+ * POST
+* /api/savegames/
+ * GET
+* /uploads\/(?P<path>.*)$
+ * GET 
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
