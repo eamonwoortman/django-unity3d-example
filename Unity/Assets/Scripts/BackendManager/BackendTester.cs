@@ -37,7 +37,9 @@ public class BackendTester : MonoBehaviour {
     public string AlternateBackendUrl = "";
 
     private BackendManager backendManager;
-
+    private System.Diagnostics.Stopwatch stopwatch;
+    private float totaltime;
+    
     private void Start() {
         backendManager = GetComponent<BackendManager>();
         if (backendManager == null) {
@@ -46,6 +48,7 @@ public class BackendTester : MonoBehaviour {
         if (AlternateBackendUrl != "") {
             backendManager.DevelopmentUrl = backendManager.ProductionUrl = AlternateBackendUrl;
         }
+        stopwatch = new System.Diagnostics.Stopwatch();
         StartTests();
     }
 
@@ -56,6 +59,7 @@ public class BackendTester : MonoBehaviour {
         }
 
         Debug.Log("Starting test " + testNumber + "...");
+        stopwatch.Start();
         method.Invoke(this, null);
         return true;
     }
@@ -118,10 +122,14 @@ public class BackendTester : MonoBehaviour {
             Debug.LogWarning("[TEST " + testNumber + "] FAILED");
             Debug.LogWarning("[TEST " + testNumber + "] EXCEPTION: " + ex.InnerException);
         }
+        stopwatch.Stop();
+        totaltime += stopwatch.ElapsedMilliseconds;
+        Debug.Log("The test took "+stopwatch.ElapsedMilliseconds+" ms.");
+        stopwatch.Reset();
 
         //now find and start a new test
         if (!StartTest(testNumber + 1)) {
-            Debug.Log("All tests are done!");
+            Debug.Log("All tests are done! All tests completed in "+totaltime+" ms.");
         }
     }
 
