@@ -133,7 +133,7 @@ public class BackendTester : MonoBehaviour {
         WWWForm form = new WWWForm();
         form.AddField("username", "testuser");
         form.AddField("password", "superpassword");
-        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
+        backendManager.Send(RequestType.Post, "user", form, OnBackendResponse);
     }
     private void Validate_1(ResponseType responseType, JToken responseData) {
         const string invalidEmailMsg = "This field is required.";
@@ -150,7 +150,7 @@ public class BackendTester : MonoBehaviour {
         form.AddField("username", AdminUsername);
         form.AddField("password", "superpassword");
         form.AddField("email", "test@test.com");
-        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
+        backendManager.Send(RequestType.Post, "user", form, OnBackendResponse);
     }
     private void Validate_2(ResponseType responseType, JToken responseData) {
         const string uniqueUsernameMsg = "This field must be unique.";
@@ -168,7 +168,7 @@ public class BackendTester : MonoBehaviour {
         form.AddField("username", randomUsername);
         form.AddField("password", password);
         form.AddField("email", email);
-        backendManager.Send(RequestType.Post, "deleteuser", form);
+        backendManager.Send(RequestType.Delete, "user", form);
     }
     private void Test_3() {
         WWWForm form = new WWWForm();
@@ -178,7 +178,7 @@ public class BackendTester : MonoBehaviour {
         form.AddField("username", randomUsername);
         form.AddField("password", password);
         form.AddField("email", email);
-        backendManager.Send(RequestType.Post, "registeruser", form, OnBackendResponse);
+        backendManager.Send(RequestType.Post, "user", form, OnBackendResponse);
     }
     private void Validate_3(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
