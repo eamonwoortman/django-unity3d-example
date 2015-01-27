@@ -66,22 +66,26 @@ You are now done.
 ### List of API routes ###
 
 * /api/score
- * GET
- * POST 
+ * description: creates a new score object or lists all scores
+ * methods: GET, POST 
 * /api/user
- * POST
- * DELETE
+ * description: creates a new user object or deletes one
+ * methods:  POST, DELETE
 * /api/getauthtoken
- * POST
+ * description: returns an authentication token
+ * methods: POST
 * /api/savegame/(?P<pk>\d+)/$
- * PUT
- * DELETE
+ * description: updates or deletes a savegame object
+ * methods: PUT, DELETE
 * /api/savegame
- * POST
+ * description: creates a new savegame object
+ * methods: POST
 * /api/savegames/
- * GET
+ * description: gets a lists all savegames
+ * methods: GET
 * /uploads\/(?P<path>.*)$
- * GET 
+ * description: gets a savegame file
+ * methods: GET 
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
