@@ -21,3 +21,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 This software uses JsonDotNet by James Newton-King which also uses the MIT License.
+Textures provided by Nieb and OpenGameArt.com (http://opengameart.org/content/niebs-tesseract-textures)
