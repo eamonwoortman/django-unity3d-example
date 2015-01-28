@@ -7,9 +7,7 @@ Django-Unity-Example is an example project of how to use Django as a backend for
 ### Notes ###
 This repository is currently set up using Microsoft Visual Studio and Python Tools for VS. If you are using either Linux or Mac, you should be able to run this django project considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
 
-### Goals ###
-To have a minimal backend this example project should include the following features:
-
+### Features ###
 * Players can signup using an email adress, username and password
 * Players can login
 * Players will be able to save their score and get a list of all scores
