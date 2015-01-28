@@ -66,6 +66,7 @@ The wiki contains more information about the Django and Unity project.
 
 * [BaseGame](https://github.com/eamonwoortman/django-unity3d-example/wiki/BaseGame)
 * [Jeu de boules example](https://github.com/eamonwoortman/django-unity3d-example/wiki/Jeu-de-boules-example)
+* [API routes](https://github.com/eamonwoortman/django-unity3d-example/wiki/API-routes)
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
