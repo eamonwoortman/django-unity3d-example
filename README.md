@@ -52,7 +52,7 @@ You are now done.
 * If you haven't already done so, open the solution in Visual Studio 
 * Start debugging by pressing F5 or clicking the Play button
 *This will run the Django Debug server and open your webbrowser at http://localhost:8000/ which displays a friendly "Hello world" message*
-* Optionally explore th admin page at http://localhost:8000/admin/ by logging in with the admin/admin credentials
+* Optionally explore the admin page at http://localhost:8000/admin/ by logging in with the admin/admin credentials
 
 
 ***Unity3D***
