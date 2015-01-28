@@ -2,15 +2,15 @@
 ![python-django.png](https://cloud.githubusercontent.com/assets/9072397/5611563/762c7108-94c8-11e4-9d9c-8ae4a703a03e.png)
 # Django-Unity-Example #
 
-Django-Unity-Example is an example project of how to use Django as a backend for a Unity3D game. 
+Django-Unity-Example is an example project of how to use Django as a backend for a Unity3D game. This repository contains both the Django and Unity3D project.
 
 ### Notes ###
-This repository is currently set up using Microsoft Visual Studio and Python Tools for VS, however, you should be able to run this django project on Linux and Mac considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
+This repository is currently set up using Microsoft Visual Studio and Python Tools for VS. If you are using either Linux or Mac, you should be able to run this django project considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
 
 ### Goals ###
 To have a minimal backend this example project should include the following features:
 
-* Players can signup using an email and password
+* Players can signup using an email adress, username and password
 * Players can login
 * Players will be able to save their score and get a list of all scores
 * Players can save their game(blob of data) and retreive a list of saved games
@@ -63,6 +63,12 @@ You are now done.
 * Either load the main scene which contains the tester or open one of the two example scenes
 * Press play
 
+### Wiki ###
+The wiki contains more information about the Django and Unity project.
+
+* Link 1
+* Link 2
+
 ### List of API routes ###
 
 * /api/score
@@ -74,7 +80,7 @@ You are now done.
 * /api/getauthtoken
  * description: returns an authentication token
  * methods: POST
-* /api/savegame/(?P<pk>\d+)/$
+* /api/savegame/[pk]
  * description: updates or deletes a savegame object
  * methods: PUT, DELETE
 * /api/savegame
@@ -83,10 +89,12 @@ You are now done.
 * /api/savegames/
  * description: gets a lists all savegames
  * methods: GET
-* /uploads\/(?P<path>.*)$
+* /uploads/[path]
  * description: gets a savegame file
  * methods: GET 
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
-TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework)
+TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework, django and rest framework)
+
+This project is licenced under the MIT License.
