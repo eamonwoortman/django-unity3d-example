@@ -58,7 +58,7 @@ class Savegame(models.Model):
         return '%s - %s' % (self.name, self.updated)
 
 class SavegameAdmin(admin.ModelAdmin):
-    fields = ('id', 'owner', 'name', 'file')
+    fields = ('owner', 'name', 'file')
     list_display = ['id', 'owner', 'name', 'created', 'updated']
 
 
