@@ -66,8 +66,8 @@ You are now done.
 ### Wiki ###
 The wiki contains more information about the Django and Unity project.
 
-* Link 1
-* Link 2
+* [BaseGame](https://github.com/eamonwoortman/django-unity3d-example/wiki/BaseGame)
+* [Jeu de boules example](https://github.com/eamonwoortman/django-unity3d-example/wiki/Jeu-de-boules-example)
 
 ### List of API routes ###
 
