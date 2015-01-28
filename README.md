@@ -62,11 +62,7 @@ You are now done.
 * Press play
 
 ### Wiki ###
-The wiki contains more information about the Django and Unity project.
-
-* [BaseGame](https://github.com/eamonwoortman/django-unity3d-example/wiki/BaseGame) - Info about the Unity script that handles the login and save and loading of the game 
-* [Jeu de boules example](https://github.com/eamonwoortman/django-unity3d-example/wiki/Jeu-de-boules-example) - Info about the specific Jeu de boule game example
-* [API routes](https://github.com/eamonwoortman/django-unity3d-example/wiki/API-routes) - A list of all the supported API routes of the Django back-end
+The [wiki](https://github.com/eamonwoortman/django-unity3d-example/wiki) contains more information about the Django and Unity project.
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
