@@ -69,30 +69,6 @@ The wiki contains more information about the Django and Unity project.
 * [BaseGame](https://github.com/eamonwoortman/django-unity3d-example/wiki/BaseGame)
 * [Jeu de boules example](https://github.com/eamonwoortman/django-unity3d-example/wiki/Jeu-de-boules-example)
 
-### List of API routes ###
-
-* /api/score
- * description: creates a new score object or lists all scores
- * methods: GET, POST 
-* /api/user
- * description: creates a new user object or deletes one
- * methods:  POST, DELETE
-* /api/getauthtoken
- * description: returns an authentication token
- * methods: POST
-* /api/savegame/[pk]
- * description: updates or deletes a savegame object
- * methods: PUT, DELETE
-* /api/savegame
- * description: creates a new savegame object
- * methods: POST
-* /api/savegames/
- * description: gets a lists all savegames
- * methods: GET
-* /uploads/[path]
- * description: gets a savegame file
- * methods: GET 
-
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
 TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework, django and rest framework)
