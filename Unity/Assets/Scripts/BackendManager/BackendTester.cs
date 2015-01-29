@@ -146,7 +146,7 @@ public class BackendTester : MonoBehaviour {
         backendManager.Send(RequestType.Post, "user", form, OnBackendResponse);
     }
     private void Validate_1(ResponseType responseType, JToken responseData) {
-        const string invalidEmailMsg = "This field is required.";
+        const string invalidEmailMsg = "This field may not be blank";
         Assert(responseType == ResponseType.RequestError, "responseType != ErrorFromServer, it's: " + responseType);
         ValidateSubfield(responseData, "email", invalidEmailMsg);
     }
@@ -173,12 +173,12 @@ public class BackendTester : MonoBehaviour {
     /// this should pass if the response was successful and the response object contains an email field which equals to our email
     /// </summary>
     private string randomUsername, password, email;
-    private void DeleteCreatedUser() {
+    private void DeleteCreatedUser(int userId) {
         WWWForm form = new WWWForm();
         form.AddField("username", randomUsername);
         form.AddField("password", password);
         form.AddField("email", email);
-        backendManager.Send(RequestType.Delete, "user", form);
+        backendManager.Send(RequestType.Delete, "user/" + userId + "/", form);
     }
     private void Test_3() {
         WWWForm form = new WWWForm();
@@ -193,7 +193,8 @@ public class BackendTester : MonoBehaviour {
     private void Validate_3(ResponseType responseType, JToken responseData) {
         Assert(responseType == ResponseType.Success, "responseType != Success, it's: " + responseType);
         ValidateField<string>(responseData, "email", "test@test.com");
-        DeleteCreatedUser();
+        int userId = responseData.Value<int>("id");
+        DeleteCreatedUser(userId);
     }
 
     /// <summary>

@@ -32,6 +32,7 @@ urlpatterns = patterns('unitybackendapp.views',
     
     #apis
     url(r'^api/score', ScoreAPI.as_view()),
+    url(r'^api/user/(?P<pk>\d+)/$', UserAPI.as_view()),
     url(r'^api/user', UserAPI.as_view()),
     url(r'^api/getauthtoken', GetAuthToken.as_view()),
     url(r'^api/savegame/(?P<pk>\d+)/$', SavegameAPI.as_view()),

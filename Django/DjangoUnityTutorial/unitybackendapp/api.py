@@ -49,11 +49,12 @@ class ScoreAPI(ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 class UserAPI(DestroyAPIView, CreateAPIView):
+    queryset = User.objects.all()
     serializer_class = CreateUserSerializer
 
     def perform_destroy(self, instance):
-        user = User.objects.get(username=request.data['username'], email=request.data['email'])
-        if user.check_password(request.data['password']) is False:
+        user = User.objects.get(username=self.request.data['username'], email=self.request.data['email'])
+        if user.check_password(self.request.data['password']) is False:
             return Response('You are not authorized to do that.', status=status.HTTP_401_UNAUTHORIZED)
         instance.delete()
 
