@@ -115,6 +115,7 @@ public class SignupMenu : BaseMenu {
         }
         GUI.enabled = true;
         if (GUILayout.Button("Cancel")) {
+            enabled = false;
             if (OnCancel != null) {
                 OnCancel();
             }
