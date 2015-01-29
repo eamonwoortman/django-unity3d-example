@@ -39,13 +39,13 @@ This project was targetted for Windows users but since both Django and Unity3D a
 All the screenshots can be found at our [wiki.](https://github.com/eamonwoortman/django-unity3d-example/wiki/Screenshots) 
 
 
-<p><a href="https://cloud.githubusercontent.com/assets/9072397/5958512/805df0b0-a7c5-11e4-8a7a-f9403d465b71.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958512/805df0b0-a7c5-11e4-8a7a-f9403d465b71.png" alt="" style="width:50%;"></a></p>
+<p><a href="https://cloud.githubusercontent.com/assets/9072397/5958512/805df0b0-a7c5-11e4-8a7a-f9403d465b71.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958512/805df0b0-a7c5-11e4-8a7a-f9403d465b71.png" alt="" width="50%"></a>
 
-<p><a href="https://cloud.githubusercontent.com/assets/9072397/5958514/8076147e-a7c5-11e4-9c81-f1d166d9b17f.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958514/8076147e-a7c5-11e4-9c81-f1d166d9b17f.png" alt="" style="width:50%;"></a></p>
+<a href="https://cloud.githubusercontent.com/assets/9072397/5958514/8076147e-a7c5-11e4-9c81-f1d166d9b17f.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958514/8076147e-a7c5-11e4-9c81-f1d166d9b17f.png" alt="" width="50%"></a>
 
-<p><a href="https://cloud.githubusercontent.com/assets/9072397/5958507/805a00ae-a7c5-11e4-8674-e2b2e1a9950b.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958507/805a00ae-a7c5-11e4-8674-e2b2e1a9950b.png" alt="" style="width:50%;"></a></p>
+<a href="https://cloud.githubusercontent.com/assets/9072397/5958507/805a00ae-a7c5-11e4-8674-e2b2e1a9950b.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958507/805a00ae-a7c5-11e4-8674-e2b2e1a9950b.png" alt="" width="50%"></a>
 
-<p><a href="https://cloud.githubusercontent.com/assets/9072397/5958511/805d978c-a7c5-11e4-9dd3-bf21c8030f66.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958511/805d978c-a7c5-11e4-9dd3-bf21c8030f66.png" alt="" style="width:50%;"></a></p>
+<a href="https://cloud.githubusercontent.com/assets/9072397/5958511/805d978c-a7c5-11e4-9dd3-bf21c8030f66.png"><img src="https://cloud.githubusercontent.com/assets/9072397/5958511/805d978c-a7c5-11e4-9dd3-bf21c8030f66.png" alt="" width="50%"></a></p>
 
 
 
