@@ -90,7 +90,7 @@ public class BackendTester : MonoBehaviour {
         bool found = false;
         foreach (JToken token in fieldValidationErrors) {
             string tokenValue = token.Value<string>();
-            if (tokenValue.Equals(value)) {
+            if (tokenValue.Contains(value)) {
                 found = true;
                 break;
             }
@@ -117,14 +117,16 @@ public class BackendTester : MonoBehaviour {
 
         try {
             methodInfo.Invoke(this, new object[] { responseType, responseData });
-            Debug.Log("[TEST " + testNumber + "] PASSED");
+            stopwatch.Stop();
+            totaltime += stopwatch.ElapsedMilliseconds;
+            Debug.Log("[TEST " + testNumber + "] PASSED in " + stopwatch.ElapsedMilliseconds + " ms.");
         } catch (Exception ex) {
             Debug.LogWarning("[TEST " + testNumber + "] FAILED");
             Debug.LogWarning("[TEST " + testNumber + "] EXCEPTION: " + ex.InnerException);
         }
-        stopwatch.Stop();
-        totaltime += stopwatch.ElapsedMilliseconds;
-        Debug.Log("The test took "+stopwatch.ElapsedMilliseconds+" ms.");
+        if (stopwatch.IsRunning) {
+            stopwatch.Stop();
+        }
         stopwatch.Reset();
 
         //now find and start a new test
