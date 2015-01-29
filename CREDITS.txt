@@ -1,0 +1,3 @@
+This software uses JsonDotNet library by James Newton-King.
+Thanks To Christie for his great Django Rest Framework.
+Textures provided by Nieb and OpenGameArt.com (http://opengameart.org/content/niebs-tesseract-textures)

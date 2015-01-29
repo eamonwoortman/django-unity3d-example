@@ -2,12 +2,15 @@
 ![python-django.png](https://cloud.githubusercontent.com/assets/9072397/5611563/762c7108-94c8-11e4-9d9c-8ae4a703a03e.png)
 # Django-Unity-Example #
 
-Django-Unity-Example is an example project of how to use Django as a backend for a Unity3D game. This repository contains both the Django and Unity3D project.
+Django-Unity-Example is an example project of how to use Django as a backend for a Unity3D game. 
 
-### Notes ###
-This repository is currently set up using Microsoft Visual Studio and Python Tools for VS. If you are using either Linux or Mac, you should be able to run this django project considered you've got the dependencies(django, restframework). As this is just an example project, this does *not* cover deploying or getting ready for production.
 
-### Features ###
+### Overview ###
+
+Creating backends for your games has never been this easy! Django and the Django Rest Framework are excellent tools to
+As this is just an example project, this does *not* cover deploying or getting ready for production.
+
+
 * Players can signup using an email adress, username and password
 * Players can login
 * Players will be able to save their score and get a list of all scores
@@ -45,6 +48,10 @@ You are now done.
 
 *NOTE: depending on which Unity version you are using, you may get a decrepation warning as this project was created using Unity 4.3*
 
+***Django on Linux/Mac***
+The project is currently set up using Microsoft Visual Studio and Python Tools for VS. If you are using either Linux or Mac, you should be able to run this django project considered you've got the dependencies(django, restframework). 
+
+
 ### Getting started ###
 
 ***Django***
@@ -61,11 +68,16 @@ You are now done.
 * Either load the main scene which contains the tester or open one of the two example scenes
 * Press play
 
-### Wiki ###
+
+
+### Documentation ###
 The [wiki](https://github.com/eamonwoortman/django-unity3d-example/wiki) contains more information about the Django and Unity project.
 
 NOTE: THIS EXAMPLE PROJECT IS NOT FINISHED YET
 
-TODO: ADD DISCLAIMER/LICENCE (mention Newtonsofts JSON.NET framework, django and rest framework)
+### Contributor  ###
+Bas 'broding' Roding
 
-This project is licenced under the MIT License.
+### Licence ###
+
+*Django-Unity-Example* is licenced under the MIT License. Please see the LICENSE file for details.
