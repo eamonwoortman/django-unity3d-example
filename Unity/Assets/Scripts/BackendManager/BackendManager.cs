@@ -84,18 +84,18 @@ public partial class BackendManager : MonoBehaviour {
     public delegate void RequestResponseDelegate(ResponseType responseType, JToken jsonResponse, string callee);
 
 
+    //---- Public Properties ----//
+    public string BackendUrl {
+        get {
+            return UseProduction ? ProductionUrl : DevelopmentUrl;
+        }
+    }
+
     //---- URLS ----//
     public bool UseProduction = false;
     public bool Secure;
     public string ProductionUrl = "http://foobar:8000/api/";
     public string DevelopmentUrl = "http://localhost:8000/api/";
-
-    //---- Private Properties ----//
-    string hostUrl {
-        get {
-            return UseProduction ? ProductionUrl : DevelopmentUrl;
-        }
-    }
 
     //---- Private Methods ----//
 
@@ -109,7 +109,7 @@ public partial class BackendManager : MonoBehaviour {
         WWW request;
         Hashtable headers;
         byte[] postData;
-        string url = hostUrl + command;
+        string url = BackendUrl + command;
 
         if (Secure) {
             url = url.Replace("http", "https");

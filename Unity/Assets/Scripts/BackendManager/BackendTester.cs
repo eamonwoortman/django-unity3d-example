@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using System.Collections;
 
 class AssertionFailedException : Exception {
     public AssertionFailedException(string message) : base(message) { }
@@ -49,7 +50,7 @@ public class BackendTester : MonoBehaviour {
             backendManager.DevelopmentUrl = backendManager.ProductionUrl = AlternateBackendUrl;
         }
         stopwatch = new System.Diagnostics.Stopwatch();
-        StartTests();
+        StartCoroutine(StartTests());
     }
 
     private bool StartTest(int testNumber) {
@@ -64,7 +65,15 @@ public class BackendTester : MonoBehaviour {
         return true;
     }
 
-    private void StartTests() {
+    private IEnumerator StartTests() {
+        WWW www = new WWW(backendManager.BackendUrl);
+        while (!www.isDone) {
+            yield return false;
+        }
+        if (www.error != null) {
+            Debug.LogError("Could not reach backend server, are you sure it's online?");
+            yield break;
+        }
         StartTest(1);
     }
 
@@ -121,6 +130,8 @@ public class BackendTester : MonoBehaviour {
             totaltime += stopwatch.ElapsedMilliseconds;
             Debug.Log("[TEST " + testNumber + "] PASSED in " + stopwatch.ElapsedMilliseconds + " ms.");
         } catch (Exception ex) {
+            stopwatch.Stop();
+            totaltime += stopwatch.ElapsedMilliseconds;
             Debug.LogWarning("[TEST " + testNumber + "] FAILED");
             Debug.LogWarning("[TEST " + testNumber + "] EXCEPTION: " + ex.InnerException);
         }
