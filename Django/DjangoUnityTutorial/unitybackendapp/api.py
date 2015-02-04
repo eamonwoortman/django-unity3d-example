@@ -84,8 +84,10 @@ class SavegameAPI(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
         serializer.save(owner=self.request.user)
 
     def list(self, request, *args, **kwargs):
-        if 'SavegameType' not in self.request.data: 
-            return Response([])
-        instance = self.get_queryset().filter(type=self.request.data['SavegameType'])
+        savegameType = ''
+        if 'SavegameType' in self.request.data: 
+            savegameType = self.request.data['SavegameType']
+
+        instance = self.get_queryset().filter(type=savegameType)
         serializer = self.get_serializer(instance, many=True)
         return Response(serializer.data)
