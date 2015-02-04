@@ -122,7 +122,7 @@ public partial class BackendManager {
         form.AddField("username", username);
         form.AddField("email", email);
         form.AddField("password", password);
-        Send(RequestType.Post, "signup", form, OnSignupResponse);
+        Send(RequestType.Post, "user", form, OnSignupResponse);
     }
 
     private void OnSignupResponse(ResponseType responseType, JToken responseData, string callee) {
