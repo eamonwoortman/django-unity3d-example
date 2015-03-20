@@ -34,7 +34,7 @@ public class Ball : MonoBehaviour {
     private Color targetColor;
     
     private void Awake(){
-        startColor = targetColor = renderer.material.GetColor("_SpecColor");
+        startColor = targetColor = GetComponent<Renderer>().material.GetColor("_SpecColor");
 
         //let's not render the GUI on the cubemap
         Camera.main.GetComponent<GUILayer>().enabled = false;
@@ -46,9 +46,9 @@ public class Ball : MonoBehaviour {
     }
 
     private void Update() {
-        Color currColor = renderer.material.GetColor("_SpecColor");
+        Color currColor = GetComponent<Renderer>().material.GetColor("_SpecColor");
         Color newColor = Color.Lerp(currColor, targetColor, Time.deltaTime * 2f);
-        renderer.material.SetColor("_SpecColor", newColor);
+        GetComponent<Renderer>().material.SetColor("_SpecColor", newColor);
 
         if (Time.time > nextChangeTime) {
             if (targetColor == startColor) {
