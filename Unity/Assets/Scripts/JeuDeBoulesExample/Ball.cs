@@ -37,10 +37,11 @@ public class Ball : MonoBehaviour {
         startColor = targetColor = GetComponent<Renderer>().material.GetColor("_SpecColor");
 
         //let's not render the GUI on the cubemap
-        Camera.main.GetComponent<GUILayer>().enabled = false;
-        Camera.main.RenderToCubemap(cubemap);
-        Camera.main.GetComponent<GUILayer>().enabled = true;
-
+		if(cubemap != null) {
+			Camera.main.GetComponent<GUILayer>().enabled = false;
+			Camera.main.RenderToCubemap(cubemap);
+			Camera.main.GetComponent<GUILayer>().enabled = true;
+		}
         gameObject.name = "Ball";
         Data = new BallData();
     }
