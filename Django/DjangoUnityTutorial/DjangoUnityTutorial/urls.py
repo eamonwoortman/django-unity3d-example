@@ -16,7 +16,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'app.views.home', name='home'),
-    url(r'^', include('unitybackendapp.urls')),
+    
+    #url(r'^', include('unitybackendapp.urls')),
 
     url(r'^api/', include(router.urls)),
 

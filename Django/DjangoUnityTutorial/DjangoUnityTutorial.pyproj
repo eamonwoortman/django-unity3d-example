@@ -4,10 +4,8 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>DjangoUnityTutorial</Name>
     <RootNamespace>DjangoUnityTutorial</RootNamespace>
-    <InterpreterId>
-    </InterpreterId>
-    <InterpreterVersion>
-    </InterpreterVersion>
+    <InterpreterId>{9407a7ad-c27f-4655-bc4c-193329475bb6}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
     <PythonRunWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
     <PythonDebugWebServerCommandArguments>runserver --settings "$(DjangoSettingsModule)" %SERVER_PORT% $(CommandLineArguments)</PythonDebugWebServerCommandArguments>
     <WebBrowserPort>8000</WebBrowserPort>
@@ -42,7 +40,10 @@
     <Compile Include="unitybackendapp\api.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="unitybackendapp\middleware.py">
+    <Compile Include="unity\authentication\api.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="unity\middleware.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="unitybackendapp\models.py" />
@@ -55,22 +56,58 @@
     </Compile>
     <Compile Include="unitybackendapp\views.py" />
     <Compile Include="unitybackendapp\__init__.py" />
+    <Compile Include="unity\authentication\models.py" />
+    <Compile Include="unity\authentication\views.py" />
+    <Compile Include="unity\authentication\__init__.py" />
+    <Compile Include="unity\highscores\models.py" />
+    <Compile Include="unity\highscores\tests.py" />
+    <Compile Include="unity\highscores\views.py" />
+    <Compile Include="unity\highscores\__init__.py" />
+    <Compile Include="unity\savegames\models.py" />
+    <Compile Include="unity\savegames\tests.py" />
+    <Compile Include="unity\savegames\views.py" />
+    <Compile Include="unity\savegames\__init__.py" />
+    <Compile Include="unity\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DjangoUnityTutorial\" />
     <Folder Include="unitybackendapp\" />
     <Folder Include="unitybackendapp\templates\" />
+    <Folder Include="unity\" />
+    <Folder Include="unity\authentication\" />
+    <Folder Include="unity\authentication\templates\" />
+    <Folder Include="unity\highscores\" />
+    <Folder Include="unity\highscores\templates\" />
+    <Folder Include="unity\savegames\" />
+    <Folder Include="unity\savegames\templates\" />
+    <Folder Include="unity\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
-    <Content Include="db.sqlite3" />
     <Content Include="unitybackendapp\templates\home.html" />
     <Content Include="unitybackendapp\templates\index.html" />
+    <Content Include="unity\authentication\templates\index.html" />
+    <Content Include="unity\highscores\templates\index.html" />
+    <Content Include="unity\savegames\templates\index.html" />
+    <Content Include="unity\templates\index.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">
       <SubType>WebBrowser</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="django-unity\">
+      <Id>{9407a7ad-c27f-4655-bc4c-193329475bb6}</Id>
+      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
+      <Version>2.7</Version>
+      <Description>django-unity (Python 64-bit 2.7)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>Amd64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -38,7 +38,7 @@ LOGIN_URL = '/login'
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -110,7 +110,7 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'unitybackendapp.middleware.Unity3DMiddleware'
+    'unity.middleware.Unity3DMiddleware'
 )
 
 ROOT_URLCONF = 'DjangoUnityTutorial.urls'
@@ -133,7 +133,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'unitybackendapp',
+    'unity.authentication', 
+    'unity.highscores', 
+    'unity.savegames', 
+
+    #'unitybackendapp',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -143,7 +147,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     # Uncomment the next line to enable SSL
-    #'sslserver',
+    'sslserver',
 )
 
 # A sample logging configuration. The only tangible logging

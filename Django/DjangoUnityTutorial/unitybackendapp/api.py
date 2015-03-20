@@ -35,6 +35,12 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameSerializer
 from unitybackendapp.models import Score, Savegame
 
+class GetUserScores(ListAPIView):
+    authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
+    
 class ScoreAPI(ListCreateAPIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -47,29 +53,6 @@ class ScoreAPI(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-class UserAPI(DestroyAPIView, CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = CreateUserSerializer
-
-    def perform_destroy(self, instance):
-        user = User.objects.get(username=self.request.data['username'], email=self.request.data['email'])
-        if user.check_password(self.request.data['password']) is False:
-            return Response('You are not authorized to do that.', status=status.HTTP_401_UNAUTHORIZED)
-        instance.delete()
-
-class GetAuthToken(GenericAPIView):
-    throttle_classes = ()
-    permission_classes = ()
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
-    renderer_classes = (renderers.JSONRenderer,)
-
-    def post(self, request):
-        serializer = AuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
 
 class SavegameAPI(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)

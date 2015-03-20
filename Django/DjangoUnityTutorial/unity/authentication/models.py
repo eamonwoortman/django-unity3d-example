@@ -21,23 +21,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.conf.urls import patterns, url, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.db import models
 
-from unitybackendapp.api import ScoreAPI, UserAPI, GetAuthToken, SavegameAPI, GetUserScores
-
-urlpatterns = patterns('unitybackendapp.views',
-	url(r'^$', 'home_view'),
-    
-    #apis
-    url(r'^api/scores', GetUserScores.as_view()),
-    url(r'^api/score', ScoreAPI.as_view()),
-    url(r'^api/user/(?P<pk>\d+)/$', UserAPI.as_view()),
-    url(r'^api/user', UserAPI.as_view()),
-    url(r'^api/getauthtoken', GetAuthToken.as_view()),
-    url(r'^api/savegame/(?P<pk>\d+)/$', SavegameAPI.as_view()),
-    url(r'^api/savegame', SavegameAPI.as_view()),
-    url(r'^api/savegames/', SavegameAPI.as_view()),
-
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Create your models here.
