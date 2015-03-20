@@ -55,7 +55,7 @@ public class BlockSpawner : MonoBehaviour {
 
     private Vector3 GetPosition() {
         Vector3 position = transform.position;
-        BoxCollider bc = (BoxCollider)GetComponent<Collider>();
+        BoxCollider bc = (BoxCollider)collider;
         float width = bc.bounds.max.x - bc.bounds.min.x;
         position.x = (bc.bounds.min.x) + (width * (Input.mousePosition.x / Screen.width));
         return position;

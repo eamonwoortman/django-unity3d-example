@@ -130,9 +130,9 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
         Ball ball = InitializeBall();
 
-        ball.GetComponent<Rigidbody>().isKinematic = false;
-        ball.GetComponent<Collider>().enabled = true;
-        ball.GetComponent<Rigidbody>().AddForce(target * 80);
+        ball.rigidbody.isKinematic = false;
+        ball.collider.enabled = true;
+        ball.rigidbody.AddForce(target * 80);
 
         balls.Add(ball);
 
@@ -164,8 +164,8 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
 
             Ball ball = InitializeBall();
             ball.transform.position = ballData.Position;
-            ball.GetComponent<Rigidbody>().isKinematic = false;
-            ball.GetComponent<Collider>().enabled = true;
+            ball.rigidbody.isKinematic = false;
+            ball.collider.enabled = true;
 
             balls.Add(ball);
         }
@@ -194,7 +194,7 @@ public class BallGame : BaseGame<JeuDeBoulesData> {
         yield return new WaitForFixedUpdate();
 
         // Every 0.5 second, check if velocity of balls is below the BALL_VELOCITY_THRESHOLD, if so, then post scores. 
-        while (balls.Where(ball => ball.GetComponent<Rigidbody>().velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
+        while (balls.Where(ball => ball.rigidbody.velocity.sqrMagnitude > BALL_VELOCITY_THRESHOLD).ToArray().Length != 0)
             yield return new WaitForSeconds(2f);
 
         highscoreMenu.enabled = true;
