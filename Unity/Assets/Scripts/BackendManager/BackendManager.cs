@@ -21,22 +21,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-#define UNITY_4_PLUS
-#define UNITY_5_PLUS
-
-#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
-    #define UNITY_4_X
-    #undef UNITY_5_PLUS
-#elif UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_5_7 || UNITY_5_8 || UNITY_5_9
-    #define UNITY_5_X
-#endif
-
 using UnityEngine;
 using System;
 using System.Collections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 //---- Public Enums ----//
 public enum ResponseType {
@@ -118,11 +107,7 @@ public partial class BackendManager : MonoBehaviour {
     /// <param name="authToken">An optional authToken which, when set will be put in the Authorization header</param>
     public void Send(RequestType type, string command, WWWForm wwwForm, RequestResponseDelegate onResponse = null, string authToken = "") {
         WWW request;
-#if UNITY_5_PLUS
-        Dictionary<string, string> headers;
-#else
         Hashtable headers;
-#endif
         byte[] postData;
         string url = BackendUrl + command;
 
