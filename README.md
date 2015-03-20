@@ -25,7 +25,8 @@ This project was targetted for Windows users but since both Django and Unity3D a
 
 * Django (v1.7.1)
 * Django-rest-framework (v3.0.2)
-* Unity3D (v4.3+)
+* Unity3D (v5.0+)
+    NOTE: For Unity 4.x support, check out the unity4_support tag at https://github.com/eamonwoortman/django-unity3d-example/releases/tag/stable_unity4
 * MS Visual Studio Community 2013 
 * Python tools for Visual Studio (v2.1)
 
