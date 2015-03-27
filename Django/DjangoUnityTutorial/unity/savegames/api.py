@@ -21,38 +21,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.contrib.auth.models import User
-from django.utils.datastructures import MultiValueDict
+from rest_framework.generics import ListCreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework import authentication, permissions
-from rest_framework import status
-from rest_framework import parsers
-from rest_framework import renderers
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView, CreateAPIView
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from unitybackendapp.serializers import ScoreSerializer, CreateUserSerializer, SavegameSerializer
-from unitybackendapp.models import Score, Savegame
-
-class GetUserScores(ListAPIView):
-    authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-    
-class ScoreAPI(ListCreateAPIView):
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-    
-    def filter_queryset(self, queryset):
-        return queryset.order_by('-score')[0:5]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+from unity.savegames.serializers import SavegameSerializer
+from unity.savegames.models import Savegame
 
 class SavegameAPI(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
     authentication_classes = (authentication.TokenAuthentication,authentication.SessionAuthentication,)

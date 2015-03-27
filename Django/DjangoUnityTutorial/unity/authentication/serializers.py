@@ -21,30 +21,22 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.db import models
-from django.contrib import admin
 from django.contrib.auth.models import User
-import uuid
-import os
+from rest_framework import serializers, filters
 
-class Savegame(models.Model):
-    def update_filename(instance, filename):
-        path = 'savegames/'
-        format = '%s%s'%(instance.owner.pk, str(uuid.uuid4()))
-        return os.path.join(path, format)
+class CreateUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
 
-    owner = models.ForeignKey(User)
-    name = models.CharField(max_length=100)
-    file = models.FileField(upload_to=update_filename)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    type = models.CharField(max_length=100)
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'username', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
-    def __unicode__(self):
-        return '%s - %s' % (self.name, self.updated)
-
-class SavegameAdmin(admin.ModelAdmin):
-    fields = ('owner', 'name', 'file')
-    list_display = ['id', 'owner', 'name', 'created', 'updated']
-
-admin.site.register(Savegame, SavegameAdmin)
+    def create(self, validated_data):
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save() 
+        return user

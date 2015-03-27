@@ -37,35 +37,37 @@
     <Compile Include="DjangoUnityTutorial\settings.py" />
     <Compile Include="DjangoUnityTutorial\urls.py" />
     <Compile Include="DjangoUnityTutorial\wsgi.py" />
-    <Compile Include="unitybackendapp\api.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="unitybackendapp\urls.py" />
     <Compile Include="unity\authentication\api.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="unity\authentication\serializers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="unity\authentication\urls.py" />
+    <Compile Include="unity\highscores\api.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="unity\highscores\serializers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="unity\highscores\urls.py" />
     <Compile Include="unity\middleware.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="unitybackendapp\models.py" />
-    <Compile Include="unitybackendapp\serializers.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="unitybackendapp\tests.py" />
-    <Compile Include="unitybackendapp\urls.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="unitybackendapp\views.py" />
     <Compile Include="unitybackendapp\__init__.py" />
-    <Compile Include="unity\authentication\models.py" />
-    <Compile Include="unity\authentication\views.py" />
     <Compile Include="unity\authentication\__init__.py" />
     <Compile Include="unity\highscores\models.py" />
-    <Compile Include="unity\highscores\tests.py" />
-    <Compile Include="unity\highscores\views.py" />
     <Compile Include="unity\highscores\__init__.py" />
+    <Compile Include="unity\savegames\api.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="unity\savegames\models.py" />
-    <Compile Include="unity\savegames\tests.py" />
-    <Compile Include="unity\savegames\views.py" />
+    <Compile Include="unity\savegames\serializers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="unity\savegames\urls.py" />
     <Compile Include="unity\savegames\__init__.py" />
     <Compile Include="unity\__init__.py" />
   </ItemGroup>
@@ -75,21 +77,13 @@
     <Folder Include="unitybackendapp\templates\" />
     <Folder Include="unity\" />
     <Folder Include="unity\authentication\" />
-    <Folder Include="unity\authentication\templates\" />
     <Folder Include="unity\highscores\" />
-    <Folder Include="unity\highscores\templates\" />
     <Folder Include="unity\savegames\" />
-    <Folder Include="unity\savegames\templates\" />
-    <Folder Include="unity\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
     <Content Include="unitybackendapp\templates\home.html" />
     <Content Include="unitybackendapp\templates\index.html" />
-    <Content Include="unity\authentication\templates\index.html" />
-    <Content Include="unity\highscores\templates\index.html" />
-    <Content Include="unity\savegames\templates\index.html" />
-    <Content Include="unity\templates\index.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">

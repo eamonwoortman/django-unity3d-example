@@ -22,14 +22,14 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from django.contrib.auth.models import User
-from rest_framework import authentication, permissions
 from rest_framework import status
 from rest_framework import parsers
 from rest_framework import renderers
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import DestroyAPIView, GenericAPIView, CreateAPIView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from unity.authentication.serializers import CreateUserSerializer
+from django.template.base import Token
 
 class UserAPI(DestroyAPIView, CreateAPIView):
     queryset = User.objects.all()

@@ -21,29 +21,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
+from django.conf.urls import patterns, url
+from unity.authentication.api import UserAPI, GetAuthToken
 
-Replace this with more appropriate tests for your application.
-"""
-
-import django
-from django.test import TestCase
-
-# TODO: Configure your database in settings.py and sync before running tests.
-
-class SimpleTest(TestCase):
-    """Tests for the application views."""
-
-    if django.VERSION[:2] >= (1, 7):
-        # Django 1.7 requires an explicit setup() when running tests in PTVS
-        @classmethod
-        def setUpClass(cls):
-            django.setup()
-
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+urlpatterns = patterns('unity.authentication.views',
+    url(r'^api/user/(?P<pk>\d+)/$', UserAPI.as_view()),
+    url(r'^api/user', UserAPI.as_view()),
+    url(r'^api/getauthtoken', GetAuthToken.as_view())
+)

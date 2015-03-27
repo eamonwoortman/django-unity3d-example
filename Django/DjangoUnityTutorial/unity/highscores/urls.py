@@ -21,6 +21,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.db import models
+from django.conf.urls import patterns, url
+from unity.highscores.api import GetUserScores, ScoreAPI
 
-# Create your models here.
+urlpatterns = patterns('unity.highscores.views',
+    url(r'^api/scores', GetUserScores.as_view()),
+    url(r'^api/score', ScoreAPI.as_view())
+) 

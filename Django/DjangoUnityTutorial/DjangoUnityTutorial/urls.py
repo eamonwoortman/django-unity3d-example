@@ -21,6 +21,13 @@ urlpatterns = patterns('',
 
     url(r'^api/', include(router.urls)),
 
+    url(r'^', include('unitybackendapp.urls')),
+
+    url(r'', include('unity.authentication.urls')),
+    url(r'', include('unity.highscores.urls')),
+    url(r'', include('unity.savegames.urls')),
+
+
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

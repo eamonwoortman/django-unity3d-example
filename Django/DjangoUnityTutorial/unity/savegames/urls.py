@@ -21,35 +21,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.contrib.auth.models import User
-from rest_framework import serializers, filters
-from unitybackendapp.models import Score, Savegame
+from django.conf.urls import patterns, url
+from unity.savegames.api import SavegameAPI
 
-class ScoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Score
-        fields = ('id', 'score', 'owner_name', 'updated')
-
-class CreateUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'username', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save() 
-        return user
-
-
-class SavegameSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ('id', 'name', 'updated', 'file', 'type')
-        model = Savegame
-
+urlpatterns = patterns('unity.savegames.views',
+    url(r'^api/savegame/(?P<pk>\d+)/$', SavegameAPI.as_view()),
+    url(r'^api/savegame', SavegameAPI.as_view()),
+    url(r'^api/savegames/', SavegameAPI.as_view())
+) 
