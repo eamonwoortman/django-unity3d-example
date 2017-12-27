@@ -262,7 +262,7 @@ public partial class BackendManager {
     /// </summary>
     /// <param name="index"></param>
     public void DeleteSavegame(int index) {
-        Send(RequestType.Delete, "savegame/" + index + "/", null, OnSaveGameResponse, authenticationToken);
+        Send(RequestType.Delete, "savegame/" + index + "/", null, OnDeleteSavegameResponse, authenticationToken);
     }
 
     private void OnDeleteSavegameResponse(ResponseType responseType, JToken responseData, string callee) {
