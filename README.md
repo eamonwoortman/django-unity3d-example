@@ -4,6 +4,7 @@
 
 Django-Unity-Example is an example project of how to use Django as a backend for a Unity3D game. 
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/eamonw)
 
 ## Overview
 
